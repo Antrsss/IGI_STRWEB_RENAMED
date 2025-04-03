@@ -1,3 +1,10 @@
+"""
+Task 1: Product classes
+Version: 1.0
+Developer: Darya Zgirskaya
+Date: 2025-04-03
+"""
+
 import csv
 import pickle
 
