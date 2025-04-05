@@ -1,0 +1,8 @@
+Upper digit words: L0ng_Pa 12MeRci L1ght_Sab3r 
+Password is safe
+Password is safe
+Password is not safe!
+Password is not safe!
+Number of upper words: 3
+Longest word that starts with 'l' letter: l0wercase
+Duplicate words:  in admin Secure123 words l0wercase some Hello_World_2024 
