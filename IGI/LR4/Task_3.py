@@ -112,3 +112,4 @@ if __name__ == "__main__":
     plt.title("Calculating methods comparison arcsin(x)")
     plt.grid()
     plt.show()
+    plt.savefig('task_3_files/arcsin_comparison.png')
