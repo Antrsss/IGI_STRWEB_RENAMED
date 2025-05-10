@@ -34,13 +34,12 @@ class FileManager:
 
     def zip_file_with_info(self, zip_name):
         """
-        Заархивировать файл и получить информацию о нем в архиве
+        Zips file and saves info about zip
 
-        :param source_file: Путь к файлу для архивации
-        :param zip_name: Имя создаваемого zip-архива
-        :return: Информация о заархивированном файле
+        :param source_file: file to archive
+        :param zip_name: name of zip
+        :return: info about zip
         """
-        # Проверяем, существует ли исходный файл
         if not os.path.exists(self.__save_filename):
             raise FileNotFoundError(f"File {self.__save_filename} not found")
 
@@ -53,11 +52,9 @@ class FileManager:
             'archive_name': zip_name
         }
 
-        # Создаем zip-архив и добавляем файл
         with zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
             zipf.write(self.__save_filename, os.path.basename(self.__save_filename))
 
-            # Получаем информацию о файле в архиве
             file_in_zip = zipf.getinfo(os.path.basename(self.__save_filename))
             file_info['compressed_size'] = file_in_zip.compress_size
             file_info['compression_ratio'] = round(

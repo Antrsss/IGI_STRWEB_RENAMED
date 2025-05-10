@@ -8,6 +8,7 @@ Date: 2025-04-07
 import math
 import matplotlib.pyplot as plt
 from collections import Counter
+from input.input_check import input_x, input_x_list, input_int
 
 
 class SeriesOperations:
@@ -56,7 +57,7 @@ class SeriesOperations:
             return (sorted_series[n // 2] + sorted_series[n // 2 + 1]) / 2
 
     @classmethod
-    def find_series_mod(cls):
+    def series_mod(cls):
         """Returns the mode of series"""
         if not cls.series:
             return 0.0
@@ -80,27 +81,37 @@ class SeriesOperations:
 
 
 if __name__ == "__main__":
-    x = 0.3
-    result, n_terms = SeriesOperations.arcsin_series(x)
 
-    print(f"\nSeries for x = {x}:")
+    my_x = input_x("Enter x: ")
+    SeriesOperations.arcsin_series(my_x)
+    print(f"\nSeries for x = {my_x}:")
     print(f"Arithmetic average: {SeriesOperations.arithmetic_average()}")
     print(f"Median: {SeriesOperations.series_median()}")
-    print(f"Mode: {SeriesOperations.find_series_mod()}")
+    print(f"Mode: {SeriesOperations.series_mod()}")
     print(f"Dispersion: {SeriesOperations.series_dispersion()}")
+
+    size = input_int("\nEnter x number: ")
+    x_values = input_x_list("Enter x list: ", size)
+
+    result_list = []
+    terms_list = []
+    for input_x in x_values:
+        x_result, n_terms = SeriesOperations.arcsin_series(input_x)
+        result_list.append(x_result)
+        terms_list.append(n_terms)
 
     print("\nResults' table:")
     print("| x     | n  | F(x) (series)      | F(x) (math)     | eps    |")
     print("|-------|----|-----------------|-----------------|--------|")
-    for x in [0.1, 0.2, 0.3, 0.4, 0.5]:
-        F_series, n = SeriesOperations.arcsin_series(x)
-        F_math = math.asin(x)
-        print(f"| {x:.1f}   | {n:2} | {F_series:.8f} | {F_math:.8f} | 1e-6   |")
+
+    i = 0
+    for input_x in x_values:
+        F_math = math.asin(input_x)
+        print(f"| {input_x:.1f}   | {terms_list[i]:2} | {result_list[i]:.8f} | {F_math:.8f} | 1e-6   |")
+        i += 1
 
 
 
-
-    x_values = [0.1, 0.2, 0.3, 0.4, 0.5]
     series_results = [SeriesOperations.arcsin_series(x)[0] for x in x_values]
     math_results = [math.asin(x) for x in x_values]
 

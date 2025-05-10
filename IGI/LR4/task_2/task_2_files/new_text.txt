@@ -5,4 +5,4 @@ Password is not safe!
 Password is not safe!
 Number of upper words: 3
 Longest word that starts with 'l' letter: l0wercase
-Duplicate words:  in admin Secure123 words l0wercase some Hello_World_2024 
+Duplicate words:  words l0wercase some in Secure123 Hello_World_2024 admin 
