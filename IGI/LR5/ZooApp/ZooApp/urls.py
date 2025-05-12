@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from zoo.views import views
+from zoo import views
 
 
 urlpatterns = [
@@ -28,5 +28,5 @@ urlpatterns = [
     path('positions/<int:pk>/update/', views.position_update, name='position_update'),
     path('positions/<int:pk>/delete/', views.position_delete, name='position_delete'),
     path('admin/', admin.site.urls),
-    path('zoo/', include('zoo.urls')),
+    #path('zoo/', include('zoo.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
