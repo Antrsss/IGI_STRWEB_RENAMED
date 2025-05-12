@@ -14,7 +14,6 @@ class Employee(BaseModel):
     info = models.TextField()
     photo = models.ImageField(upload_to='photos/news/', default=None, null=True)
     position = models.ForeignKey(EmployeePosition, on_delete=models.SET_NULL, related_query_name="news", null=True)
-    room = models.ManyToManyField(Room, related_query_name="employees", blank=True)
 
     #def __str__(self):
     #   return self.user.username + ' employee'

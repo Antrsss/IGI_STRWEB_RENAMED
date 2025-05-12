@@ -1,21 +1,24 @@
 @startuml Diagram
-
+top to bottom direction
 
 abstract class BaseModel
 
-class Animal
+rectangle AnimalGroup {
+    class Animal
+    class AnimalFamily
+    class Country
+    class FoodType
+}
 
-class AnimalFamily
+rectangle EmployeeGroup {
+    class AdminUser
+    class Employee
+    class EmployeePosition
+}
 
-class Room
-
-class FoodType
-
-class Employee
-
-class EmployeePosition
-
-class Country
+rectangle RoomGroup {
+    class Room
+}
 
 BaseModel <|-- Animal
 BaseModel <|-- AnimalFamily
@@ -27,13 +30,13 @@ BaseModel <|-- Room
 
 AdminUser --> Employee : user (OneToOne)
 
-EmployeePosition --> Employee : employees (FK)
-Employee --> Room : rooms (M2M)
-Animal --> Room : room (FK)
-Employee --> Animal : animals (FK)
-AnimalFamily --> Animal : animals (FK)
-EmployeePosition --> Employee : employees (FK)
-Country --> Animal : animals (FK)
-FoodType --> Animal : animals (FK)
+Animal --> AnimalFamily : animals (FK)
+Animal --> Country : animals (FK)
+Animal --> FoodType : animals (FK)
+Animal --> Room : animals (FK)
+
+Animal --> Employee : animals (FK)
+
+Employee --> EmployeePosition : employees (FK)
 
 @enduml
