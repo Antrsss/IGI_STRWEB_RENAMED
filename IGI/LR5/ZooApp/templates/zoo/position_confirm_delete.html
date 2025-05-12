@@ -1,0 +1,7 @@
+<h1>Удаление должности</h1>
+<p>Вы уверены, что хотите удалить "{{ position.name }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Удалить</button>
+    <a href="{% url 'position_detail' position.pk %}">Отмена</a>
+</form>

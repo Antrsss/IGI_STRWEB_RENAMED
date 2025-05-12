@@ -1,0 +1,39 @@
+@startuml Diagram
+
+
+abstract class BaseModel
+
+class Animal
+
+class AnimalFamily
+
+class Room
+
+class FoodType
+
+class Employee
+
+class EmployeePosition
+
+class Country
+
+BaseModel <|-- Animal
+BaseModel <|-- AnimalFamily
+BaseModel <|-- Country
+BaseModel <|-- Employee
+BaseModel <|-- EmployeePosition
+BaseModel <|-- FoodType
+BaseModel <|-- Room
+
+AdminUser --> Employee : user (OneToOne)
+
+EmployeePosition --> Employee : employees (FK)
+Employee --> Room : rooms (M2M)
+Animal --> Room : room (FK)
+Employee --> Animal : animals (FK)
+AnimalFamily --> Animal : animals (FK)
+EmployeePosition --> Employee : employees (FK)
+Country --> Animal : animals (FK)
+FoodType --> Animal : animals (FK)
+
+@enduml

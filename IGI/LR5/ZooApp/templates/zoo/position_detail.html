@@ -1,0 +1,5 @@
+<h1>{{ position.name }}</h1>
+<p>{{ position.info }}</p>
+<a href="{% url 'position_update' position.pk %}">Редактировать</a>
+<a href="{% url 'position_delete' position.pk %}">Удалить</a>
+<a href="{% url 'position_list' %}">Назад к списку</a>

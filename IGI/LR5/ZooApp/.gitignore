@@ -1,0 +1,58 @@
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+/media/
+
+# Backup files #
+*.bak 
+*.tmp
+
+# IDE #
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Virtual environment #
+venv/
+.env/
+.envrc
+env/
+
+# Database migrations (можно раскомментировать если не нужно хранить миграции)
+# zoo/migrations/
+
+# Статические файлы (если собираются при деплое)
+/staticfiles/
+
+# Тестовые файлы
+/test_results/
+/coverage/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Node.js (если используется)
+node_modules/
+npm-debug.log*
+
+# Python packaging
+*.egg-info/
+/dist/
+/build/
+*.egg
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
