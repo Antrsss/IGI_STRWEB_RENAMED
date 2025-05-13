@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from zoo.models import EmployeePositions
 from zoo.forms import EmployeePositionForm
+from django.contrib.auth.forms import UserCreationForm
 
 # Create (Создание)
 def position_create(request):
@@ -42,3 +43,27 @@ def position_delete(request, pk):
         position.delete()
         return redirect('position_list')
     return render(request, 'zoo/position_confirm_delete.html', {'position': position})
+
+
+def home(request):
+    return render(request, 'home.html')
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')  # перенаправление после регистрации
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})

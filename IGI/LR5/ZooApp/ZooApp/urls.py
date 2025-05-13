@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from zoo import views
+from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
@@ -29,4 +30,9 @@ urlpatterns = [
     path('positions/<int:pk>/delete/', views.position_delete, name='position_delete'),
     path('admin/', admin.site.urls),
     #path('zoo/', include('zoo.urls')),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name = 'login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('register/', views.register, name='register'),
+    
+    path('oauth/', include('social_django.urls', namespace='social')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
