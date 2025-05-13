@@ -1,5 +1,5 @@
 from django.contrib import admin
-from zoo.models import Article, CompanyInfo, FAQ, Employees, EmployeePositions, Vacancy, Review, PromoCode, PrivacyPolicy
+from zoo.models import Article, CompanyInfo, FAQ, Contacts, EmployeePositions, Vacancy, Review, PromoCode, PrivacyPolicy
 
 
 @admin.register(Article)
@@ -21,7 +21,7 @@ class FAQAdmin(admin.ModelAdmin):
 class EmployeePositionAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
-@admin.register(Employees)
+@admin.register(Contacts)
 class EmployeeAdmin(admin.ModelAdmin):
     list_display = ('name', 'position', 'phone', 'email', 'is_active')
     list_filter = ('position', 'is_active')

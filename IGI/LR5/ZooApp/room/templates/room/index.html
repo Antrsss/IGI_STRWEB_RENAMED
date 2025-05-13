@@ -1,0 +1,33 @@
+<html>
+<head>
+    <title>Room Management</title>
+</head>
+<body>
+    <h1>Rooms List</h1>
+    <a href="{% url 'room:create' %}">Add New Room</a>
+    
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Number</th>
+            <th>Square</th>
+            <th>Swimming Pool</th>
+            <th>Heating</th>
+            <th>Actions</th>
+        </tr>
+        {% for room in rooms %}
+        <tr>
+            <td>{{ room.name }}</td>
+            <td>{{ room.number }}</td>
+            <td>{{ room.square }}</td>
+            <td>{% if room.has_swimming %}Yes{% else %}No{% endif %}</td>
+            <td>{% if room.has_heating %}Yes{% else %}No{% endif %}</td>
+            <td>
+                <a href="{% url 'room:edit' room.id %}">Edit</a>
+                <a href="{% url 'room:delete' room.id %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

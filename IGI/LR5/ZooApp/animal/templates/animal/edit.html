@@ -1,0 +1,23 @@
+<html>
+<head>
+    <title>Edit Animal</title>
+</head>
+<body>
+    <h1>Edit Animal</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <p>Name: <input type="text" name="name" value="{{ animal.name }}"></p>
+        <p>Family: <input type="text" name="family" value="{{ animal.family }}"></p>
+        <p>Receipt Date: <input type="date" name="recepient_date" value="{{ animal.receipt_date|date:'Y-m-d' }}"></p>
+        <p>Room: <input type="text" name="room" value="{{ animal.room }}"></p>
+        <p>Birthday: <input type="date" name="birthday" value="{{ animal.birthday|date:'Y-m-d' }}"></p>
+        <p>Employee: <input type="text" name="employee" value="{{ animal.employee }}"></p>
+        <p>Facts: <textarea name="facts">{{ animal.facts }}</textarea></p>
+        <p>Food Type: <input type="text" name="food_type" value="{{ animal.food_type }}"></p>
+        <p>Country: <input type="text" name="country" value="{{ animal.country }}"></p>
+        <p>Photo URL: <input type="text" name="photo" value="{{ animal.photo }}"></p>
+        <input type="submit" value="Save">
+        <a href="/">Cancel</a>
+    </form>
+</body>
+</html>

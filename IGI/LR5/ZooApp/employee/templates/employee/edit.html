@@ -1,0 +1,21 @@
+<html>
+<head>
+    <title>Edit Employee</title>
+</head>
+<body>
+    <h1>Edit Employee: {{ employee.name }}</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <p>User: <input type="text" name="user" value="{{ employee.user }}"></p>
+        <p>Name: <input type="text" name="name" value="{{ employee.name }}" required></p>
+        <p>Email: <input type="email" name="email" value="{{ employee.email }}"></p>
+        <p>Position: <input type="text" name="position" value="{{ employee.position }}"></p>
+        <p>Photo URL: <input type="text" name="photo" value="{{ employee.photo }}"></p>
+        <p>Info: <textarea name="info">{{ employee.info }}</textarea></p>
+        
+        <input type="submit" value="Save">
+        <a href="{% url 'employee:index' %}">Cancel</a>
+    </form>
+</body>
+</html>

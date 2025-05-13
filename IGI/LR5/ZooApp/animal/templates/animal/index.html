@@ -1,0 +1,29 @@
+<html>
+<head>
+    <title>Animal Shelter</title>
+</head>
+<body>
+    <h1>Animals List</h1>
+    <a href="{% url 'animal:create' %}">Add New Animal</a>
+    
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Family</th>
+            <th>Room</th>
+            <th>Actions</th>
+        </tr>
+        {% for animal in animals %}
+        <tr>
+            <td>{{ animal.name }}</td>
+            <td>{{ animal.family }}</td>
+            <td>{{ animal.room }}</td>
+            <td>
+                <a href="{% url 'animal:edit' animal.id %}">Edit</a>
+                <a href="{% url 'animal:delete' animal.id %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
