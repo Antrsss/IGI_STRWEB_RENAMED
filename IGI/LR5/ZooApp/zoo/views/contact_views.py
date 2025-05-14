@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponseRedirect, HttpResponseNotFound
-from ..models import Contacts, EmployeePositions
+from ..pages_models import Contacts, EmployeePositions
 
 contact_not_found = "<h2>Contact not found</h2>"
 

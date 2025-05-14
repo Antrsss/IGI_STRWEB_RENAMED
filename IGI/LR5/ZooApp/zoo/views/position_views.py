@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponseRedirect, HttpResponseNotFound
-from ..models import EmployeePositions
+from ..pages_models import EmployeePositions
 
 position_not_found = "<h2>Position not found</h2>"
 

@@ -5,6 +5,7 @@ from django.utils import timezone
 from .models import Animal, AnimalFamily, AnimalCountry, AnimalFoodType, Room
 from employee.models import Employee
 
+
 animal_not_found = "<h2>Animal not found</h2>"
 
 def index(request):
@@ -19,26 +20,23 @@ def index(request):
         "countries": AnimalCountry.objects.all(),
         "employees": Employee.objects.all()
     })
-
+    
 def create(request):
     if request.method == "POST":
         try:
             animal = Animal()
             animal.name = request.POST.get("name")
             
-            # Обработка ForeignKey полей
             animal.family = get_object_or_none(AnimalFamily, request.POST.get("family"))
             animal.room = get_object_or_none(Room, request.POST.get("room"))
             animal.food_type = get_object_or_none(AnimalFoodType, request.POST.get("food_type"))
             animal.country = get_object_or_none(AnimalCountry, request.POST.get("country"))
             animal.employee = get_object_or_none(Employee, request.POST.get("employee"))
             
-            # Обработка остальных полей
             animal.receipt_date = request.POST.get("recepient_date") or timezone.now()
             animal.birthday = request.POST.get("birthday") or timezone.now()
             animal.facts = request.POST.get("facts", "")
             
-            # Обработка фото
             if 'photo' in request.FILES:
                 animal.photo = request.FILES['photo']
             
@@ -104,7 +102,6 @@ def delete(request, id):
         messages.error(request, "Animal not found")
     return HttpResponseRedirect("/animals/")
 
-# Вспомогательная функция
 def get_object_or_none(model, id):
     if id and id.isdigit():
         try:

@@ -146,4 +146,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '139054913490-u4gcspbppkdeo7du4m81vbpa1n6bm4sk.a
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
 MIDDLEWARE += [
     'social_django.middleware.SocialAuthExceptionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'zoo.middleware.LoginRequiredMiddleware',
 ]
+
+LOGIN_REDIRECT_URL = 'profile'

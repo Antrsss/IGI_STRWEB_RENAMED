@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponseNotFound
-from ..models import Article
+from ..pages_models import Article
 
 article_not_found = "<h2>Article not found</h2>"
 

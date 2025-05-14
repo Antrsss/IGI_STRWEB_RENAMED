@@ -1,8 +1,10 @@
 from django.contrib import admin
-from zoo.models import Article, CompanyInfo, FAQ, Contacts, EmployeePositions, Vacancy, Review, PromoCode, PrivacyPolicy
+from zoo.pages_models import Article, CompanyInfo, FAQ, Contacts, EmployeePositions, Vacancy, Review, PromoCode, PrivacyPolicy
+from animal.models import Animal, AnimalFamily, AnimalCountry, AnimalFoodType
+from employee.models import Employee, EmployeePosition
+from room.models import Room
 
-
-@admin.register(Article)
+@admin.register(Article)    
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ('title', 'pub_date', 'is_published')
     list_filter = ('is_published',)
@@ -16,10 +18,6 @@ class CompanyInfoAdmin(admin.ModelAdmin):
 class FAQAdmin(admin.ModelAdmin):
     list_display = ('question', 'date_added')
     search_fields = ('question', 'answer')
-
-@admin.register(EmployeePositions)
-class EmployeePositionAdmin(admin.ModelAdmin):
-    list_display = ('name',)
 
 @admin.register(Contacts)
 class EmployeeAdmin(admin.ModelAdmin):

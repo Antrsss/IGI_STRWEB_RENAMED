@@ -1,48 +1,70 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.shortcuts import render, redirect
+from django.http import HttpResponseNotFound
+from django.contrib import messages
 from .models import Room
 
 
 room_not_found = "<h2>Room not found</h2>"
 
 def index(request):
-    rooms = Room.objects.all()
+    rooms = Room.objects.all().order_by('number')  # Сортировка по номеру
     return render(request, "room/index.html", {"rooms": rooms})
-
 
 def create(request):
     if request.method == "POST":
-        room = Room()
-        room.name = request.POST.get("name")
-        room.number = request.POST.get("number")
-        room.has_swimming = request.POST.get("has_swimming")
-        room.has_heating = request.POST.get("has_heating")
-        room.square = request.POST.get("square")
-        room.save()
-    return HttpResponseRedirect("/")
-
-
-def edit(request, id):
+        try:
+            room = Room(
+                name=request.POST.get("name", "").strip(),
+                number=int(request.POST.get("number", 0)),
+                has_swimming=bool(request.POST.get("has_swimming", False)),
+                has_heating=bool(request.POST.get("has_heating", False)),
+                square=float(request.POST.get("square", 0.0))
+            )
+            room.full_clean()  # Валидация модели
+            room.save()
+            messages.success(request, "Room created successfully!")
+            return redirect("rooms:index")
+            
+        except ValueError as e:
+            messages.error(request, f"Invalid input: {str(e)}")
+        except Exception as e:
+            messages.error(request, f"Error creating room: {str(e)}")
+    
+    return redirect("rooms:index")
     try:
         room = Room.objects.get(id=id)
         
         if request.method == "POST":
-            room.name = request.POST.get("name")
-            room.number = request.POST.get("number")
-            room.has_swimming = request.POST.get("has_swimming")
-            room.has_heating = request.POST.get("has_heating")
-            room.square = request.POST.get("square")
-            room.save()
-        else:
-            return render(request, "room/edit.html", {"room": room})
+            try:
+                room.name = request.POST.get("name", room.name).strip()
+                room.number = int(request.POST.get("number", room.number))
+                room.has_swimming = bool(request.POST.get("has_swimming", room.has_swimming))
+                room.has_heating = bool(request.POST.get("has_heating", room.has_heating))
+                room.square = float(request.POST.get("square", room.square))
+                
+                room.full_clean()  # Валидация модели
+                room.save()
+                messages.success(request, "Room updated successfully!")
+                return redirect("rooms:index")
+                
+            except ValueError as e:
+                messages.error(request, f"Invalid input: {str(e)}")
+            except Exception as e:
+                messages.error(request, f"Error updating room: {str(e)}")
+            
+            return redirect("rooms:edit", id=id)
+        
+        return render(request, "room/edit.html", {"room": room})
+        
     except Room.DoesNotExist:
+        messages.error(request, "Room not found")
         return HttpResponseNotFound(room_not_found)
-    
 
 def delete(request, id):
     try:
         room = Room.objects.get(id=id)
         room.delete()
-        return HttpResponseRedirect("/")
+        messages.success(request, "Room deleted successfully!")
     except Room.DoesNotExist:
-        return HttpResponseNotFound(room_not_found)
+        messages.error(request, "Room not found")
+    return redirect("rooms:index")

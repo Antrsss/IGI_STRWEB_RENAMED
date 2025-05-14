@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponseRedirect, HttpResponseNotFound
-from ..models import Recall
+from ..pages_models import Recall
 
 recall_not_found = "<h2>Recall not found</h2>"
 

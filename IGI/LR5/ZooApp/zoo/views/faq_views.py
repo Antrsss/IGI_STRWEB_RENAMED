@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponseRedirect, HttpResponseNotFound
-from ..models import FAQ
+from ..pages_models import FAQ
 
 faq_not_found = "<h2>FAQ not found</h2>"
 

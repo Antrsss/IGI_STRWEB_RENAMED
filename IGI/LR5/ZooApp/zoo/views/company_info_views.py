@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponseRedirect, HttpResponseNotFound
 from django.contrib import messages
-from ..models import CompanyInfo
+from ..pages_models import CompanyInfo
 
 company_not_found = "<h2>Company info not found</h2>"
 
