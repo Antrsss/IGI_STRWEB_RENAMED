@@ -18,20 +18,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from zoo.views import article_views
 from django.contrib.auth import views as auth_views
+import zoo.views.article_views as article_views
+import zoo.register_views as register_views
 
 
 urlpatterns = [
-    path('positions/', article_views.position_list, name='position_list'),
-    path('positions/create/', article_views.create, name='position_create'),
-    path('positions/<int:pk>/', article_views.position_detail, name='position_detail'),
-    path('positions/<int:pk>/update/', article_views.position_update, name='position_update'),
-    path('positions/<int:pk>/delete/', article_views.position_delete, name='position_delete'),
     path('admin/', admin.site.urls),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name = 'login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('register/', article_views.register, name='register'),
+    path('register/', register_views.register, name='register'),
     path('oauth/', include('social_django.urls', namespace='social')),
     
     

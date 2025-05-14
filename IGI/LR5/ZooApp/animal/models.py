@@ -50,3 +50,8 @@ class Animal(BaseModel):
 
     def __str__(self):
         return self.name + ' ' + self.room.name
+    
+    @staticmethod
+    def create_family(family_name):
+        family, created = AnimalFamily.objects.get_or_create(name=family_name)
+        return family

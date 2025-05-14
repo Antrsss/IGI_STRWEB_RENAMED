@@ -1,29 +1,220 @@
+<!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
     <title>Animal Shelter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .form-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], 
+        input[type="date"], 
+        select, 
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"], button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .messages {
+            margin: 20px 0;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .alert-error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        .photo-thumbnail {
+            max-width: 100px;
+            max-height: 100px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Animals List</h1>
-    <a href="{% url 'animal:create' %}">Add New Animal</a>
+    <h1>Animal Shelter</h1>
     
-    <table border="1">
-        <tr>
-            <th>Name</th>
-            <th>Family</th>
-            <th>Room</th>
-            <th>Actions</th>
-        </tr>
-        {% for animal in animals %}
-        <tr>
-            <td>{{ animal.name }}</td>
-            <td>{{ animal.family }}</td>
-            <td>{{ animal.room }}</td>
-            <td>
-                <a href="{% url 'animal:edit' animal.id %}">Edit</a>
-                <a href="{% url 'animal:delete' animal.id %}">Delete</a>
-            </td>
-        </tr>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
         {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="form-container">
+        <h2>Add New Animal</h2>
+        <form method="POST" action="create/" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="family">Family:</label>
+                <select id="family" name="family" required>
+                    <option value="">Select family</option>
+                    {% for family in families %}
+                        <option value="{{ family.id }}">{{ family.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="room">Room:</label>
+                <select id="room" name="room">
+                    <option value="">Select room</option>
+                    {% for room in rooms %}
+                        <option value="{{ room.id }}">{{ room.name }} (№{{ room.number }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="food_type">Food Type:</label>
+                <select id="food_type" name="food_type">
+                    <option value="">Select food type</option>
+                    {% for food_type in food_types %}
+                        <option value="{{ food_type.id }}">{{ food_type.food_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="country">Country:</label>
+                <select id="country" name="country">
+                    <option value="">Select country</option>
+                    {% for country in countries %}
+                        <option value="{{ country.id }}">{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="employee">Employee:</label>
+                <select id="employee" name="employee">
+                    <option value="">Select employee</option>
+                    {% for employee in employees %}
+                        <option value="{{ employee.id }}">{{ employee.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="recepient_date">Receipt Date:</label>
+                <input type="date" id="recepient_date" name="recepient_date">
+            </div>
+            
+            <div class="form-group">
+                <label for="birthday">Birthday:</label>
+                <input type="date" id="birthday" name="birthday">
+            </div>
+            
+            <div class="form-group">
+                <label for="facts">Facts:</label>
+                <textarea id="facts" name="facts" rows="4"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="photo">Photo:</label>
+                <input type="file" id="photo" name="photo">
+            </div>
+            
+            <input type="submit" value="Add Animal">
+        </form>
+    </div>
+
+    {% if animals.count > 0 %}
+    <h2>List of Animals</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Family</th>
+                <th>Room</th>
+                <th>Birthday</th>
+                <th>Photo</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for animal in animals %}
+            <tr>
+                <td>{{ animal.id }}</td>
+                <td>{{ animal.name }}</td>
+                <td>{{ animal.family.name|default:"-" }}</td>
+                <td>{{ animal.room.name|default:"-" }}</td>
+                <td>{{ animal.birthday|date:"Y-m-d" }}</td>
+                <td>
+                    {% if animal.photo %}
+                        <img src="{{ animal.photo.url }}" class="photo-thumbnail">
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="edit/{{ animal.id }}">Edit</a> | 
+                    <a href="delete/{{ animal.id }}" onclick="return confirm('Are you sure you want to delete this animal?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
+    {% else %}
+    <p>No animals in the shelter yet.</p>
+    {% endif %}
 </body>
 </html>
