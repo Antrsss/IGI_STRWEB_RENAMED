@@ -3,6 +3,9 @@ from zoo.pages_models import Article, CompanyInfo, FAQ, Contacts, EmployeePositi
 from animal.models import Animal, AnimalFamily, AnimalCountry, AnimalFoodType
 from employee.models import Employee, EmployeePosition
 from room.models import Room
+from django.contrib.auth.admin import UserAdmin
+from .models import User, TicketType, ExtraService, Ticket
+from employee.models import EmployeePosition  # Импортируем если нужно в админке
 
 @admin.register(Article)    
 class ArticleAdmin(admin.ModelAdmin):
@@ -46,3 +49,46 @@ class PromoCodeAdmin(admin.ModelAdmin):
 @admin.register(PrivacyPolicy)
 class PrivacyPolicyAdmin(admin.ModelAdmin):
     pass
+
+
+# Кастомный класс для отображения User в админке
+class CustomUserAdmin(UserAdmin):
+    list_display = ('username', 'email', 'phone', 'is_employee', 'is_visitor', 'position')
+    list_filter = ('is_employee', 'is_visitor')
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'email', 'phone')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 
+                                  'is_employee', 'is_visitor', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+        ('Employee info', {'fields': ('position',)}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'password1', 'password2', 'email', 'phone', 
+                       'is_employee', 'is_visitor', 'position'),
+        }),
+    )
+
+# Регистрация моделей
+admin.site.register(User, CustomUserAdmin)
+
+@admin.register(TicketType)
+class TicketTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'weekday_price', 'weekend_price')
+    search_fields = ('name',)
+
+@admin.register(ExtraService)
+class ExtraServiceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'description')
+    search_fields = ('name',)
+    list_editable = ('price',)
+
+@admin.register(Ticket)
+class TicketAdmin(admin.ModelAdmin):
+    list_display = ('visitor', 'ticket_type', 'purchase_date', 'visit_date')
+    list_filter = ('visit_date', 'ticket_type')
+    search_fields = ('visitor__username', 'visitor__email')
+    filter_horizontal = ('services',)
+    date_hierarchy = 'visit_date'

@@ -6,6 +6,6 @@ urlpatterns = [
     path('employee/', views.employee_dashboard, name='employee_dashboard'),
     path('visitor/', views.visitor_dashboard, name='visitor_dashboard'),
     path('public/', views.public_info, name='public_info'),
-    path('employee/guest/', views.unregistered_employee_view, name='unregistered_employee'),
+    path('guest/', views.unregistered_employee_view, name='unregistered_employee'),
     #path('buy-ticket/', views.buy_ticket, name='buy_ticket'),
 ]

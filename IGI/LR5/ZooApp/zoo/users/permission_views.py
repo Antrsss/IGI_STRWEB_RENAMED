@@ -68,7 +68,7 @@ def unregistered_employee_view(request):
     services = ExtraService.objects.all()
     promocodes = PromoCode.objects.filter(is_active=True)  # Только активные промокоды
 
-    return render(request, 'employee/unregistered_employee_dashboard.html', {
+    return render(request, 'unregistered_employee_dashboard.html', {
         'animals': animals,
         'rooms': rooms,
         'ticket_types': ticket_types,
