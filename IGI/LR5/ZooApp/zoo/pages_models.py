@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
-    
-    
+from django.conf import settings
+
 class Article(models.Model):
     """News/articles for main and news pages"""
     title = models.CharField(max_length=200, verbose_name="Header")
@@ -117,7 +117,7 @@ class Review(models.Model):
     text = models.TextField(verbose_name="Recall text")
     pub_date = models.DateTimeField(auto_now_add=True, verbose_name="Date published")
     is_published = models.BooleanField(default=False, verbose_name="Published")
-    user = models.ForeignKey('auth.User', on_delete=models.SET_NULL, 
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, 
                            null=True, blank=True, verbose_name="User")
 
     class Meta:
@@ -129,7 +129,6 @@ class Review(models.Model):
         return f"Recall by {self.author_name} ({self.rating}/5)"
 
 class PromoCode(models.Model):
-    """Promocodes"""
     code = models.CharField(max_length=50, unique=True, verbose_name="Code")
     description = models.TextField(verbose_name="Description")
     discount = models.PositiveIntegerField(verbose_name="Sale size (%)")

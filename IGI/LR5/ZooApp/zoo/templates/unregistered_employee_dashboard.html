@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Информация для сотрудников</h1>
+
+<!-- Животные -->
+<h2>Животные</h2>
+<div class="animals">
+    {% for animal in animals %}
+    <div class="animal">
+        <img src="{{ animal.photo.url }}" alt="{{ animal.name }}" width="200">
+        <h3>{{ animal.name }}</h3>
+        <p>{{ animal.facts }}</p>
+        <p>Семейство: {{ animal.family.name }}</p>
+        <p>Страна: {{ animal.country.name }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Помещения -->
+<h2>Помещения</h2>
+<div class="rooms">
+    {% for room in rooms %}
+    <div class="room">
+        <h3>{{ room.name }}</h3>
+        <p>Температура: {{ room.temperature }}°C</p>
+        <p>Влажность: {{ room.humidity }}%</p>
+        <p>Животные: {% for animal in room.animals.all %}{{ animal.name }}{% endfor %}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Билеты и услуги -->
+<h2>Стоимость билетов</h2>
+<table>
+    <tr>
+        <th>Тип билета</th>
+        <th>Будни</th>
+        <th>Выходные</th>
+    </tr>
+    {% for ticket in ticket_types %}
+    <tr>
+        <td>{{ ticket.name }}</td>
+        <td>{{ ticket.weekday_price }} ₽</td>
+        <td>{{ ticket.weekend_price }} ₽</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Дополнительные услуги</h2>
+<ul>
+    {% for service in services %}
+    <li>
+        <strong>{{ service.name }}</strong> - {{ service.price }} ₽
+        <p>{{ service.description }}</p>
+    </li>
+    {% endfor %}
+</ul>
+
+<!-- Промокоды -->
+<h2>Активные промокоды</h2>
+<ul>
+    {% for promo in promocodes %}
+    <li>
+        <strong>{{ promo.code }}</strong> - {{ promo.discount }}% скидка (действует до {{ promo.valid_until }})
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

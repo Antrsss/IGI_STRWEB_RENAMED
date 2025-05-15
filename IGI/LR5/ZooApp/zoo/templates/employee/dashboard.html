@@ -1,0 +1,19 @@
+<h1>Мои животные</h1>
+{% for animal in animals %}
+<div class="animal">
+    <img src="{{ animal.photo.url }}" alt="{{ animal.name }}">
+    <h2>{{ animal.name }} ({{ animal.species }})</h2>
+    <p>Дата поступления: {{ animal.arrival_date }}</p>
+    <p>Год рождения: {{ animal.birth_year }}</p>
+    <p>Семейство: {{ animal.family.name }}</p>
+    <p>Континент: {{ animal.continent.name }}</p>
+    <p>Корм: {{ animal.daily_food }} кг/день</p>
+    
+    <h3>Помещения:</h3>
+    <ul>
+    {% for room in animal.rooms.all %}
+        <li>{{ room.name }} (№{{ room.number }})</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endfor %}

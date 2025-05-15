@@ -1,7 +1,7 @@
-from django.shortcuts import render, HttpResponseRedirect, HttpResponseNotFound
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.utils import timezone
 from ..pages_models import PromoCode
-
 
 promocode_not_found = "<h2>Promocode not found</h2>"
 

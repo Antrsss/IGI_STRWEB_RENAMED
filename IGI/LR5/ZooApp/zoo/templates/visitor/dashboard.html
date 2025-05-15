@@ -1,0 +1,10 @@
+<h1>Мои билеты</h1>
+{% for ticket in tickets %}
+<div class="ticket">
+    <p>Тип: {{ ticket.ticket_type.name }}</p>
+    <p>Дата посещения: {{ ticket.visit_date }}</p>
+    {% if ticket.promo_code %}
+    <p>Промокод: {{ ticket.promo_code }}</p>
+    {% endif %}
+</div>
+{% endfor %}

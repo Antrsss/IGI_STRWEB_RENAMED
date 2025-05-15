@@ -1,0 +1,16 @@
+<h1>Аналитика зоопарка</h1>
+
+<h2>Суточное потребление корма приматами: {{ primates_food }} кг</h2>
+
+<h2>Общая численность псовых: {{ canines_count }}</h2>
+
+<h2>Пары видов в помещениях:</h2>
+<ul>
+{% for room in species_pairs %}
+    <li>{{ room.name }} ({{ room.number }}):
+        {% for animal in room.animals.all %}
+            {{ animal.species }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </li>
+{% endfor %}
+</ul>

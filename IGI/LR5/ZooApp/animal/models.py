@@ -33,7 +33,7 @@ class AnimalFoodType(BaseModel):
     time = models.TimeField(default=datetime.time)
 
     def __str__(self):
-        return self.food_name.name + ' ' + str(self.portion) + 'kg at ' + str(self.time)
+        return self.food_name + ' ' + str(self.portion) + 'kg at ' + str(self.time)
 
 
 class Animal(BaseModel):
@@ -49,4 +49,6 @@ class Animal(BaseModel):
     photo = models.ImageField(upload_to='photos/animals/')
 
     def __str__(self):
-        return self.name + ' ' + self.room.name
+        if self.room:
+            return f"{self.name} {self.room.name}"
+        return self.name
