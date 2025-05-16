@@ -37,7 +37,7 @@ class Animal(BaseModel):
     receipt_date = models.DateTimeField(default=timezone.now)
     room = models.ForeignKey(Room, on_delete=models.SET_NULL, related_query_name="animals", null=True, related_name="animals")
     birthday = models.DateTimeField(default=timezone.now)
-    employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, related_query_name="news", null=True)
+    employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, related_name='animal', null=True)
     facts = models.TextField()
     food_type = models.ForeignKey(AnimalFoodType, on_delete=models.SET_NULL, related_query_name="food_type", null=True)
     country = models.ForeignKey(AnimalCountry, on_delete=models.SET_NULL, related_query_name="country", null=True)
