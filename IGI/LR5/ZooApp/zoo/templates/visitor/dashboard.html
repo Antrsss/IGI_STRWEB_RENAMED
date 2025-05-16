@@ -1,10 +1,30 @@
-<h1>Мои билеты</h1>
-{% for ticket in tickets %}
-<div class="ticket">
-    <p>Тип: {{ ticket.ticket_type.name }}</p>
-    <p>Дата посещения: {{ ticket.visit_date }}</p>
-    {% if ticket.promo_code %}
-    <p>Промокод: {{ ticket.promo_code }}</p>
-    {% endif %}
-</div>
-{% endfor %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Dashboard</title>
+    <style>
+        /* Аналогичные стили для карточек билетов и промокодов */
+    </style>
+</head>
+<body>
+    <h1>Visitor Dashboard - {{ visitor_name }}</h1>
+    
+    <h2>Your Tickets</h2>
+    {% for ticket in tickets %}
+        <!-- Отображение информации о билетах -->
+    {% empty %}
+        <p>You have no tickets yet.</p>
+    {% endfor %}
+    
+    <h2>Your Promocodes</h2>
+    {% for promocode in promocodes %}
+        <!-- Отображение промокодов -->
+    {% empty %}
+        <p>You have no active promocodes.</p>
+    {% endfor %}
+    
+    <a href="{% url 'buy_ticket' %}" class="btn">Buy New Ticket</a>
+</body>
+</html>

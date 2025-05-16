@@ -116,14 +116,64 @@ def superuser_dashboard(request):
 @login_required
 @user_passes_test(is_employee)
 def employee_dashboard(request):
-    animals = request.user.animals.all().select_related('family', 'continent')
-    return render(request, 'employee/dashboard.html', {'animals': animals})
+    employee = request.user.employee
+    
+    animals = Animal.objects.filter(employee=employee).select_related(
+        'family',
+        'country',
+        'room',
+        'food_type'
+    ).order_by('room__name', 'family__name')
+
+    rooms_data = {}
+    for animal in animals:
+        room = animal.room
+        if room.id not in rooms_data:
+            rooms_data[room.id] = {
+                'name': room.name,
+                'number': room.number,
+                'has_swimming': room.has_swimming,
+                'has_heating': room.has_heating,
+                'square': room.square,
+                'animals_count': Animal.objects.filter(room=room).count(),
+                'animals': []
+            }
+        
+        # Правильно рассчитываем информацию о кормлении
+        if animal.food_type:
+            feeding_info = f"{animal.food_type.times} times a day ({animal.food_type.food_name}, {animal.food_type.portion} kg each)"
+        else:
+            feeding_info = "Not specified"
+        
+        rooms_data[room.id]['animals'].append({
+            'id': animal.id,
+            'name': animal.name,
+            'species': animal.family.name if animal.family else "Unknown",
+            'country': animal.country.name if animal.country else "Unknown",
+            'receipt_date': animal.receipt_date,
+            'birthday': animal.birthday,
+            'facts': animal.facts,
+            'photo_url': animal.photo.url if animal.photo else None,
+            'feeding_info': feeding_info,
+            'food_type': animal.food_type.food_name if animal.food_type else 'Not specified'
+        })
+
+    return render(request, 'employee/dashboard.html', {
+        'rooms_data': rooms_data.values(),
+        'employee_name': employee.name
+    })
 
 @login_required
 @user_passes_test(is_visitor)
 def visitor_dashboard(request):
-    tickets = Ticket.objects.filter(visitor=request.user)
-    return render(request, 'visitor/dashboard.html', {'tickets': tickets})
+    tickets = request.user.tickets.select_related('visit_date').order_by('-purchase_date')
+    promocodes = request.user.promocodes.filter(used=False)
+    
+    return render(request, 'visitor/dashboard.html', {
+        'tickets': tickets,
+        'promocodes': promocodes,
+        'visitor_name': request.user.get_full_name()
+    })
     
 def unregistered_employee_view(request):
     animals = Animal.objects.all().select_related('family', 'country')
