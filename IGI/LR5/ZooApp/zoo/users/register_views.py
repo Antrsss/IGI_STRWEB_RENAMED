@@ -11,9 +11,7 @@ def register(request, role):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            if role == 'employee':
-                user.is_employee = True
-            elif role == 'visitor':
+            if role == 'visitor':
                 user.is_visitor = True
             user.save()
             login(request, user)

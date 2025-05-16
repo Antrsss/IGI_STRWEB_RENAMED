@@ -4,21 +4,18 @@ from room.models import Room
 from employee.models import Employee
 import datetime
 
-
 class BaseModel(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        abstract = True
-        
+        abstract = True    
 
 class AnimalFamily(BaseModel):
     name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name
-    
 
 class AnimalCountry(BaseModel):
     name = models.CharField(max_length=50)
@@ -26,15 +23,13 @@ class AnimalCountry(BaseModel):
     def __str__(self):
         return self.name
     
-
 class AnimalFoodType(BaseModel):
     food_name = models.CharField(max_length=20)
     portion = models.FloatField(default=0.0)
-    time = models.TimeField(default=datetime.time)
+    times = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.food_name + ' ' + str(self.portion) + 'kg at ' + str(self.time)
-
+        return self.food_name + ' ' + str(self.portion) + 'kg ' + str(self.times) + ' times a day'
 
 class Animal(BaseModel):
     name = models.CharField(max_length=50)

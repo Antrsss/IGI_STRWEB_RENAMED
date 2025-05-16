@@ -10,7 +10,7 @@
     {% if user.is_authenticated %}
         {% if user.is_superuser %}
             <h2>Вы вошли как владелец</h2>
-            <p><a href="{% url 'owner_dashboard' %}">Панель управления</a></p>
+            <p><a href="{% url 'superuser_dashboard' %}">Панель управления</a></p>
         {% elif user.is_employee %}
             <h2>Вы вошли как сотрудник</h2>
             <p><a href="{% url 'employee_dashboard' %}">Рабочая панель</a></p>
@@ -27,7 +27,6 @@
             <p><a href="{% url 'register_employee' %}">Регистрация сотрудника</a></p>
         </div>
         <h3>Общая информация</h3>
-        <p><a href="{% url 'public_info' %}">Просмотреть информацию о зоопарке</a></p>
         <p><a href="{% url 'unregistered_employee' %}">Информация для сотрудников</a></p>
     {% endif %}
 </body>
