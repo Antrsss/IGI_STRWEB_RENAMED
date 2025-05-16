@@ -135,6 +135,13 @@ class PromoCode(models.Model):
     is_active = models.BooleanField(default=True, verbose_name="Active")
     created_at = models.DateTimeField(auto_now_add=True)
     expiry_date = models.DateField(verbose_name="Expiry date")
+    # Добавляем связь с пользователями
+    users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='promocodes',
+        blank=True,
+        verbose_name="Users"
+    )
 
     class Meta:
         verbose_name = "Promocode"

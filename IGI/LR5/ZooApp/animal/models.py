@@ -33,14 +33,14 @@ class AnimalFoodType(BaseModel):
 
 class Animal(BaseModel):
     name = models.CharField(max_length=50)
-    family = models.ForeignKey(AnimalFamily, on_delete=models.SET_NULL, related_query_name="family", null=True)
+    family = models.ForeignKey(AnimalFamily, on_delete=models.SET_NULL, related_name="animals", null=True)
     receipt_date = models.DateTimeField(default=timezone.now)
     room = models.ForeignKey(Room, on_delete=models.SET_NULL, related_query_name="animals", null=True, related_name="animals")
     birthday = models.DateTimeField(default=timezone.now)
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, related_name='animal', null=True)
     facts = models.TextField()
     food_type = models.ForeignKey(AnimalFoodType, on_delete=models.SET_NULL, related_query_name="food_type", null=True)
-    country = models.ForeignKey(AnimalCountry, on_delete=models.SET_NULL, related_query_name="country", null=True)
+    country = models.ForeignKey(AnimalCountry, on_delete=models.SET_NULL, related_name='animals', null=True)
     photo = models.ImageField(upload_to='photos/animals/')
 
     def __str__(self):

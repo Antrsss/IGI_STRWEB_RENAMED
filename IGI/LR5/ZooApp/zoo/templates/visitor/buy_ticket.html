@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buy Ticket</title>
+    <style>
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input[type="date"], input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Buy New Ticket</h1>
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Ticket Type -->
+        <div class="form-group">
+            <label for="{{ form.ticket_type.id_for_label }}">{{ form.ticket_type.label }}</label>
+            {{ form.ticket_type }}
+            {% if form.ticket_type.errors %}
+                <div class="error">{{ form.ticket_type.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Visit Date -->
+        <div class="form-group">
+            <label for="{{ form.visit_date.id_for_label }}">{{ form.visit_date.label }}</label>
+            {{ form.visit_date }}
+            {% if form.visit_date.errors %}
+                <div class="error">{{ form.visit_date.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Extra Service (optional) -->
+        <div class="form-group">
+            <label for="{{ form.extra_service.id_for_label }}">{{ form.extra_service.label }}</label>
+            {{ form.extra_service }}
+            {% if form.extra_service.errors %}
+                <div class="error">{{ form.extra_service.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Promo Code -->
+        <div class="form-group">
+            <label for="{{ form.promo_code.id_for_label }}">{{ form.promo_code.label }}</label>
+            {{ form.promo_code }}
+            {% if form.promo_code.errors %}
+                <div class="error">{{ form.promo_code.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <button type="submit">Purchase Ticket</button>
+    </form>
+    <a href="{% url 'visitor_dashboard' %}">Back to Dashboard</a>
+</body>
+</html>

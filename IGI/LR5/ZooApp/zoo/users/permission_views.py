@@ -1,14 +1,17 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Sum, Count
-from django.shortcuts import render
-from animal.models import Animal
+from django.shortcuts import render, redirect
+from animal.models import Animal, AnimalFamily, AnimalCountry
 from room.models import Room
 from ..models import Ticket, TicketType, ExtraService
 from ..pages_views.promocode_views import PromoCode
 from django.db.models import F, Sum 
+from django.contrib import messages
 from employee.models import Employee
 from datetime import timezone, timedelta, datetime
-from django.db.models import Prefetch
+from ..forms import TicketPurchaseForm
+from django.shortcuts import render
+from django.db.models import Count
 
 now = datetime.now(timezone.utc)
 
@@ -166,26 +169,111 @@ def employee_dashboard(request):
 @login_required
 @user_passes_test(is_visitor)
 def visitor_dashboard(request):
-    tickets = request.user.tickets.select_related('visit_date').order_by('-purchase_date')
-    promocodes = request.user.promocodes.filter(used=False)
+    visitor = request.user
     
-    return render(request, 'visitor/dashboard.html', {
+    # Получаем все билеты посетителя
+    tickets = Ticket.objects.filter(visitor=visitor).select_related(
+        'ticket_type', 'promo_code'
+    ).prefetch_related('services').order_by('-visit_date')
+    
+    # Получаем активные промокоды посетителя через related_name
+    promocodes = visitor.promocodes.filter(
+        is_active=True,
+        expiry_date__gte=datetime.now(timezone.utc)
+    )
+    
+    context = {
+        'user': visitor,
         'tickets': tickets,
         'promocodes': promocodes,
-        'visitor_name': request.user.get_full_name()
-    })
+        'today': datetime.now(timezone.utc)
+    }
     
-def unregistered_employee_view(request):
-    animals = Animal.objects.all().select_related('family', 'country')
-    rooms = Room.objects.all()
-    ticket_types = TicketType.objects.all()
-    services = ExtraService.objects.all()
-    promocodes = PromoCode.objects.filter(is_active=True)
+    return render(request, 'visitor/dashboard.html', context)
 
-    return render(request, 'unregistered_employee_dashboard.html', {
+@login_required
+@user_passes_test(is_visitor)
+def buy_ticket(request):
+    if request.method == 'POST':
+        form = TicketPurchaseForm(request.POST)
+        if form.is_valid():
+            ticket = form.save(commit=False)
+            ticket.visitor = request.user
+            
+            # Применяем промокод если он есть
+            promo_code = form.cleaned_data.get('promo_code')
+            if promo_code:
+                try:
+                    promo = PromoCode.objects.get(code=promo_code, is_active=True)
+                    ticket.promo_code = promo
+                except PromoCode.DoesNotExist:
+                    messages.error(request, 'Invalid promo code')
+            
+            ticket.save()
+            form.save_m2m()  # Сохраняем many-to-many отношения (услуги)
+            
+            messages.success(request, 'Ticket purchased successfully!')
+            return redirect('visitor_dashboard')
+    else:
+        form = TicketPurchaseForm()
+    
+    return render(request, 'visitor/buy_ticket.html', {'form': form})
+
+def unregistered_employee_view(request):
+    # Основной запрос для животных с расчетом суточного потребления пищи
+    animals = Animal.objects.select_related(
+        'family', 'country', 'room', 'food_type', 'employee'
+    ).annotate(
+        daily_food=F('food_type__portion') * F('food_type__times')
+    ).order_by('family__name', 'name')
+    
+    # Помещения с количеством животных и видов
+    rooms = Room.objects.annotate(
+        animal_count=Count('animals'),
+        species_count=Count('animals__family', distinct=True)
+    ).prefetch_related('animals', 'animals__family').order_by('number')
+    
+    # Типы билетов
+    ticket_types = TicketType.objects.all()
+    
+    # Дополнительные услуги
+    services = ExtraService.objects.all()
+    
+    # Активные промокоды
+    promocodes = PromoCode.objects.filter(
+        is_active=True,
+        expiry_date__gte=datetime.now(timezone.utc)
+    )
+    
+    # Семейства животных с подсчетом
+    families = AnimalFamily.objects.annotate(
+        animal_count=Count('animals')
+    ).prefetch_related('animals__room').order_by('name')
+    
+    # Страны происхождения с подсчетом
+    countries = AnimalCountry.objects.annotate(
+        animal_count=Count('animals')
+    ).prefetch_related('animals__room').order_by('name')
+
+    # Собираем информацию о кормлении
+    feeding_info = {
+        animal.id: {
+            'diet': f"{animal.food_type.food_name} ({animal.food_type.portion} kg)",
+            'schedule': f"{animal.food_type.times} times a day"
+        } for animal in animals if animal.food_type
+    }
+
+    context = {
         'animals': animals,
         'rooms': rooms,
         'ticket_types': ticket_types,
         'services': services,
         'promocodes': promocodes,
-    })
+        'families': families,
+        'countries': countries,
+        'feeding_info': feeding_info,
+        'current_date': datetime.now(timezone.utc),
+        'weekend_days': [5, 6]  # 5=Saturday, 6=Sunday
+    }
+    
+    return render(request, 'unregistered_employee_dashboard.html', context)

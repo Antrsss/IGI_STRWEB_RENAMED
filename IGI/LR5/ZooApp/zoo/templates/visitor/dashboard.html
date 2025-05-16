@@ -1,30 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visitor Dashboard</title>
     <style>
-        /* Аналогичные стили для карточек билетов и промокодов */
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin-bottom: 30px; }
+        .ticket-card, .promo-card { 
+            border: 1px solid #ddd; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            border-radius: 5px;
+        }
+        .active { background-color: #e6f7e6; }
+        .expired { background-color: #ffe6e6; }
+        .upcoming { background-color: #e6f2ff; }
+        .service-badge {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 3px 8px;
+            margin: 2px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
-    <h1>Visitor Dashboard - {{ visitor_name }}</h1>
+    <h1>Welcome, {{ user.username }}</h1>
     
-    <h2>Your Tickets</h2>
-    {% for ticket in tickets %}
-        <!-- Отображение информации о билетах -->
-    {% empty %}
-        <p>You have no tickets yet.</p>
-    {% endfor %}
-    
-    <h2>Your Promocodes</h2>
-    {% for promocode in promocodes %}
-        <!-- Отображение промокодов -->
-    {% empty %}
-        <p>You have no active promocodes.</p>
-    {% endfor %}
-    
-    <a href="{% url 'buy_ticket' %}" class="btn">Buy New Ticket</a>
+    <div class="section">
+        <h2>Your Tickets</h2>
+        {% if tickets %}
+            {% for ticket in tickets %}
+                <div class="ticket-card 
+                    {% if ticket.visit_date == today %}active
+                    {% elif ticket.visit_date < today %}expired
+                    {% else %}upcoming{% endif %}">
+                    <h3>{{ ticket.ticket_type.name }}</h3>
+                    <p><strong>Visit Date:</strong> {{ ticket.visit_date }}</p>
+                    <p><strong>Purchase Date:</strong> {{ ticket.purchase_date }}</p>
+                    <p><strong>Price:</strong> 
+                        {% if ticket.visit_date|date:"N" in "Saturday,Sunday" %}
+                            {{ ticket.ticket_type.weekend_price }} (weekend)
+                        {% else %}
+                            {{ ticket.ticket_type.weekday_price }} (weekday)
+                        {% endif %}
+                    </p>
+                    {% if ticket.promo_code %}
+                        <p><strong>Promo Code:</strong> {{ ticket.promo_code.code }} ({{ ticket.promo_code.discount }}% off)</p>
+                    {% endif %}
+                    {% if ticket.services.all %}
+                        <p><strong>Extra Services:</strong>
+                            {% for service in ticket.services.all %}
+                                <span class="service-badge">{{ service.name }} (+{{ service.price }})</span>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>You don't have any tickets yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>Your Promo Codes</h2>
+        {% if promocodes %}
+            {% for promo in promocodes %}
+                <div class="promo-card">
+                    <h3>{{ promo.code }}</h3>
+                    <p><strong>Discount:</strong> {{ promo.discount }}%</p>
+                    <p><strong>Valid until:</strong> {{ promo.valid_until }}</p>
+                    <p><strong>Description:</strong> {{ promo.description }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>You don't have any active promo codes.</p>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <a href="{% url 'buy_ticket' %}"><button>Buy New Ticket</button></a>
+    </div>
 </body>
 </html>

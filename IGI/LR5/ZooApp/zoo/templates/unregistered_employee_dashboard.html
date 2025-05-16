@@ -1,73 +1,329 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Информация о зоопарке</title>
+    <title>Zoo Information Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .animal-photo {
+            max-width: 200px;
+            max-height: 200px;
+            margin-right: 20px;
+            float: left;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+        .price {
+            font-weight: bold;
+            color: #27ae60;
+        }
+        .promo-badge {
+            display: inline-block;
+            background: #f1c40f;
+            color: #333;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .feature-badge {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-right: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            background: #eee;
+            cursor: pointer;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background: #3498db;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 15px;
+            background: white;
+            border-radius: 0 0 5px 5px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
 <body>
-    <h1>Добро пожаловать в наш зоопарк</h1>
-
-    <h2>Наши животные</h2>
-    {% for animal in animals %}
-    <div>
-        <h3>{{ animal.name }}</h3>
-        <img src="{{ animal.photo.url }}" alt="{{ animal.name }}" width="300">
-        <p>{{ animal.facts }}</p>
-        <p>Семейство: {{ animal.family.name }}</p>
-        <p>Страна происхождения: {{ animal.country.name }}</p>
-    </div>
-    {% endfor %}
-
-    <h2>Помещения и условия обитания</h2>
-    {% for room in rooms %}
-    <div>
-        <h3>{{ room.name }}</h3>
-        <p>Температура: {{ room.temperature }}°C</p>
-        <p>Влажность: {{ room.humidity }}%</p>
-        <p>Обитатели: 
-            {% for animal in room.animals.all %}
-                {{ animal.name }}{% if not forloop.last %}, {% endif %}
+    <div class="container">
+        <h1>Zoo Information Dashboard</h1>
+        
+        <!-- Краткая статистика -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Animals</h3>
+                <p>{{ animals.count }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Habitats</h3>
+                <p>{{ rooms.count }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Animal Families</h3>
+                <p>{{ families.count }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Countries of Origin</h3>
+                <p>{{ countries.count }}</p>
+            </div>
+        </div>
+        
+        <!-- Раздел животных -->
+        <div class="section">
+            <h2>Animal Information</h2>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('all-animals')">All Animals</div>
+                <div class="tab" onclick="showTab('by-family')">By Family</div>
+                <div class="tab" onclick="showTab('by-country')">By Country</div>
+            </div>
+            
+            <!-- Все животные -->
+            <div id="all-animals" class="tab-content active">
+                {% for animal in animals %}
+                <div class="card clearfix">
+                    {% if animal.photo %}
+                    <img src="{{ animal.photo.url }}" alt="{{ animal.name }}" class="animal-photo">
+                    {% endif %}
+                    <h3>{{ animal.name }}</h3>
+                    <p><strong>Family:</strong> {{ animal.family.name }}</p>
+                    <p><strong>Origin:</strong> {{ animal.country.name }}</p>
+                    <p><strong>Habitat:</strong> {{ animal.room.name }} (Room #{{ animal.room.number }})</p>
+                    <p><strong>Care Specialist:</strong> {{ animal.employee.name|default:"Not assigned" }}</p>
+                    <p><strong>Arrival Date:</strong> {{ animal.receipt_date|date:"Y-m-d" }}</p>
+                    <p><strong>Birth Date:</strong> {{ animal.birthday|date:"Y-m-d" }}</p>
+                    
+                    {% if animal.food_type %}
+                    <div style="margin-top: 10px;">
+                        <p><strong>Diet:</strong> {{ animal.food_type.food_name }} ({{ animal.food_type.portion }} kg per serving)</p>
+                        <p><strong>Feeding Schedule:</strong> {{ animal.food_type.times }} times daily</p>
+                        <p><strong>Daily Food Consumption:</strong> {{ animal.daily_food|floatformat:2 }} kg</p>
+                    </div>
+                    {% endif %}
+                    
+                    <p><strong>Interesting Facts:</strong> {{ animal.facts }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- По семействам -->
+            <div id="by-family" class="tab-content">
+                {% for family in families %}
+                <div class="card">
+                    <h3>{{ family.name }} ({{ family.animal_count }} animals)</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+                        {% for animal in family.animals.all %}
+                        <div style="border: 1px solid #eee; padding: 10px; border-radius: 4px;">
+                            <h4>{{ animal.name }}</h4>
+                            <p>Habitat: {{ animal.room.name }}</p>
+                            <p>Origin: {{ animal.country.name }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- По странам -->
+            <div id="by-country" class="tab-content">
+                {% for country in countries %}
+                <div class="card">
+                    <h3>{{ country.name }} ({{ country.animal_count }} animals)</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+                        {% for animal in country.animals.all %}
+                        <div style="border: 1px solid #eee; padding: 10px; border-radius: 4px;">
+                            <h4>{{ animal.name }}</h4>
+                            <p>Family: {{ animal.family.name }}</p>
+                            <p>Habitat: {{ animal.room.name }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Раздел помещений -->
+        <div class="section">
+            <h2>Habitats & Rooms</h2>
+            {% for room in rooms %}
+            <div class="card">
+                <h3>{{ room.name }} (Room #{{ room.number }})</h3>
+                <p><strong>Size:</strong> {{ room.square }} m²</p>
+                
+                <p><strong>Features:</strong>
+                    {% if room.has_swimming %}<span class="feature-badge">Swimming Pool</span>{% endif %}
+                    {% if room.has_heating %}<span class="feature-badge">Heating System</span>{% endif %}
+                </p>
+                
+                <p><strong>Animals:</strong> {{ room.animal_count }} ({{ room.species_count }} species)</p>
+                
+                <h4>Current Residents:</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px;">
+                    {% for animal in room.animals.all %}
+                    <div style="border: 1px solid #eee; padding: 10px; border-radius: 4px;">
+                        <h5>{{ animal.name }}</h5>
+                        <p>Family: {{ animal.family.name }}</p>
+                        <p>Origin: {{ animal.country.name }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
             {% endfor %}
-        </p>
+        </div>
+        
+        <!-- Раздел посещения -->
+        <div class="section">
+            <h2>Visitor Information</h2>
+            
+            <h3>Ticket Prices</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticket Type</th>
+                        <th>Weekday Price</th>
+                        <th>Weekend Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in ticket_types %}
+                    <tr>
+                        <td>{{ ticket.name }}</td>
+                        <td class="price">${{ ticket.weekday_price }}</td>
+                        <td class="price">${{ ticket.weekend_price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <h3>Extra Services</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+                {% for service in services %}
+                <div class="card">
+                    <h4>{{ service.name }}</h4>
+                    <p class="price">${{ service.price }}</p>
+                    <p>{{ service.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <h3>Active Promotions</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+                {% for promo in promocodes %}
+                <div class="card">
+                    <span class="promo-badge">{{ promo.code }}</span>
+                    <span>{{ promo.discount }}% discount</span>
+                    <p>Valid until: {{ promo.expiry_date|date:"Y-m-d" }}</p>
+                    <p>{{ promo.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-    {% endfor %}
 
-    <h2>Стоимость посещения</h2>
-    <table>
-        <tr>
-            <th>Тип билета</th>
-            <th>Будни</th>
-            <th>Выходные/Праздники</th>
-        </tr>
-        {% for ticket in ticket_types %}
-        <tr>
-            <td>{{ ticket.name }}</td>
-            <td>{{ ticket.weekday_price }} ₽</td>
-            <td>{{ ticket.weekend_price }} ₽</td>
-        </tr>
-        {% endfor %}
-    </table>
-
-    <h2>Дополнительные услуги</h2>
-    {% for service in services %}
-    <div>
-        <h3>{{ service.name }} - {{ service.price }} ₽</h3>
-        <p>{{ service.description }}</p>
-    </div>
-    {% endfor %}
-
-    <h2>Активные промокоды</h2>
-    <ul>
-        {% for promo in promocodes %}
-        <li>
-            {{ promo.code }} - скидка {{ promo.discount }}% 
-            (действует до {{ promo.valid_until|date:"d.m.Y" }})
-        </li>
-        {% endfor %}
-    </ul>
-
-    <p>Хотите больше возможностей? <a href="{% url 'register_visitor' %}">Зарегистрируйтесь</a> или 
-    <a href="{% url 'login' %}">войдите</a></p>
+    <script>
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Deactivate all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Activate selected tab
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
 </body>
 </html>
