@@ -1,11 +1,7 @@
 from django.contrib import admin
-from zoo.pages_models import Article, CompanyInfo, FAQ, Contacts, EmployeePositions, Vacancy, Review, PromoCode, PrivacyPolicy
-from animal.models import Animal, AnimalFamily, AnimalCountry, AnimalFoodType
-from employee.models import Employee, EmployeePosition
-from room.models import Room
+from zoo.pages_models import Article, CompanyInfo, FAQ, Contacts, Vacancy, Review, PromoCode, PrivacyPolicy
 from django.contrib.auth.admin import UserAdmin
 from .models import User, TicketType, ExtraService, Ticket
-from employee.models import EmployeePosition  # Импортируем если нужно в админке
 
 @admin.register(Article)    
 class ArticleAdmin(admin.ModelAdmin):
@@ -51,7 +47,6 @@ class PrivacyPolicyAdmin(admin.ModelAdmin):
     pass
 
 
-# Кастомный класс для отображения User в админке
 class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'email', 'phone', 'is_employee', 'is_visitor', 'position')
     list_filter = ('is_employee', 'is_visitor')
@@ -71,23 +66,22 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
 
-# Регистрация моделей
 admin.site.register(User, CustomUserAdmin)
 
 @admin.register(TicketType)
 class TicketTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'weekday_price', 'weekend_price')
+    list_display = ('__str__', 'weekday_price', 'weekend_price')
     search_fields = ('name',)
 
 @admin.register(ExtraService)
 class ExtraServiceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'description')
+    list_display = ('__str__', 'price', 'description')
     search_fields = ('name',)
     list_editable = ('price',)
 
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ('visitor', 'ticket_type', 'purchase_date', 'visit_date')
+    list_display = ('__str__', 'ticket_type', 'visitor', 'purchase_date', 'visit_date')
     list_filter = ('visit_date', 'ticket_type')
     search_fields = ('visitor__username', 'visitor__email')
     filter_horizontal = ('services',)

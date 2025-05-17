@@ -31,11 +31,17 @@ class TicketType(models.Model):
     name = models.CharField(max_length=100)
     weekday_price = models.DecimalField(max_digits=8, decimal_places=2)
     weekend_price = models.DecimalField(max_digits=8, decimal_places=2)
+    
+    def __str__(self):
+        return f"{self.name} (Weekday: {self.weekday_price}, Weekend: {self.weekend_price})"
 
 class ExtraService(models.Model):
     name = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     description = models.TextField()
+    
+    def __str__(self):
+        return f"{self.name} - ${self.price}"
 
 class Ticket(models.Model):
     visitor = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -44,3 +50,6 @@ class Ticket(models.Model):
     visit_date = models.DateField()
     promo_code = models.ForeignKey(PromoCode, on_delete=models.SET_NULL, null=True)
     services = models.ManyToManyField(ExtraService)
+    
+    def __str__(self):
+        return f"Ticket #{self.id} - {self.visitor.username} ({self.visit_date})"

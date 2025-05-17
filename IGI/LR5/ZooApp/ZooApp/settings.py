@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'employee',
     'animal',
     'room',
-    'social_django',
 ]
 
 MIDDLEWARE = [

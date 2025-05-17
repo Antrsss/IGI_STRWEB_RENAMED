@@ -19,7 +19,12 @@ class EmployeePosition(BaseModel):
         return self.name
         
 class Employee(BaseModel):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=None, null=True, related_name='employee')
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        null=True,
+        blank=True,
+        related_name='employee')
     name = models.CharField(max_length=50)
     phone = PhoneNumberField(max_length=20, blank=True, null=True)
     email = models.EmailField()
