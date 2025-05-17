@@ -159,15 +159,17 @@
         {% for room in rooms_data %}
         <div class="room-card">
             <div class="room-header">
-                <h2>{{ room.name }} (Room #{{ room.number }})</h2>
+                <h2>{{ room.name }} (room №{{ room.number }})</h2>
                 <div class="room-info">
                     <span class="info-badge">Animals: {{ room.animals_count }}</span>
-                    <span class="info-badge">Size: {{ room.square }} m²</span>
                     {% if room.has_swimming %}
                     <span class="info-badge">Has Swimming</span>
                     {% endif %}
                     {% if room.has_heating %}
                     <span class="info-badge">Has Heating</span>
+                    {% endif %}
+                    {% if not room.has_swimming and not room.has_heating %}
+                    <span class="info-badge">Swimming & Heating: None</span>
                     {% endif %}
                 </div>
             </div>
@@ -186,8 +188,17 @@
                         <ul class="detail-list">
                             <li><strong>Species:</strong> {{ animal.species }}</li>
                             <li><strong>Origin:</strong> {{ animal.country }}</li>
-                            <li><strong>Food Type:</strong> {{ animal.food_type }}</li>
-                            <li><strong>Feeding:</strong> {{ animal.feeding_info }}</li>
+                            
+                            {% if animal.has_food_info %}
+                                <li><strong>Diet:</strong> {{ animal.food_type }} ({{ animal.food_portion }} kg per serving)</li>
+                                <li><strong>Feeding Schedule:</strong> {{ animal.feeding_times }} times daily</li>
+                                <li><strong>Daily Food Consumption:</strong> {{ animal.daily_food|floatformat:2 }} kg</li>
+                            {% else %}
+                                <li><strong>Diet:</strong> Not specified</li>
+                                <li><strong>Feeding Schedule:</strong> Not specified</li>
+                                <li><strong>Daily Food Consumption:</strong> Not specified</li>
+                            {% endif %}
+                            
                             <li><strong>Birthday:</strong> {{ animal.birthday|date:"Y-m-d" }}</li>
                             <li><strong>Arrival Date:</strong> {{ animal.receipt_date|date:"Y-m-d" }}</li>
                         </ul>

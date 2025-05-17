@@ -26,7 +26,9 @@ import zoo.users.register_views as register_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name = 'login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('logout/', 
+         auth_views.LogoutView.as_view(next_page='home'),  # 'home' - имя URL-шаблона
+         name='logout'),
     path('register/', register_views.register, {'role': 'visitor'}, name='register'),  # По умолчанию регистрация посетителя
     path('register/employee/', register_views.register, {'role': 'employee'}, name='register_employee'),
     path('register/visitor/', register_views.register, {'role': 'visitor'}, name='register_visitor'),

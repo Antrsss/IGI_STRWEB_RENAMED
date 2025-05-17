@@ -2,32 +2,35 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Главная - Зоопарк</title>
+    <title>Home page</title>
 </head>
 <body>
-    <h1>Добро пожаловать в зоопарк</h1>
+    <h1>Welcome to zoo!</h1>
 
     {% if user.is_authenticated %}
         {% if user.is_superuser %}
-            <h2>Вы вошли как владелец</h2>
-            <p><a href="{% url 'superuser_dashboard' %}">Панель управления</a></p>
+            <h2>You authenticated as superuser</h2>
+            <p><a href="{% url 'superuser_dashboard' %}">Superuser Dashboard</a></p>
         {% elif user.is_employee %}
-            <h2>Вы вошли как сотрудник</h2>
-            <p><a href="{% url 'employee_dashboard' %}">Рабочая панель</a></p>
+            <h2>You authenticated as employee</h2>
+            <p><a href="{% url 'employee_dashboard' %}">Employee Dashboard</a></p>
         {% elif user.is_visitor %}
-            <h2>Вы вошли как посетитель</h2>
-            <p><a href="{% url 'visitor_dashboard' %}">Мои билеты</a></p>
+            <h2>You authenticated as visitor</h2>
+            <p><a href="{% url 'visitor_dashboard' %}">Visitor Dashboard</a></p>
         {% endif %}
-        <p><a href="{% url 'logout' %}">Выйти</a></p>
+        <p><a href="{% url 'unregistered_employee' %}">Common Information</a></p>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
     {% else %}
-        <h2>Гость</h2>
+        <h2>You are not authenticated</h2>
         <div>
-            <p><a href="{% url 'login' %}">Войти</a></p>
-            <p><a href="{% url 'register_visitor' %}">Регистрация посетителя</a></p>
-            <p><a href="{% url 'register_employee' %}">Регистрация сотрудника</a></p>
+            <p><a href="{% url 'unregistered_employee' %}">Enter as a guest</a></p>
+            <p><a href="{% url 'login' %}">Login</a></p>
+            <p><a href="{% url 'register_employee' %}">Register employee</a></p>
+            <p><a href="{% url 'register_visitor' %}">Register visitor</a></p>
         </div>
-        <h3>Общая информация</h3>
-        <p><a href="{% url 'unregistered_employee' %}">Информация для сотрудников</a></p>
     {% endif %}
 </body>
 </html>

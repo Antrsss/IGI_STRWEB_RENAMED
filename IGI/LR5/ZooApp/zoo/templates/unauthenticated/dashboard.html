@@ -133,9 +133,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>Zoo Information Dashboard</h1>
+        <h1>Common Information Dashboard</h1>
         
-        <!-- Краткая статистика -->
         <div class="stats-grid">
             <div class="stat-card">
                 <h3>Total Animals</h3>
@@ -154,18 +153,10 @@
                 <p>{{ countries.count }}</p>
             </div>
         </div>
-        
-        <!-- Раздел животных -->
+
         <div class="section">
-            <h2>Animal Information</h2>
+            <h2>Animals Information</h2>
             
-            <div class="tabs">
-                <div class="tab active" onclick="showTab('all-animals')">All Animals</div>
-                <div class="tab" onclick="showTab('by-family')">By Family</div>
-                <div class="tab" onclick="showTab('by-country')">By Country</div>
-            </div>
-            
-            <!-- Все животные -->
             <div id="all-animals" class="tab-content active">
                 {% for animal in animals %}
                 <div class="card clearfix">
@@ -175,16 +166,11 @@
                     <h3>{{ animal.name }}</h3>
                     <p><strong>Family:</strong> {{ animal.family.name }}</p>
                     <p><strong>Origin:</strong> {{ animal.country.name }}</p>
-                    <p><strong>Habitat:</strong> {{ animal.room.name }} (Room #{{ animal.room.number }})</p>
-                    <p><strong>Care Specialist:</strong> {{ animal.employee.name|default:"Not assigned" }}</p>
-                    <p><strong>Arrival Date:</strong> {{ animal.receipt_date|date:"Y-m-d" }}</p>
-                    <p><strong>Birth Date:</strong> {{ animal.birthday|date:"Y-m-d" }}</p>
+                    <p><strong>Habitat:</strong> {{ animal.room.name }} (Room №{{ animal.room.number }})</p>
                     
                     {% if animal.food_type %}
                     <div style="margin-top: 10px;">
-                        <p><strong>Diet:</strong> {{ animal.food_type.food_name }} ({{ animal.food_type.portion }} kg per serving)</p>
-                        <p><strong>Feeding Schedule:</strong> {{ animal.food_type.times }} times daily</p>
-                        <p><strong>Daily Food Consumption:</strong> {{ animal.daily_food|floatformat:2 }} kg</p>
+                        <p><strong>Diet:</strong> {{ animal.food_type.food_name }}</p>
                     </div>
                     {% endif %}
                     
@@ -192,55 +178,19 @@
                 </div>
                 {% endfor %}
             </div>
-            
-            <!-- По семействам -->
-            <div id="by-family" class="tab-content">
-                {% for family in families %}
-                <div class="card">
-                    <h3>{{ family.name }} ({{ family.animal_count }} animals)</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
-                        {% for animal in family.animals.all %}
-                        <div style="border: 1px solid #eee; padding: 10px; border-radius: 4px;">
-                            <h4>{{ animal.name }}</h4>
-                            <p>Habitat: {{ animal.room.name }}</p>
-                            <p>Origin: {{ animal.country.name }}</p>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            
-            <!-- По странам -->
-            <div id="by-country" class="tab-content">
-                {% for country in countries %}
-                <div class="card">
-                    <h3>{{ country.name }} ({{ country.animal_count }} animals)</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
-                        {% for animal in country.animals.all %}
-                        <div style="border: 1px solid #eee; padding: 10px; border-radius: 4px;">
-                            <h4>{{ animal.name }}</h4>
-                            <p>Family: {{ animal.family.name }}</p>
-                            <p>Habitat: {{ animal.room.name }}</p>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
         </div>
         
-        <!-- Раздел помещений -->
         <div class="section">
             <h2>Habitats & Rooms</h2>
             {% for room in rooms %}
             <div class="card">
-                <h3>{{ room.name }} (Room #{{ room.number }})</h3>
+                <h3>{{ room.name }} (Room №{{ room.number }})</h3>
                 <p><strong>Size:</strong> {{ room.square }} m²</p>
                 
                 <p><strong>Features:</strong>
                     {% if room.has_swimming %}<span class="feature-badge">Swimming Pool</span>{% endif %}
                     {% if room.has_heating %}<span class="feature-badge">Heating System</span>{% endif %}
+                    {% if not room.has_swimming and not room.has_heating %}<span class="feature-badge">None</span>{% endif %}
                 </p>
                 
                 <p><strong>Animals:</strong> {{ room.animal_count }} ({{ room.species_count }} species)</p>
@@ -259,7 +209,6 @@
             {% endfor %}
         </div>
         
-        <!-- Раздел посещения -->
         <div class="section">
             <h2>Visitor Information</h2>
             
@@ -310,17 +259,14 @@
 
     <script>
         function showTab(tabId) {
-            // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
             
-            // Deactivate all tabs
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             
-            // Activate selected tab
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
         }

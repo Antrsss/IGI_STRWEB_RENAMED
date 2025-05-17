@@ -155,7 +155,6 @@
             background-color: #45a049;
         }
         
-        /* Дополнительные стили */
         .room-badge {
             display: inline-block;
             background-color: #e0f7fa;
@@ -175,7 +174,6 @@
 <body>
     <h1>Superuser Dashboard</h1>
     
-    <!-- Фильтр сотрудников по комнате -->
     <div class="filter-form">
         <form method="get" class="filter-row">
             <label for="room">Filter employees by room:</label>
@@ -197,7 +195,6 @@
         {% endif %}
     </div>
     
-    <!-- Основная статистика -->
     <div class="dashboard">
         <div class="card stat-card">
             <h3>Primates Daily Food</h3>
@@ -212,7 +209,6 @@
         </div>
     </div>
     
-    <!-- Информация о комнатах -->
     <div class="card" style="margin-top: 20px;">
         <h3>Rooms Information</h3>
         <table>
@@ -239,26 +235,19 @@
         </table>
     </div>
 
-    <!-- Раздел с животными -->
     <div class="card">
         <h3>Animals</h3>
         
-        <!-- Кнопки фильтрации -->
         <div class="filter-buttons">
             <button class="filter-btn active" onclick="showAllAnimals()">All Animals</button>
             <button class="filter-btn" onclick="showRecentAnimals()">Recently Added (last 6 months)</button>
         </div>
         
-        <!-- Все животные -->
         <div id="all-animals">
             <h4>All Animals ({{ animals_all.count }})</h4>
             <div class="animal-grid">
                 {% for animal in animals_all %}
                 <div class="animal-card">
-                    {% if animal.receipt_date >= six_months_ago %}
-                    <span class="new-badge">NEW</span>
-                    {% endif %}
-                    
                     {% if animal.photo %}
                     <img src="{{ animal.photo.url }}" alt="{{ animal.name }}" class="animal-photo">
                     {% else %}
@@ -284,14 +273,11 @@
             </div>
         </div>
         
-        <!-- Недавно добавленные животные (изначально скрыты) -->
         <div id="recent-animals" style="display: none;">
             <h4>Recently Added Animals ({{ recent_animals.count }})</h4>
             <div class="animal-grid">
                 {% for animal in recent_animals %}
                 <div class="animal-card">
-                    <span class="new-badge">NEW</span>
-                    
                     {% if animal.photo %}
                     <img src="{{ animal.photo.url }}" alt="{{ animal.name }}" class="animal-photo">
                     {% else %}
@@ -323,7 +309,6 @@
             document.getElementById('all-animals').style.display = 'block';
             document.getElementById('recent-animals').style.display = 'none';
             
-            // Обновляем активную кнопку
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -334,7 +319,6 @@
             document.getElementById('all-animals').style.display = 'none';
             document.getElementById('recent-animals').style.display = 'block';
             
-            // Обновляем активную кнопку
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -342,7 +326,6 @@
         }
     </script>
     
-    <!-- Карточки сотрудников -->
     <div class="card" style="margin-top: 20px;">
         <h3>Employees ({{ employees_info|length }})</h3>
         
