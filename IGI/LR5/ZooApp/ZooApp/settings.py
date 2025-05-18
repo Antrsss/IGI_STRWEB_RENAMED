@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'employee',
     'animal',
     'room',
+    'api',
 ]
 
 MIDDLEWARE = [
