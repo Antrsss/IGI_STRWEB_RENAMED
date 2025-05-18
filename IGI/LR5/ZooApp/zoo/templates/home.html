@@ -18,7 +18,7 @@
             <h2>You authenticated as visitor</h2>
             <p><a href="{% url 'visitor_dashboard' %}">Visitor Dashboard</a></p>
         {% endif %}
-        <p><a href="{% url 'unregistered_employee' %}">Common Information</a></p>
+        <p><a href="{% url 'common_info_dashboard' %}">Common Information</a></p>
         <form action="{% url 'logout' %}" method="post">
             {% csrf_token %}
             <button type="submit">Logout</button>
@@ -26,7 +26,7 @@
     {% else %}
         <h2>You are not authenticated</h2>
         <div>
-            <p><a href="{% url 'unregistered_employee' %}">Enter as a guest</a></p>
+            <p><a href="{% url 'common_info_dashboard' %}">Enter as a guest</a></p>
             <p><a href="{% url 'login' %}">Login</a></p>
             <p><a href="{% url 'register_employee' %}">Register employee</a></p>
             <p><a href="{% url 'register_visitor' %}">Register visitor</a></p>

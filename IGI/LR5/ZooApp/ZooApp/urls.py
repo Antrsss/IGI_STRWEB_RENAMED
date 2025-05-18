@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
-import zoo.users.register_views as register_views
+import zoo.register_views as register_views
 
 
 urlpatterns = [
@@ -33,7 +33,7 @@ urlpatterns = [
     
     path('home', register_views.home, name='home'),
     path('admin/', admin.site.urls),
-    path('users/', include('zoo.urls')),
+    path('', include('zoo.urls')),
     path('employees/', include(('employee.urls', 'employee'), namespace='employee')),
     path('animals/', include(('animal.urls', 'animal'), namespace='animal')),
     path('rooms/', include(('room.urls', 'room'), namespace='room')),

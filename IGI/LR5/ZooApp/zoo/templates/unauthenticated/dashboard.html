@@ -157,25 +157,18 @@
         <div class="section">
             <h2>Animals Information</h2>
             
-            <div id="all-animals" class="tab-content active">
+            <div class="animal-grid">
                 {% for animal in animals %}
-                <div class="card clearfix">
+                <a href="{% url 'animal_detail' animal.id %}" class="animal-card">
                     {% if animal.photo %}
                     <img src="{{ animal.photo.url }}" alt="{{ animal.name }}" class="animal-photo">
-                    {% endif %}
-                    <h3>{{ animal.name }}</h3>
-                    <p><strong>Family:</strong> {{ animal.family.name }}</p>
-                    <p><strong>Origin:</strong> {{ animal.country.name }}</p>
-                    <p><strong>Habitat:</strong> {{ animal.room.name }} (Room №{{ animal.room.number }})</p>
-                    
-                    {% if animal.food_type %}
-                    <div style="margin-top: 10px;">
-                        <p><strong>Diet:</strong> {{ animal.food_type.food_name }}</p>
+                    {% else %}
+                    <div class="animal-photo" style="background: #eee; display: flex; align-items: center; justify-content: center;">
+                        No photo
                     </div>
                     {% endif %}
-                    
-                    <p><strong>Interesting Facts:</strong> {{ animal.facts }}</p>
-                </div>
+                    <div class="animal-name">{{ animal.name }}</div>
+                </a>
                 {% endfor %}
             </div>
         </div>

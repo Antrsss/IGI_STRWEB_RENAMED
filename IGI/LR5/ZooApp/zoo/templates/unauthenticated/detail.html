@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ animal.name }} Details</title>
+    <style>
+        /* Стили для детальной страницы */
+        .animal-detail {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .detail-photo {
+            max-width: 300px;
+            float: left;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="animal-detail">
+        <h1>{{ animal.name }}</h1>
+        
+        {% if animal.photo %}
+        <img src="{{ animal.photo.url }}" alt="{{ animal.name }}" class="detail-photo">
+        {% endif %}
+        
+        <div class="animal-info">
+            <p><strong>Family:</strong> {{ animal.family.name }}</p>
+            <p><strong>Origin:</strong> {{ animal.country.name }}</p>
+            <p><strong>Habitat:</strong> {{ animal.room.name }} (Room №{{ animal.room.number }})</p>
+            
+            {% if animal.food_type %}
+            <p><strong>Diet:</strong> {{ animal.food_type.food_name }}</p>
+            {% endif %}
+            
+            <h3>Interesting Facts:</h3>
+            <p>{{ animal.facts }}</p>
+        </div>
+        
+        <a href="{% url 'common_info_dashboard' %}" class="btn btn-primary">Back to Common Information</a>
+    </div>
+</body>
+</html>
