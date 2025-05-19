@@ -48,22 +48,10 @@ class PrivacyPolicyAdmin(admin.ModelAdmin):
 
 
 class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'phone', 'is_employee', 'is_visitor', 'position')
-    list_filter = ('is_employee', 'is_visitor')
-    fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'email', 'phone')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 
-                                  'is_employee', 'is_visitor', 'groups', 'user_permissions')}),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),
-        ('Employee info', {'fields': ('position',)}),
-    )
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2', 'email', 'phone', 
-                       'is_employee', 'is_visitor', 'position'),
-        }),
+    list_display = ('username', 'email', 'first_name', 'last_name', 'age', 'is_visitor', 'is_employee')
+    list_filter = ('is_visitor', 'is_employee')
+    fieldsets = UserAdmin.fieldsets + (
+        ('Additional Info', {'fields': ('phone', 'birth_date', 'position')}),
     )
 
 admin.site.register(User, CustomUserAdmin)

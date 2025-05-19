@@ -3,29 +3,23 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from phonenumber_field.modelfields import PhoneNumberField
 from employee.models import EmployeePosition
 from .pages_models import PromoCode
+from datetime import date
 
 class User(AbstractUser):
     is_employee = models.BooleanField(default=False)
     is_visitor = models.BooleanField(default=False)
     phone = PhoneNumberField(max_length=20, blank=True, null=True)
     position = models.ForeignKey(EmployeePosition, on_delete=models.SET_NULL, null=True)
+    birth_date = models.DateField(null=True, blank=True)
     
-    groups = models.ManyToManyField(
-        Group,
-        verbose_name='groups',
-        blank=True,
-        help_text='The groups this user belongs to.',
-        related_name='zoo_user_set',  # Уникальное имя
-        related_query_name='zoo_user'
-    )
-    user_permissions = models.ManyToManyField(
-        Permission,
-        verbose_name='user permissions',
-        blank=True,
-        help_text='Specific permissions for this user.',
-        related_name='zoo_user_set',  # Уникальное имя
-        related_query_name='zoo_user'
-    )
+    @property
+    def age(self):
+        if self.birth_date:
+            today = date.today()
+            return today.year - self.birth_date.year - (
+                (today.month, today.day) < (self.birth_date.month, self.birth_date.day)
+            )
+        return None
 
 class TicketType(models.Model):
     name = models.CharField(max_length=100)

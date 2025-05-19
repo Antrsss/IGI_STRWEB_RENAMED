@@ -9,7 +9,7 @@ class AccessControlMiddleware:
         return response
 
     def process_view(self, request, view_func, view_args, view_kwargs):
-        if request.path.startswith('/owner/') and not request.user.is_superuser:
+        if request.path.startswith('/superuser/') and not request.user.is_superuser:
             return HttpResponseForbidden()
         elif request.path.startswith('/employee/') and not request.user.is_employee:
             return HttpResponseForbidden()
