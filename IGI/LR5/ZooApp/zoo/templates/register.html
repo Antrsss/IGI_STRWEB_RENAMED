@@ -7,7 +7,20 @@
     <h2>Регистрация {% if role %}({{ role }}){% endif %}</h2>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        
+        {% for field in form %}
+            <div>
+                <label>{{ field.label_tag }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <div style="color: red;">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        
         <button type="submit">Зарегистрироваться</button>
     </form>
     <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войдите</a></p>

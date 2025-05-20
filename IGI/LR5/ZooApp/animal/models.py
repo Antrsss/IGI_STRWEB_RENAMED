@@ -2,7 +2,6 @@ from django.db import models
 from django.utils import timezone
 from room.models import Room
 from employee.models import Employee
-import datetime
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(default=timezone.now)

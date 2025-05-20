@@ -20,7 +20,7 @@ def create(request):
                 has_heating=bool(request.POST.get("has_heating", False)),
                 square=float(request.POST.get("square", 0.0))
             )
-            room.full_clean()  # Валидация модели
+            room.full_clean()
             room.save()
             messages.success(request, "Room created successfully!")
             return redirect("rooms:index")

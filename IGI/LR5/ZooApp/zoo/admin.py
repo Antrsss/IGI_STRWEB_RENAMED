@@ -48,11 +48,15 @@ class PrivacyPolicyAdmin(admin.ModelAdmin):
 
 
 class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'first_name', 'last_name', 'age', 'is_visitor', 'is_employee')
+    list_display = ('username', 'email', 'first_name', 'last_name', 'formatted_phone', 'age', 'is_visitor', 'is_employee')
     list_filter = ('is_visitor', 'is_employee')
     fieldsets = UserAdmin.fieldsets + (
-        ('Additional Info', {'fields': ('phone', 'birth_date', 'position')}),
+        ('Additional Info', {'fields': ('phone', 'birth_date', 'position', 'timezone')}),
     )
+
+    def formatted_phone(self, obj):
+        return obj.phone if obj.phone else "-"
+    formatted_phone.short_description = 'Phone'
 
 admin.site.register(User, CustomUserAdmin)
 

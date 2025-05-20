@@ -3,7 +3,6 @@ from django.utils import timezone
 from django.conf import settings
 
 class Article(models.Model):
-    """News/articles for main and news pages"""
     title = models.CharField(max_length=200, verbose_name="Header")
     short_description = models.CharField(max_length=200, verbose_name="Summary")
     full_text = models.TextField(verbose_name="Full text")
@@ -20,7 +19,6 @@ class Article(models.Model):
         return self.title
 
 class CompanyInfo(models.Model):
-    """Info about company"""
     about_text = models.TextField(verbose_name="About company")
     logo = models.ImageField(upload_to='company/', verbose_name="Logotype")
     history = models.TextField(blank=True, verbose_name="History")
@@ -35,7 +33,6 @@ class CompanyInfo(models.Model):
         return "Info about company"
 
 class FAQ(models.Model):
-    """Terms & frequent questions dictionary"""
     question = models.CharField(max_length=255, verbose_name="Question")
     answer = models.TextField(verbose_name="Answer")
     date_added = models.DateField(auto_now_add=True, verbose_name="Date added")
@@ -49,7 +46,6 @@ class FAQ(models.Model):
         return self.question
 
 class EmployeePositions(models.Model):
-    """Employees positions"""
     name = models.CharField(max_length=100, verbose_name="Position")
 
     class Meta:
@@ -60,7 +56,6 @@ class EmployeePositions(models.Model):
         return self.name
 
 class Contacts(models.Model):
-    """Employees to contact"""
     name = models.CharField(max_length=100, verbose_name="Name")
     photo = models.ImageField(upload_to='contacts/', verbose_name="Photo")
     position = models.ForeignKey(EmployeePositions, on_delete=models.SET_NULL, 
@@ -79,14 +74,12 @@ class Contacts(models.Model):
     
     
 class PrivacyPolicy(models.Model):
-    """Privacy policy"""
 
     def __str__(self):
         return "Privacy policy"
     
 
 class Vacancy(models.Model):
-    """Zoo vacancies"""
     title = models.CharField(max_length=200, verbose_name="Vacancy name")
     description = models.TextField(verbose_name="Description")
     requirements = models.TextField(verbose_name="Requerments")
@@ -103,7 +96,6 @@ class Vacancy(models.Model):
         return self.title
 
 class Review(models.Model):
-    """Visitors' recalls"""
     RATING_CHOICES = [
         (1, '1 - Awful'),
         (2, '2 - Bad'),

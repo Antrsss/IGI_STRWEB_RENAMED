@@ -6,19 +6,33 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from .models import TicketType, ExtraService, PromoCode, Ticket
+from .validators import validate_belarus_phone_number, validate_age
 
 User = get_user_model()
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
+    phone = forms.CharField(
+        required=True,
+        validators=[validate_belarus_phone_number],
+        help_text='Format: +375 (29) XXX-XX-XX'
+    )
+    birth_date = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        validators=[validate_age],
+        help_text='You must be older than 18'
+    )
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'phone', 'birth_date', 'password1', 'password2')
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
+        user.phone = self.cleaned_data['phone']
+        user.birth_date = self.cleaned_data['birth_date']
         if commit:
             user.save()
         return user
