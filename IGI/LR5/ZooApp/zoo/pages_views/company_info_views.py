@@ -1,18 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.contrib import messages
 from ..pages_models import CompanyInfo
 
 company_not_found = "<h2>Company info not found</h2>"
 
-def comany_info_index(request):
-    try:
-        company = CompanyInfo.objects.first()
-        if not company:
-            return HttpResponseNotFound(company_not_found)
-        return render(request, "pages/company_info.html", {"company": company})
-    except Exception as e:
-        return HttpResponseNotFound(company_not_found)
+def company_info_index(request):
+    company_info = get_object_or_404(CompanyInfo)
+    return render(request, 'pages/company_info.html', {'company_info': company_info})
+
 
 def edit(request):
     try:

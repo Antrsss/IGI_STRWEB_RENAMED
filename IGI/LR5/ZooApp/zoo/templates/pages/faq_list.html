@@ -1,8 +1,22 @@
 <h1>Frequently Asked Questions</h1>
+
 {% for faq in faqs %}
     <div>
-        <h3>{{ faq.question }}</h3>
-        <p>{{ faq.answer }}</p>
-        <small>Added on {{ faq.date_added }}</small>
+        <strong>Q:</strong> {{ faq.question }}<br>
+        <em>Asked by:</em> {{ faq.asked_by.username }}<br>
+        {% if faq.answer %}
+            <strong>A:</strong> {{ faq.answer }}<br>
+            <em>Answered by:</em> {{ faq.answered_by.username }}
+        {% else %}
+            <em>No answer yet.</em>
+            {% if user.is_authenticated and user.is_employee or user.is_authenticated and user.is_superuser %}
+                <a href="{% url 'faq_answer' faq.id %}">Answer</a>
+            {% endif %}
+        {% endif %}
     </div>
+    <hr>
 {% endfor %}
+
+{% if user.is_authenticated and user.is_visitor %}
+    <a href="{% url 'faq_ask' %}">Ask a Question</a>
+{% endif %}

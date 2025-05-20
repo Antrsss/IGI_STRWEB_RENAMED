@@ -7,6 +7,8 @@ from django.utils import timezone
 from django.core.exceptions import ValidationError
 from .models import TicketType, ExtraService, PromoCode, Ticket
 from .validators import validate_belarus_phone_number, validate_age
+from django import forms
+from .pages_models import Recall, FAQ
 
 User = get_user_model()
 
@@ -109,7 +111,6 @@ class TicketPurchaseForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         
-        # Динамически обновляем минимальную дату при каждой инициализации формы
         self.fields['visit_date'].widget.attrs['min'] = timezone.now().date().isoformat()
 
     def clean_visit_date(self):
@@ -139,16 +140,13 @@ class TicketPurchaseForm(forms.ModelForm):
         ticket_type = data['ticket_type']
         visit_date = data['visit_date']
         
-        # Определяем цену (будний/выходной день)
-        if visit_date.weekday() in (5, 6):  # Суббота или воскресенье
+        if visit_date.weekday() in (5, 6):
             base_price = ticket_type.weekend_price
         else:
             base_price = ticket_type.weekday_price
         
-        # Добавляем стоимость дополнительных услуг
         services_price = sum(service.price for service in data['services'])
         
-        # Применяем скидку по промокоду
         total_price = base_price + services_price
         if data['promo_code']:
             discount = data['promo_code'].discount
@@ -159,4 +157,23 @@ class TicketPurchaseForm(forms.ModelForm):
             'services_price': services_price,
             'discount': data['promo_code'].discount if data['promo_code'] else 0,
             'total_price': total_price
+        }
+
+class RecallForm(forms.ModelForm):
+    class Meta:
+        model = Recall
+        fields = ['rating', 'text']
+
+class FAQAskForm(forms.ModelForm):
+    class Meta:
+        model = FAQ
+        fields = ['question']
+
+
+class FAQAnswerForm(forms.ModelForm):
+    class Meta:
+        model = FAQ
+        fields = ['answer']
+        widgets = {
+            'answer': forms.Textarea(attrs={'rows': 5}),
         }

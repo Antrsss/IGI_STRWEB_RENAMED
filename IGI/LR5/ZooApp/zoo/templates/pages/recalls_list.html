@@ -1,8 +1,50 @@
-<h1>User Recalls</h1>
-{% for review in reviews %}
-    <div>
-        <h3>{{ review.author_name }} rated {{ review.rating }}/5</h3>
-        <p>{{ review.text }}</p>
-        <small>Published: {{ review.pub_date }}</small>
-    </div>
-{% endfor %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recalls</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        .recall { border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+        .recall h4 { margin: 0 0 10px 0; }
+        .recall p { margin: 5px 0; }
+        .form-container { margin-top: 30px; }
+        .form-field { margin-bottom: 15px; }
+        .form-field label { display: block; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <h1>All Recalls</h1>
+
+    {% for recall in recalls %}
+        <div class="recall">
+            <h4>{{ recall.author_name }} - {{ recall.rating }}/5</h4>
+            <p>{{ recall.text }}</p>
+            <small>Published on: {{ recall.pub_date|date:"Y-m-d H:i" }}</small>
+        </div>
+    {% empty %}
+        <p>No recalls yet.</p>
+    {% endfor %}
+
+    {% if user_authenticated %}
+        <div class="form-container">
+            <h2>Leave a Recall</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-field">
+                    {{ form.rating.label_tag }}<br>
+                    {{ form.rating }}
+                </div>
+                <div class="form-field">
+                    {{ form.text.label_tag }}<br>
+                    {{ form.text }}
+                </div>
+                <div class="form-field">
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    {% else %}
+        <p><a href="{% url 'login' %}">Log in</a> to leave a recall.</p>
+    {% endif %}
+</body>
+</html>

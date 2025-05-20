@@ -1,5 +1,5 @@
 from django.contrib import admin
-from zoo.pages_models import Article, CompanyInfo, FAQ, Contacts, Vacancy, Recall, PromoCode, PrivacyPolicy
+from zoo.pages_models import Article, CompanyInfo, FAQ, Vacancy, Recall, PromoCode, PrivacyPolicy
 from django.contrib.auth.admin import UserAdmin
 from .models import User, TicketType, ExtraService, Ticket
 
@@ -17,12 +17,6 @@ class CompanyInfoAdmin(admin.ModelAdmin):
 class FAQAdmin(admin.ModelAdmin):
     list_display = ('question', 'date_added')
     search_fields = ('question', 'answer')
-
-@admin.register(Contacts)
-class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'position', 'phone', 'email', 'is_active')
-    list_filter = ('position', 'is_active')
-    search_fields = ('name', 'position__name')
 
 @admin.register(Vacancy)
 class VacancyAdmin(admin.ModelAdmin):

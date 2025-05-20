@@ -35,35 +35,34 @@ class CompanyInfo(models.Model):
 
 class FAQ(models.Model):
     question = models.CharField(max_length=255, verbose_name="Question")
-    answer = models.TextField(verbose_name="Answer")
-    date_added = models.DateField(auto_now_add=True, verbose_name="Date added")
+    answer = models.TextField(blank=True, null=True, verbose_name="Answer")
+    date_added = models.DateTimeField(auto_now_add=True, verbose_name="Date added")
+    
+    asked_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="faqs",
+        verbose_name="Asked by",
+        null=True,
+        blank=True
+    )
+
+    answered_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="answered_faqs",
+        verbose_name="Answered by"
+    )
 
     class Meta:
-        verbose_name = "QA"
-        verbose_name_plural = "Terms dictionary"
+        verbose_name = "FAQ"
+        verbose_name_plural = "FAQ"
         ordering = ['-date_added']
 
     def __str__(self):
         return self.question
-
-
-class Contacts(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Name")
-    photo = models.ImageField(upload_to='contacts/', verbose_name="Photo")
-    position = models.ForeignKey(EmployeePosition, on_delete=models.SET_NULL, 
-                               null=True, verbose_name="Position")
-    phone = models.CharField(max_length=20, verbose_name="Phone")
-    email = models.EmailField(verbose_name="Email")
-    description = models.TextField(verbose_name="Description")
-    is_active = models.BooleanField(default=True, verbose_name="Active")
-
-    class Meta:
-        verbose_name = "Contact"
-        verbose_name_plural = "Contacts"
-
-    def __str__(self):
-        return f"{self.name} ({self.position})"
-    
     
 class PrivacyPolicy(models.Model):
 
@@ -87,6 +86,11 @@ class Vacancy(models.Model):
     def __str__(self):
         return self.title
 
+from django.db import models
+from django.utils import timezone
+from django.conf import settings
+from employee.models import EmployeePosition
+
 class Recall(models.Model):
     RATING_CHOICES = [
         (1, '1 - Awful'),
@@ -100,17 +104,17 @@ class Recall(models.Model):
     rating = models.IntegerField(choices=RATING_CHOICES, verbose_name="Mark")
     text = models.TextField(verbose_name="Recall text")
     pub_date = models.DateTimeField(auto_now_add=True, verbose_name="Date published")
-    is_published = models.BooleanField(default=False, verbose_name="Published")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, 
-                           null=True, blank=True, verbose_name="User")
+    is_published = models.BooleanField(default=True, verbose_name="Published")  # изменено на True
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="User")
 
     class Meta:
         verbose_name = "Recall"
-        verbose_name_plural = "Recall"
+        verbose_name_plural = "Recalls"
         ordering = ['-pub_date']
 
     def __str__(self):
         return f"Recall by {self.author_name} ({self.rating}/5)"
+
 
 class PromoCode(models.Model):
     code = models.CharField(max_length=50, unique=True, verbose_name="Code")

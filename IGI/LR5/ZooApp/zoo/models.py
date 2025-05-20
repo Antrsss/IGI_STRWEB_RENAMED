@@ -27,7 +27,7 @@ class User(AbstractUser):
         validators=[validate_belarus_phone_number],
         help_text="Формат: +375 (29) XXX-XX-XX"
     )
-    position = models.ForeignKey(EmployeePosition, on_delete=models.SET_NULL, null=True)
+    position = models.ForeignKey(EmployeePosition, on_delete=models.SET_NULL, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     timezone = models.CharField(
         max_length=100,
