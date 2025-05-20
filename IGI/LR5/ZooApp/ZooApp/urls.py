@@ -31,7 +31,7 @@ urlpatterns = [
     path('register/visitor/', register_views.register, {'role': 'visitor'}, name='register_visitor'),
     path('oauth/', include('social_django.urls', namespace='social')),
     
-    path('home', register_views.home, name='home'),
+    path('', register_views.home, name='home'),
     path('admin/', admin.site.urls),
     path('', include('zoo.urls')),
     path('employees/', include(('employee.urls', 'employee'), namespace='employee')),
