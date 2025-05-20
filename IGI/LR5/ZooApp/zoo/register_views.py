@@ -21,7 +21,6 @@ def register(request, role):
                 user.is_employee = True
             user.save()
             
-            # Явно указываем бэкенд при входе
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect(f'{role}_dashboard')
     else:

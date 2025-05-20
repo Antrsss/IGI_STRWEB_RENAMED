@@ -7,7 +7,7 @@ promocode_not_found = "<h2>Promocode not found</h2>"
 
 def promocode_index(request):
     promocodes = PromoCode.objects.filter(is_active=True, expiry_date__gte=timezone.now())
-    return render(request, "promocode/index.html", {"promocodes": promocodes})
+    return render(request, "pages/promocode_list.html", {"promocodes": promocodes})
 
 def promocode_create(request):
     if request.method == "POST":

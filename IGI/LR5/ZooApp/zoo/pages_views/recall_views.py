@@ -1,11 +1,12 @@
-from django.shortcuts import render, HttpResponseRedirect, HttpResponseNotFound
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from ..pages_models import Recall
 
 recall_not_found = "<h2>Recall not found</h2>"
 
 def recall_index(request):
     recalls = Recall.objects.filter(is_published=True)
-    return render(request, "recall/index.html", {"recalls": recalls})
+    return render(request, "pages/recalls_list.html", {"recalls": recalls})
 
 def recall_create(request):
     if request.method == "POST":

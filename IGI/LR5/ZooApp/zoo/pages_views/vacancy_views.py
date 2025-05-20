@@ -1,11 +1,12 @@
-from django.shortcuts import render, HttpResponseRedirect, HttpResponseNotFound
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from ..pages_models import Vacancy
 
 vacancy_not_found = "<h2>Vacancy not found</h2>"
 
 def vacancy_index(request):
     vacancies = Vacancy.objects.filter(is_active=True)
-    return render(request, "vacancy/index.html", {"vacancies": vacancies})
+    return render(request, "pages/vacancy_list.html", {"vacancies": vacancies})
 
 def vacancy_create(request):
     if request.method == "POST":

@@ -1,0 +1,10 @@
+<h1>Job Vacancies</h1>
+{% for vacancy in vacancies %}
+    <div>
+        <h2>{{ vacancy.title }}</h2>
+        <p>{{ vacancy.description }}</p>
+        <p><strong>Requirements:</strong> {{ vacancy.requirements }}</p>
+        <p><strong>Salary:</strong> {{ vacancy.salary }}</p>
+        <p>Posted on: {{ vacancy.created_at }}</p>
+    </div>
+{% endfor %}

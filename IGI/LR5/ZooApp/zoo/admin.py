@@ -1,5 +1,5 @@
 from django.contrib import admin
-from zoo.pages_models import Article, CompanyInfo, FAQ, Contacts, Vacancy, Review, PromoCode, PrivacyPolicy
+from zoo.pages_models import Article, CompanyInfo, FAQ, Contacts, Vacancy, Recall, PromoCode, PrivacyPolicy
 from django.contrib.auth.admin import UserAdmin
 from .models import User, TicketType, ExtraService, Ticket
 
@@ -30,7 +30,7 @@ class VacancyAdmin(admin.ModelAdmin):
     list_filter = ('is_active',)
     search_fields = ('title', 'description')
 
-@admin.register(Review)
+@admin.register(Recall)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('author_name', 'rating', 'pub_date', 'is_published')
     list_filter = ('rating', 'is_published')

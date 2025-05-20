@@ -1,0 +1,8 @@
+<h1>User Recalls</h1>
+{% for review in reviews %}
+    <div>
+        <h3>{{ review.author_name }} rated {{ review.rating }}/5</h3>
+        <p>{{ review.text }}</p>
+        <small>Published: {{ review.pub_date }}</small>
+    </div>
+{% endfor %}

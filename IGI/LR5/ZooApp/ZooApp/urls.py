@@ -20,6 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 import zoo.register_views as register_views
+from zoo.views import *
 
 
 urlpatterns = [
@@ -32,11 +33,12 @@ urlpatterns = [
     path('oauth/', include('social_django.urls', namespace='social')),
     
     path('', register_views.home, name='home'),
-    path('admin/', admin.site.urls),
     path('', include('zoo.urls')),
+    path('pages/', include('zoo.pages_urls')),
+    path('admin/', admin.site.urls),
     path('employees/', include(('employee.urls', 'employee'), namespace='employee')),
     path('animals/', include(('animal.urls', 'animal'), namespace='animal')),
     path('rooms/', include(('room.urls', 'room'), namespace='room')),
     
-    path('api/', include('api.urls'))
+    path('api/', include('api.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

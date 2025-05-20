@@ -6,7 +6,7 @@ article_not_found = "<h2>Article not found</h2>"
 
 def article_index(request):
     articles = Article.objects.all()
-    return render(request, "article/index.html", {"articles": articles})
+    return render(request, "pages/article.html", {"articles": articles})
 
 def article_create(request):
     if request.method == "POST":

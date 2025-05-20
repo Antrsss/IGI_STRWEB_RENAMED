@@ -1,0 +1,8 @@
+<h1>Frequently Asked Questions</h1>
+{% for faq in faqs %}
+    <div>
+        <h3>{{ faq.question }}</h3>
+        <p>{{ faq.answer }}</p>
+        <small>Added on {{ faq.date_added }}</small>
+    </div>
+{% endfor %}

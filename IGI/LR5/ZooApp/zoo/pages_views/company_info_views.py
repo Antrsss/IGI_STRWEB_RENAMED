@@ -1,21 +1,20 @@
-from django.shortcuts import render, HttpResponseRedirect, HttpResponseNotFound
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.contrib import messages
 from ..pages_models import CompanyInfo
 
 company_not_found = "<h2>Company info not found</h2>"
 
-def index(request):
-    """Просмотр информации о компании"""
+def comany_info_index(request):
     try:
         company = CompanyInfo.objects.first()
         if not company:
             return HttpResponseNotFound(company_not_found)
-        return render(request, "company_info/index.html", {"company": company})
+        return render(request, "pages/company_info.html", {"company": company})
     except Exception as e:
         return HttpResponseNotFound(company_not_found)
 
 def edit(request):
-    """Редактирование информации о компании"""
     try:
         company = CompanyInfo.objects.first()
         if not company:

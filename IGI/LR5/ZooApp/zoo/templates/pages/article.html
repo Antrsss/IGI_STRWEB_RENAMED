@@ -1,0 +1,10 @@
+<h1>Articles</h1>
+{% for article in articles %}
+    <div>
+        <h2>{{ article.title }}</h2>
+        <p>{{ article.short_description }}</p>
+        <img src="{{ article.image.url }}" alt="{{ article.title }}">
+        <p>{{ article.pub_date }}</p>
+        <a href="{% url 'article_detail' article.id %}">Read more</a>
+    </div>
+{% endfor %}

@@ -10,4 +10,5 @@ urlpatterns = [
     path('visitor/buy-ticket/', views.buy_ticket, name='buy_ticket'),
     re_path(r'^animals/(?P<animal_id>\d+)/?$', views.animal_detail, name='animal_detail'),
     path('statistics/', st_view.statistics_view, name='statistics'),
+    path('ticket-statistics/', st_view.ticket_statistics_view, name='ticket_statistics'),
 ]

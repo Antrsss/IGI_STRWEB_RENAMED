@@ -1,11 +1,12 @@
-from django.shortcuts import render, HttpResponseRedirect, HttpResponseNotFound
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from ..pages_models import FAQ
 
 faq_not_found = "<h2>FAQ not found</h2>"
 
 def faq_index(request):
     faqs = FAQ.objects.all()
-    return render(request, "faq/index.html", {"faqs": faqs})
+    return render(request, "pages/faq_list.html", {"faqs": faqs})
 
 def faq_create(request):
     if request.method == "POST":

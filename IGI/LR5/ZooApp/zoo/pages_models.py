@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from employee.models import EmployeePosition
 
 class Article(models.Model):
     title = models.CharField(max_length=200, verbose_name="Header")
@@ -45,20 +46,11 @@ class FAQ(models.Model):
     def __str__(self):
         return self.question
 
-class EmployeePositions(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Position")
-
-    class Meta:
-        verbose_name = "Position"
-        verbose_name_plural = "Position"
-
-    def __str__(self):
-        return self.name
 
 class Contacts(models.Model):
     name = models.CharField(max_length=100, verbose_name="Name")
     photo = models.ImageField(upload_to='contacts/', verbose_name="Photo")
-    position = models.ForeignKey(EmployeePositions, on_delete=models.SET_NULL, 
+    position = models.ForeignKey(EmployeePosition, on_delete=models.SET_NULL, 
                                null=True, verbose_name="Position")
     phone = models.CharField(max_length=20, verbose_name="Phone")
     email = models.EmailField(verbose_name="Email")
@@ -95,7 +87,7 @@ class Vacancy(models.Model):
     def __str__(self):
         return self.title
 
-class Review(models.Model):
+class Recall(models.Model):
     RATING_CHOICES = [
         (1, '1 - Awful'),
         (2, '2 - Bad'),

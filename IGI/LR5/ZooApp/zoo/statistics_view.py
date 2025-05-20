@@ -1,12 +1,12 @@
-from django.db.models import Count, Avg, Sum
-from django.db.models.functions import ExtractYear
-from datetime import date
-from collections import Counter
+from django.db.models import Count, Sum
 import statistics
-from .models import Ticket, User
+from .models import Ticket, TicketType, User
 from django.shortcuts import render
 from django.db.models import Case, When, F, DecimalField, Sum, Value
-from django.db.models.functions import ExtractYear, Concat
+from django.db.models.functions import Concat
+import matplotlib.pyplot as plt
+import io
+import base64
 
 def statistics_view(request):
     visitors = User.objects.filter(is_visitor=True).annotate(
@@ -54,3 +54,36 @@ def statistics_view(request):
         'profitable_ticket': profitable_ticket
     }
     return render(request, 'statistics.html', context)
+
+def ticket_statistics_view(request):
+    # Get data from database
+    ticket_types = TicketType.objects.all()
+    counts = [Ticket.objects.filter(ticket_type=t).count() for t in ticket_types]
+    labels = [t.name for t in ticket_types]
+    
+    # Combine labels and counts for the template
+    ticket_data = zip(labels, counts)
+
+    # Create the chart
+    plt.figure(figsize=(10, 6))
+    plt.bar(labels, counts)
+    plt.title('Ticket Type Distribution')
+    plt.ylabel('Quantity')
+    plt.xlabel('Ticket Type')
+    plt.tight_layout()
+
+    # Convert to image
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+
+    # Encode for HTML
+    graphic = base64.b64encode(image_png)
+    graphic = graphic.decode('utf-8')
+
+    return render(request, 'stats.html', {
+        'graphic': graphic,
+        'ticket_data': ticket_data
+    })
