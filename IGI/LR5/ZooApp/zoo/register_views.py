@@ -3,7 +3,6 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm
 from django.contrib.auth import get_user_model
-from django.contrib.auth.backends import ModelBackend
 
 User = get_user_model()
 

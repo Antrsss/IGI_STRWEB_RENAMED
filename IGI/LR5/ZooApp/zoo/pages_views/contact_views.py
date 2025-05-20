@@ -19,7 +19,7 @@ def contact_create(request):
         contact.info = request.POST.get("info")
         contact.photo = request.FILES.get("photo")
         contact.save()
-        return HttpResponseRedirect(reverse("contacts"))  # name='contacts' в urls.py
+        return HttpResponseRedirect(reverse("contacts"))
     return render(request, "pages/contact_create.html", {
         "positions": EmployeePosition.objects.all()
     })

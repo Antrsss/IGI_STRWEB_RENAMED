@@ -5,7 +5,6 @@ from django.utils import timezone
 from .models import Animal, AnimalFamily, AnimalCountry, AnimalFoodType, Room
 from employee.models import Employee
 
-
 animal_not_found = "<h2>Animal not found</h2>"
 
 def index(request):

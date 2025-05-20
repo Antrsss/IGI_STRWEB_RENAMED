@@ -56,15 +56,12 @@ def statistics_view(request):
     return render(request, 'statistics.html', context)
 
 def ticket_statistics_view(request):
-    # Get data from database
     ticket_types = TicketType.objects.all()
     counts = [Ticket.objects.filter(ticket_type=t).count() for t in ticket_types]
     labels = [t.name for t in ticket_types]
     
-    # Combine labels and counts for the template
     ticket_data = zip(labels, counts)
 
-    # Create the chart
     plt.figure(figsize=(10, 6))
     plt.bar(labels, counts)
     plt.title('Ticket Type Distribution')
@@ -72,14 +69,12 @@ def ticket_statistics_view(request):
     plt.xlabel('Ticket Type')
     plt.tight_layout()
 
-    # Convert to image
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png')
     buffer.seek(0)
     image_png = buffer.getvalue()
     buffer.close()
 
-    # Encode for HTML
     graphic = base64.b64encode(image_png)
     graphic = graphic.decode('utf-8')
 

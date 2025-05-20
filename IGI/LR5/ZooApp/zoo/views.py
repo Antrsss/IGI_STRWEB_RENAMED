@@ -190,7 +190,6 @@ def buy_ticket(request):
             ticket = form.save(commit=False)
             ticket.visitor = request.user
             
-            # Применяем промокод если он есть
             promo_code = form.cleaned_data.get('promo_code')
             if promo_code:
                 try:
@@ -200,7 +199,7 @@ def buy_ticket(request):
                     messages.error(request, 'Invalid promo code')
             
             ticket.save()
-            form.save_m2m()  # Сохраняем many-to-many отношения (услуги)
+            form.save_m2m()
             
             messages.success(request, 'Ticket purchased successfully!')
             return redirect('visitor_dashboard')

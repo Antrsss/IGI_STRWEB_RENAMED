@@ -9,7 +9,6 @@ def faq_index(request):
     faqs = FAQ.objects.all()
     return render(request, "pages/faq_list.html", {"faqs": faqs})
 
-
 @login_required
 def faq_ask(request):
     if not request.user.is_visitor:
@@ -25,7 +24,6 @@ def faq_ask(request):
     else:
         form = FAQAskForm()
     return render(request, "pages/faq_ask.html", {"form": form})
-
 
 @login_required
 def faq_answer(request, id):

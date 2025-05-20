@@ -4,7 +4,6 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Employee, EmployeePosition
 
-
 employee_not_found = "<h2>Employee not found</h2>"
 
 def index(request):

@@ -1,4 +1,3 @@
-# context_processors.py
 from django.utils import timezone
 import pytz
 import calendar

@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
-from employee.models import EmployeePosition
 
 class Article(models.Model):
     title = models.CharField(max_length=200, verbose_name="Header")
@@ -85,11 +84,6 @@ class Vacancy(models.Model):
 
     def __str__(self):
         return self.title
-
-from django.db import models
-from django.utils import timezone
-from django.conf import settings
-from employee.models import EmployeePosition
 
 class Recall(models.Model):
     RATING_CHOICES = [
