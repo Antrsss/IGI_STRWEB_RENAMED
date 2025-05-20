@@ -65,7 +65,7 @@ class Ticket(BaseModel):
     ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE)
     purchase_date = models.DateTimeField(auto_now_add=True)
     visit_date = models.DateField()
-    promo_code = models.ForeignKey(PromoCode, on_delete=models.SET_NULL, null=True)
+    promo_code = models.ForeignKey(PromoCode, on_delete=models.SET_NULL, null=True, blank=True)
     services = models.ManyToManyField(ExtraService)
     
     def __str__(self):

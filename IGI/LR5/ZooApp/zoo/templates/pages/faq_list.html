@@ -13,6 +13,13 @@
                 <a href="{% url 'faq_answer' faq.id %}">Answer</a>
             {% endif %}
         {% endif %}
+        
+        {% if user.is_authenticated and user == faq.asked_by or user.is_superuser %}
+            <a href="{% url 'faq_edit' faq.id %}">Edit</a>
+            <a href="{% url 'faq_delete' faq.id %}">Delete</a>
+        {% elif user.is_authenticated and user == faq.answered_by %}
+            <a href="{% url 'faq_delete' faq.id %}">Delete</a>
+        {% endif %}
     </div>
     <hr>
 {% endfor %}

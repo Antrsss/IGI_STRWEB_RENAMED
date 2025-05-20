@@ -35,14 +35,10 @@ class CustomUserCreationForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         user.phone = self.cleaned_data['phone']
         user.birth_date = self.cleaned_data['birth_date']
+        
         if commit:
             user.save()
         return user
-
-class CustomAuthenticationForm(AuthenticationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.user_cache = None
 
 class TicketPurchaseForm(forms.ModelForm):
     visit_date = forms.DateField(

@@ -25,4 +25,6 @@ urlpatterns = [
     path('faqs/', faq_views.faq_index, name="faq_index"),
     path('faqs/ask/', faq_views.faq_ask, name="faq_ask"),
     path('faqs/<int:id>/answer/', faq_views.faq_answer, name="faq_answer"),
+    path('faq/edit/<int:id>/', faq_views.faq_edit, name='faq_edit'),
+    path('faq/delete/<int:id>/', faq_views.faq_delete, name='faq_delete'),
 ]

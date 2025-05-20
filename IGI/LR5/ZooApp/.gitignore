@@ -56,3 +56,6 @@ npm-debug.log*
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+db.sqlite3
+.env\n*.sqlite3\n*.pyc

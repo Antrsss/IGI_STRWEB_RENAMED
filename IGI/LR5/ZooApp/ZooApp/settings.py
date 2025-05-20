@@ -54,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'zoo.middleware.AccessControlMiddleware',
+    'zoo.middleware.TimezoneMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'ZooApp.urls'
@@ -144,13 +146,8 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '139054913490-u4gcspbppkdeo7du4m81vbpa1n6bm4sk.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
-MIDDLEWARE += [
-    'social_django.middleware.SocialAuthExceptionMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'zoo.middleware.AccessControlMiddleware',
-]
 
 #LOGIN_REDIRECT_URL = 'profile'
 

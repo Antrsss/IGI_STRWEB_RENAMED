@@ -40,7 +40,6 @@ class PromoCodeAdmin(admin.ModelAdmin):
 class PrivacyPolicyAdmin(admin.ModelAdmin):
     pass
 
-
 class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name', 'formatted_phone', 'age', 'is_visitor', 'is_employee')
     list_filter = ('is_visitor', 'is_employee')

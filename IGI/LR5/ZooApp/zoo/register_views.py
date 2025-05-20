@@ -3,11 +3,43 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+import pytz
 
 User = get_user_model()
 
 def home(request):
-    return render(request, 'home.html')
+    context = {}
+    if request.user.is_authenticated:
+        user_timezone = request.user.timezone if hasattr(request.user, 'timezone') else 'UTC'
+        try:
+            tz = pytz.timezone(user_timezone)
+            local_time = timezone.now().astimezone(tz)
+            utc_time = timezone.now().astimezone(pytz.UTC)
+            time_diff = local_time - utc_time
+            hours_diff = time_diff.total_seconds() / 3600
+            
+            context.update({
+                'user_timezone': user_timezone,
+                'local_time': local_time,
+                'utc_time': utc_time,
+                'hours_diff': hours_diff,
+                'current_date': local_time.date(),
+            })
+        except pytz.UnknownTimeZoneError:
+            tz = pytz.UTC
+            local_time = timezone.now().astimezone(tz)
+            utc_time = timezone.now().astimezone(pytz.UTC)
+            
+            context.update({
+                'user_timezone': 'UTC',
+                'local_time': local_time,
+                'utc_time': utc_time,
+                'hours_diff': 0,
+                'current_date': local_time.date(),
+            })
+    
+    return render(request, 'home.html', context)
 
 def register(request, role):
     if request.method == 'POST':
