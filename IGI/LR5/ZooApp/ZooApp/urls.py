@@ -20,13 +20,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 import zoo.register_views as register_views
-from zoo.views import *
-
 
 urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name = 'login'),
     path('logout/', 
-         auth_views.LogoutView.as_view(next_page='home'),  # 'home' - имя URL-шаблона
+         auth_views.LogoutView.as_view(next_page='home'),
          name='logout'),
     path('register/employee/', register_views.register, {'role': 'employee'}, name='register_employee'),
     path('register/visitor/', register_views.register, {'role': 'visitor'}, name='register_visitor'),
