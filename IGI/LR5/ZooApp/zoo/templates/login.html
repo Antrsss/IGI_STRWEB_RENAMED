@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Вход в систему</title>
+    <title>Login</title>
 </head>
 <body>
-    <h1>Вход</h1>
+    <h1>Login</h1>
     
     <form method="post">
         {% csrf_token %}
         
         <div>
-            <label>Имя пользователя:</label>
+            <label>Username:</label>
             <input type="text" name="username" required>
             {% if form.username.errors %}
                 {% for error in form.username.errors %}
@@ -21,7 +21,7 @@
         </div>
         
         <div>
-            <label>Пароль:</label>
+            <label>Password:</label>
             <input type="password" name="password" required>
             {% if form.password.errors %}
                 {% for error in form.password.errors %}
@@ -30,17 +30,17 @@
             {% endif %}
         </div>
         
-        <button type="submit">Войти</button>
+        <button type="submit">Log In</button>
     </form>
 
     <div>
-        <p>Или войдите через: <a href="{% url 'social:begin' 'google-oauth2' %}">Google</a></p>
+        <p>Or log in with: <a href="{% url 'social:begin' 'google-oauth2' %}">Google</a></p>
     </div>
 
     <div>
-        <p>Нет аккаунта?</p>
-        <a href="{% url 'register_visitor' %}">Регистрация посетителя</a>
-        <a href="{% url 'register_employee' %}">Регистрация сотрудника</a>
+        <p>Don't have an account?</p>
+        <a href="{% url 'register_visitor' %}">Register as Visitor</a>
+        <a href="{% url 'register_employee' %}">Register as Employee</a>
     </div>
 </body>
 </html>
