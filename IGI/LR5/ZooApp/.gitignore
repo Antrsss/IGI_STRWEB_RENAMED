@@ -4,8 +4,6 @@
 *.pyc
 __pycache__/
 local_settings.py
-db.sqlite3
-db.sqlite3-journal
 /media/
 
 # Backup files #
@@ -57,5 +55,4 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-db.sqlite3
 .env\n*.sqlite3\n*.pyc
