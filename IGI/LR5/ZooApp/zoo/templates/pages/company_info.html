@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,36 +8,49 @@
 <body>
     <h1>About Company</h1>
     
-    <div>
-        <h2>About</h2>
+    <section>
+        <h2>Company information</h2>
         <p>{{ company_info.about_text|linebreaks }}</p>
-    </div>
+    </section>
+
+    <section>
+        <h2>Zoo Video Trailer</h2>
+        <video controls autoplay muted loop src="{% static 'video/zoo_trailer.mp4'%}" type="video/mp4">
+    </section>
     
-    <div>
-        <h2>Logo</h2>
+    <section>
+        <h2>Zoo Logo</h2>
         {% if company_info.logo %}
             <img src="{{ company_info.logo.url }}" alt="Company Logo" style="max-width: 300px;" />
         {% else %}
             <p>No logo available.</p>
         {% endif %}
-    </div>
+    </section>
     
-    <div>
-        <h2>History</h2>
+    <section>
+        <h2>Zoo History</h2>
         {% if company_info.history %}
             <p>{{ company_info.history|linebreaks }}</p>
         {% else %}
             <p>No history information.</p>
         {% endif %}
-    </div>
+    </section>
     
-    <div>
-        <h2>Requisites</h2>
+    <section>
+        <h2>Zoo Requisites</h2>
         <p>{{ company_info.requisites|linebreaks }}</p>
-    </div>
+    </section>
+
+    <section>
+        <h2>Certificate</h2>
+        <img src="{% static 'images/certificate.png' %}" alt="Cercificate" width="200" height="300" d/>
+        <p>
+            <a href="{% static 'images/certificate.png' %}" download>
+                Download Certificate
+            </a>
+        </p>
+    </section>
     
-    <div>
-        <small>Last updated: {{ company_info.last_updated|date:"d M Y H:i" }}</small>
-    </div>
+    <small>Last updated: {{ company_info.last_updated|date:"d M Y H:i" }}</small>
 </body>
 </html>
