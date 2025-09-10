@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Site Navigation</title>
+</head>
+<body>
+    <h1>Navigation Links</h1>
+    <ul>
+        <li><a href="articles/">Articles</a></li>
+        <li><a href="company-info/">Company Info</a></li>
+        <li><a href="contacts/">Contacts</a></li>
+        <li><a href="faqs/">FAQs</a></li>
+        <li><a href="positions/">Employee Positions</a></li>
+        <li><a href="promocodes/">Promo Codes</a></li>
+        <li><a href="recalls/">Recalls</a></li>
+        <li><a href="vacancies/">Vacancies</a></li>
+    </ul>
+
+    {% if latest_article %}
+    <h2>Latest Article</h2>
+    <h3>{{ latest_article.title }}</h3>
+    <p>{{ latest_article.short_description }}</p>
+    <img src="{{ latest_article.image.url }}" alt="{{ latest_article.title }}" width="300">
+    <p>Published on: {{ latest_article.pub_date|date:"d M Y" }}</p>
+    {% else %}
+    <p>No articles published yet.</p>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,29 @@
+<h1>Frequently Asked Questions</h1>
+
+{% for faq in faqs %}
+    <div>
+        <strong>Q:</strong> {{ faq.question }}<br>
+        <em>Asked by:</em> {{ faq.asked_by.username }}<br>
+        {% if faq.answer %}
+            <strong>A:</strong> {{ faq.answer }}<br>
+            <em>Answered by:</em> {{ faq.answered_by.username }}
+        {% else %}
+            <em>No answer yet.</em>
+            {% if user.is_authenticated and user.is_employee or user.is_authenticated and user.is_superuser %}
+                <a href="{% url 'faq_answer' faq.id %}">Answer</a>
+            {% endif %}
+        {% endif %}
+        
+        {% if user.is_authenticated and user == faq.asked_by or user.is_superuser %}
+            <a href="{% url 'faq_edit' faq.id %}">Edit</a>
+            <a href="{% url 'faq_delete' faq.id %}">Delete</a>
+        {% elif user.is_authenticated and user == faq.answered_by %}
+            <a href="{% url 'faq_delete' faq.id %}">Delete</a>
+        {% endif %}
+    </div>
+    <hr>
+{% endfor %}
+
+{% if user.is_authenticated and user.is_visitor %}
+    <a href="{% url 'faq_ask' %}">Ask a Question</a>
+{% endif %}

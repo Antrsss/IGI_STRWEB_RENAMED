@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket Statistics</title>
+</head>
+<body>
+    <h1>Ticket Sales Statistics</h1>
+    
+    <h2>Ticket Type Distribution</h2>
+    <div>
+        <img src="data:image/png;base64,{{ graphic }}" alt="Ticket Type Distribution Chart">
+    </div>
+    
+    <h3>Raw Data</h3>
+    <table border="1">
+        <tr>
+            <th>Ticket Type</th>
+            <th>Number Sold</th>
+        </tr>
+        {% for ticket_type, count in ticket_data %}
+        <tr>
+            <td>{{ ticket_type }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <p>Generated on: {% now "DATETIME_FORMAT" %}</p>
+    
+    <div>
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>

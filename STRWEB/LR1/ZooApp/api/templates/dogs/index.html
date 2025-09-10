@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Random Dog Image</title>
+</head>
+<body>
+    <h1>Random Dog Image</h1>
+    
+    {% if info.status == "success" %}
+        <img src="{{ info.message }}" alt="Random dog" style="max-width: 500px;">
+    {% else %}
+        <p>Sorry, couldn't load a dog image. Status: {{ info.status }}</p>
+    {% endif %}
+    
+    <button onclick="window.location.reload();">Get Another Dog</button>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Statistics</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Visitor and Ticket Sales Statistics</h1>
+
+    <h2>Visitor Age</h2>
+    <ul>
+        <li>Average age: {{ age_stats.mean }}</li>
+        <li>Median age: {{ age_stats.median }}</li>
+    </ul>
+
+    <h2>Visitors</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for visitor in visitors %}
+                <tr>
+                    <td>{{ visitor.username }}</td>
+                    <td>
+                        {% if visitor.age %}
+                            {{ visitor.age }} years old
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2">No registered visitors</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Total Sales</h2>
+    <p>Total revenue: {{ total_sales }} units</p>
+
+    <h2>Sales Statistics</h2>
+    <ul>
+        <li>Average ticket price: {{ sales_stats.mean }}</li>
+        <li>Median ticket price: {{ sales_stats.median }}</li>
+        <li>Mode ticket price: {{ sales_stats.mode }}</li>
+    </ul>
+
+    <h2>Most Popular Ticket Type</h2>
+    {% if popular_ticket %}
+        <p>{{ popular_ticket.ticket_type__name }} — {{ popular_ticket.count }} sales</p>
+    {% else %}
+        <p>No data available</p>
+    {% endif %}
+
+    <h2>Most Profitable Ticket Type</h2>
+    {% if profitable_ticket %}
+        <p>{{ profitable_ticket.ticket_type__name }} — {{ profitable_ticket.total }} units</p>
+    {% else %}
+        <p>No data available</p>
+    {% endif %}
+</body>
+</html>

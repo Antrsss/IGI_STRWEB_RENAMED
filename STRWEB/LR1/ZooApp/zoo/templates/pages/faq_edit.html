@@ -1,0 +1,8 @@
+<h2>Edit Question</h2>
+<p><strong>Original Q:</strong> {{ faq.question }}</p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update Question</button>
+    <a href="{% url 'faq_index' %}">Cancel</a>
+</form>

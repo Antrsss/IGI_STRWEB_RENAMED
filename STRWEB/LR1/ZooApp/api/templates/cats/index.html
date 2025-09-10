@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Random Cat Fact</title>
+</head>
+<body>
+    <h1>Random Cat Fact</h1>
+    
+    {% if info.fact %}
+        <p>{{ info.fact }}</p>
+    {% else %}
+        <p>Could not load cat fact. Please try again.</p>
+    {% endif %}
+    
+    <button onclick="window.location.reload()">Get Another Fact</button>
+</body>
+</html>

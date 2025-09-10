@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Room</title>
+</head>
+<body>
+    <h1>Edit Room</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <p>Name: <input type="text" name="name" value="{{ room.name }}" required></p>
+        <p>Number: <input type="text" name="number" value="{{ room.number }}" required></p>
+        <p>Square: <input type="number" name="square" value="{{ room.square }}" step="0.01" required></p>
+        <p>
+            Swimming Pool: 
+            <input type="checkbox" name="has_swimming" {% if room.has_swimming %}checked{% endif %}>
+        </p>
+        <p>
+            Heating: 
+            <input type="checkbox" name="has_heating" {% if room.has_heating %}checked{% endif %}>
+        </p>
+        <input type="submit" value="Save">
+        <a href="{% url 'room:index' %}">Cancel</a>
+    </form>
+</body>
+</html>

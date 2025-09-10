@@ -1,0 +1,133 @@
+from django.db import models
+from django.utils import timezone
+from django.conf import settings
+
+class Article(models.Model):
+    title = models.CharField(max_length=200, verbose_name="Header")
+    short_description = models.CharField(max_length=200, verbose_name="Summary")
+    full_text = models.TextField(verbose_name="Full text")
+    image = models.ImageField(upload_to='articles/', verbose_name="Image")
+    pub_date = models.DateTimeField(default=timezone.now, verbose_name="Date published")
+    is_published = models.BooleanField(default=True, verbose_name="Published")
+
+    class Meta:
+        verbose_name = "News"
+        verbose_name_plural = "News"
+        ordering = ['-pub_date']
+
+    def __str__(self):
+        return self.title
+
+class CompanyInfo(models.Model):
+    about_text = models.TextField(verbose_name="About company")
+    logo = models.ImageField(upload_to='company/', verbose_name="Logotype")
+    history = models.TextField(blank=True, verbose_name="History")
+    requisites = models.TextField(verbose_name="Props")
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Info about company"
+        verbose_name_plural = "Info about company"
+
+    def __str__(self):
+        return "Info about company"
+
+class FAQ(models.Model):
+    question = models.CharField(max_length=255, verbose_name="Question")
+    answer = models.TextField(blank=True, null=True, verbose_name="Answer")
+    date_added = models.DateTimeField(auto_now_add=True, verbose_name="Date added")
+    
+    asked_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="faqs",
+        verbose_name="Asked by",
+        null=True,
+        blank=True
+    )
+
+    answered_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="answered_faqs",
+        verbose_name="Answered by"
+    )
+
+    class Meta:
+        verbose_name = "FAQ"
+        verbose_name_plural = "FAQ"
+        ordering = ['-date_added']
+
+    def __str__(self):
+        return self.question
+    
+class PrivacyPolicy(models.Model):
+
+    def __str__(self):
+        return "Privacy policy"
+    
+
+class Vacancy(models.Model):
+    title = models.CharField(max_length=200, verbose_name="Vacancy name")
+    description = models.TextField(verbose_name="Description")
+    requirements = models.TextField(verbose_name="Requerments")
+    salary = models.CharField(max_length=100, blank=True, verbose_name="Salary")
+    is_active = models.BooleanField(default=True, verbose_name="Active")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Vacancy"
+        verbose_name_plural = "Vacancy"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+
+class Recall(models.Model):
+    RATING_CHOICES = [
+        (1, '1 - Awful'),
+        (2, '2 - Bad'),
+        (3, '3 - OK'),
+        (4, '4 - Good'),
+        (5, '5 - Perfect'),
+    ]
+    
+    author_name = models.CharField(max_length=100, verbose_name="Author name")
+    rating = models.IntegerField(choices=RATING_CHOICES, verbose_name="Mark")
+    text = models.TextField(verbose_name="Recall text")
+    pub_date = models.DateTimeField(auto_now_add=True, verbose_name="Date published")
+    is_published = models.BooleanField(default=True, verbose_name="Published")  # изменено на True
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="User")
+
+    class Meta:
+        verbose_name = "Recall"
+        verbose_name_plural = "Recalls"
+        ordering = ['-pub_date']
+
+    def __str__(self):
+        return f"Recall by {self.author_name} ({self.rating}/5)"
+
+
+class PromoCode(models.Model):
+    code = models.CharField(max_length=50, unique=True, verbose_name="Code")
+    description = models.TextField(verbose_name="Description")
+    discount = models.PositiveIntegerField(verbose_name="Sale size (%)")
+    is_active = models.BooleanField(default=True, verbose_name="Active")
+    created_at = models.DateTimeField(auto_now_add=True)
+    expiry_date = models.DateField(verbose_name="Expiry date")
+    users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='promocodes',
+        blank=True,
+        verbose_name="Users"
+    )
+
+    class Meta:
+        verbose_name = "Promocode"
+        verbose_name_plural = "Promocodes"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.code} (-{self.discount}%)"

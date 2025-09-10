@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Home page</title>
+    <style>
+        .time-info {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .time-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        .time-label {
+            font-weight: bold;
+            width: 150px;
+        }
+        .calendar {
+            font-family: Arial, sans-serif;
+            width: 300px;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .calendar-title {
+            font-weight: bold;
+            text-align: center;
+            flex-grow: 1;
+        }
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        .calendar-day {
+            text-align: center;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .today {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to zoo!</h1>
+
+    {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+            <h2>You authenticated as superuser</h2>
+            <p><a href="{% url 'superuser_dashboard' %}">Superuser Dashboard</a></p>
+        {% elif user.is_employee %}
+            <h2>You authenticated as employee</h2>
+            <p><a href="{% url 'employee_dashboard' %}">Employee Dashboard</a></p>
+        {% elif user.is_visitor %}
+            <h2>You authenticated as visitor</h2>
+            <p><a href="{% url 'visitor_dashboard' %}">Visitor Dashboard</a></p>
+        {% endif %}
+        
+        <div class="time-info">
+            <div class="time-row">
+                <span class="time-label">Your timezone:</span>
+                <span>{{ user_timezone }}</span>
+            </div>
+            <div class="time-row">
+                <span class="time-label">Local time:</span>
+                <span>{{ local_time|time }}</span>
+            </div>
+            <div class="time-row">
+                <span class="time-label">UTC time:</span>
+                <span>{{ utc_time|time }}</span>
+            </div>
+            <div class="time-row">
+                <span class="time-label">Time difference:</span>
+                <span>
+                    {% if hours_diff > 0 %}
+                        UTC+{{ hours_diff|floatformat:1 }} hours
+                    {% elif hours_diff < 0 %}
+                        UTC{{ hours_diff|floatformat:1 }} hours
+                    {% else %}
+                        UTC±0 hours
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        
+        <div class="calendar">
+            <div class="calendar-header">
+                <span class="calendar-title">{{ local_time|date:"F Y" }}</span>
+            </div>
+            <div class="calendar-weekdays">
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+                <div>Sun</div>
+            </div>
+            <div class="calendar-days">
+                {% with local_time.day as today %}
+                    {% for day in "12345678910111213141516171819202122232425262728293031" %}
+                        {% if forloop.counter <= 31 %}
+                            <div class="calendar-day {% if forloop.counter == today %}today{% endif %}">
+                                {{ forloop.counter }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+            </div>
+        </div>
+        
+        <p><a href="{% url 'common_info_dashboard' %}">Common Information</a></p>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    {% else %}
+        <h2>You are not authenticated</h2>
+        <div>
+            <p><a href="{% url 'common_info_dashboard' %}">Enter as a guest</a></p>
+            <p><a href="{% url 'pages' %}">Pages</a></p>
+            <p><a href="{% url 'login' %}">Login</a></p>
+            <p><a href="{% url 'register_employee' %}">Register employee</a></p>
+            <p><a href="{% url 'register_visitor' %}">Register visitor</a></p>
+        </div>
+    {% endif %}
+</body>
+</html>
