@@ -1,9 +1,26 @@
-<h1>Available Promo Codes</h1>
-{% for promo in promocodes %}
-    <div>
-        <h2>{{ promo.code }} - {{ promo.discount }}% off</h2>
-        <p>{{ promo.description }}</p>
-        <p>Expires: {{ promo.expiry_date }}</p>
-        <p>Status: {% if promo.is_active %}Active{% else %}Inactive{% endif %}</p>
-    </div>
-{% endfor %}
+<head>
+    <title>Promo Codes</title>
+</head>
+<body>
+    <h1>Promo Codes</h1>
+
+    <h2>Active</h2>
+    <ol>
+    {% for promo in active_promocodes %}
+        <h3><li>{{ promo.code }}</li></h3>
+        <strong>Discount:</strong> {{ promo.discount }}% off<br>
+        {{ promo.description }}<br>
+        <p><em>Expires: </em> {{ promo.expiry_date }}<br>
+    {% endfor %}
+    </ol>
+
+    <h2>Expired</h2>
+    <ul>
+        {% for promo in expired_promocodes %}
+            <h3><li>{{ promo.code }}</li></h3>
+            <strong>Discount:</strong> {{ promo.discount }}% off<br>
+            {{ promo.description }}<br>
+            <p><em>Expired: </em> {{ promo.expiry_date }}<br>
+        {% endfor %}
+    </ul>    
+</body>    

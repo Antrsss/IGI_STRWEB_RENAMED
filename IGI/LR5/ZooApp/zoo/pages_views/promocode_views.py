@@ -6,8 +6,13 @@ from ..pages_models import PromoCode
 promocode_not_found = "<h2>Promocode not found</h2>"
 
 def promocode_index(request):
-    promocodes = PromoCode.objects.filter(is_active=True, expiry_date__gte=timezone.now())
-    return render(request, "pages/promocode_list.html", {"promocodes": promocodes})
+    now = timezone.now()
+    active_promocodes = PromoCode.objects.filter(is_active=True, expiry_date__gte=now)
+    expired_promocodes = PromoCode.objects.filter(expiry_date__lt=now)
+    return render(request, "pages/promocode_list.html", {
+        "active_promocodes": active_promocodes,
+        "expired_promocodes": expired_promocodes,
+    })
 
 def promocode_create(request):
     if request.method == "POST":
