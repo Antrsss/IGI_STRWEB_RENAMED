@@ -1,0 +1,23 @@
+<head>
+    <title>Leave Recall</title>
+</head>
+<body>
+    <h1>Leave Recall</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-field">
+            {{ form.rating.label_tag }}<br>                
+            {{ form.rating }}
+        </div>
+        <div class="form-field">
+            {{ form.text.label_tag }}<br>                
+            {{ form.text }}
+        </div>
+        <div class="form-field">
+            <button type="submit">Submit</button>            
+        </div>
+    </form>
+
+    <p><a href="{% url 'recalls' %}">Return to Recalls</a></p>
+</body>

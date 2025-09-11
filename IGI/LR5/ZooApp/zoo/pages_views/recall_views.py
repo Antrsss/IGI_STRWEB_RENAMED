@@ -39,7 +39,7 @@ def recall_create(request):
     else:
         form = RecallForm()
     
-    return render(request, "recall/create.html", {"form": form})
+    return render(request, "pages/recall_create.html", {"form": form})
 
 @login_required
 def recall_edit(request, id):
