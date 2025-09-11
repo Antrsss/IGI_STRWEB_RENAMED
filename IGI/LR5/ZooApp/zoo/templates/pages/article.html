@@ -1,15 +1,24 @@
-<h1>Articles</h1>
 
-{% for article in articles %}
-    <div>
+<head>
+    <title>Zoo News</title>
+<head>
+
+<body>
+    <h1>News</h1>
+    <hr>
+    {% for article in articles %}
         <h2>{{ article.title }}</h2>
         <p>{{ article.short_description }}</p>
-        {% if article.image %}
+        {% if article.image %}            
             <img src="{{ article.image.url }}" alt="{{ article.title }}" width="300">
         {% endif %}
-        <p>{{ article.full_text }}</p>
         <p>{{ article.pub_date }}</p>
-    </div>
-{% empty %}
-    <p>No articles available.</p>
-{% endfor %}
+        <details>
+            <summary>Read more</summary>
+            <p>{{ article.full_text }}</p>
+        </details>
+        <hr>
+    {% empty %}
+        <p>No articles available.</p>
+    {% endfor %}
+</body>
