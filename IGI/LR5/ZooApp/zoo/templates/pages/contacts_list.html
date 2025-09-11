@@ -1,14 +1,20 @@
-<h1>Contacts</h1>
+<head>
+    <title>Contatcts</title>
+</head>
+<body>
+    <h1>Employees' Contacts</h1>
 
-{% for contact in contacts %}
-    <div>
-        {% if contact.photo %}
-            <img src="{{ contact.photo.url }}" alt="{{ contact.name }}" width="150">
-        {% endif %}
-        <h3>{{ contact.name }} - {{ contact.position.name }}</h3>
-        <p>{{ contact.info }}</p>
-        <p>Phone: {{ contact.phone }}</p>
-        <p>Email: {{ contact.email }}</p>
-    </div>
-    <hr>
-{% endfor %}
+    {% for contact in contacts %}
+        <hr>
+        <figure>
+            {% if contact.photo %}
+                <img src="{{ contact.photo.url }}"  width="150">
+            {% endif %}
+            <figcaption>{{ contact.name }}</figcaption>
+            <p><strong>Position:</strong> {{ contact.position.name }}</p>
+            <p>{{ contact.info }}</p>
+            <p><em>Phone:</em> {{ contact.phone }}</p>
+            <p><em>Email:</em> {{ contact.email }}</p>
+        </figure>
+    {% endfor %}
+</body>
