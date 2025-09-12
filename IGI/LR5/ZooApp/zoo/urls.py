@@ -2,6 +2,7 @@ from django.urls import path, re_path
 from . import permission_views as views
 from . import statistics_view as st_view
 from .pages_views import recall_views
+from .pages_views import privacy_policy_views
 
 urlpatterns = [
     path('superuser/', views.superuser_dashboard, name='superuser_dashboard'),
@@ -17,4 +18,6 @@ urlpatterns = [
     path("recalls/create/", recall_views.recall_create, name="recall_create"),
     path("recalls/<int:id>/edit/", recall_views.recall_edit, name="recall_edit"),
     path("recalls/<int:id>/delete/", recall_views.recall_delete, name="recall_delete"),
+    
+    path("pages/privacy-policy/", privacy_policy_views.privacy_policy, name="privacy_policy"),
 ]
