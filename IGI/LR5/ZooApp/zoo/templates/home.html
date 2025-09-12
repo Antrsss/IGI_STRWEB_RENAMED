@@ -4,17 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Main page</title>
-    <!--icon-->
+    <link rel="icon" href="{% static 'images/zoo_icon.png' %}" type="image/png">
 </head>
 <body>
     <header>
         <img src="{% static "images/zoo_icon.png" %}" alt="Zoo Logo" width="100" height="100">
         <h1>Welcome to zoo!</h1>
     </header>
+    
+    <p>Open from <time>10:00</time> to <time>21.00</time> every day.</p>
 
     {% for banner in banners %}
         <img src="{{ banner }}" alt="Banner {{ forloop.counter }}" width="200" height="120">
     {% endfor %}
+
+    <p>
+        <audio controls>
+            <source src="{% static "audio/zoo_audio.mp3" %}" type="audio/mpeg">
+            Your browser doesn't support audio.
+        </audio>
+    </p>
+
+    <p>
+        <q lang="eng" cite="https://chatgpt.com/">
+            A zoo is not just a place to see animals<wbr> — it’s a place to learn how to <wbr><mark>live in harmony</mark> with them.
+        </q>
+    </p>
+    <blockquote lang="eng">
+        <pre>
+            Animals speak a silent language,
+            written in their eyes and carried in their movements.
+            To listen to them is to rediscover
+            the gentleness, balance, and wisdom
+            that the world often forgets.
+        </pre>
+    </blockquote>
 
     <hr>
     {% if latest_article %}

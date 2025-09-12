@@ -1,6 +1,7 @@
 <h1>Employee Positions</h1>
-<ul>
+<label for="positions">Choose position:</label>
+<select id="positions" name="positions">
     {% for position in positions %}
-        <li>{{ position.name }}</li>
+        <option value="{{position.name}}">{{ position.name }}</option>
     {% endfor %}
-</ul>
+</select>
