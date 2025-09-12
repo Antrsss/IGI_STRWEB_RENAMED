@@ -7,6 +7,7 @@ from datetime import date
 import pytz
 from django.utils import timezone
 from .validators import validate_belarus_phone_number
+from django.conf import settings
 
 TIMEZONE_CHOICES = [(tz, tz) for tz in pytz.all_timezones]
 
@@ -70,3 +71,37 @@ class Ticket(BaseModel):
     
     def __str__(self):
         return f"Ticket #{self.id} - {self.visitor.username} ({self.visit_date})"
+    
+class PartnerCompany(BaseModel):
+    name = models.CharField(max_length=100)
+    website = models.URLField()
+    logo = models.ImageField(upload_to="partners/")
+
+    class Meta:
+        verbose_name = "Partner Company"
+        verbose_name_plural = "Partner Companies"
+
+    def __str__(self):
+        return self.name
+    
+class Cart(BaseModel):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    is_paid = models.BooleanField(default=False)
+
+    def total_price(self):
+        return sum(item.total_price() for item in self.items.all())
+
+    def __str__(self):
+        return f"Cart #{self.id} for {self.user.username}"
+
+class CartItem(BaseModel):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
+    ticket_type = models.ForeignKey("TicketType", on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def total_price(self):
+        # пример: считаем цену по будням
+        return self.ticket_type.weekday_price * self.quantity
+
+    def __str__(self):
+        return f"{self.ticket_type.name} x {self.quantity}"

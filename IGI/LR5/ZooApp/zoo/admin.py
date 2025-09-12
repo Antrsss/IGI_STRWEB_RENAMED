@@ -1,7 +1,7 @@
 from django.contrib import admin
 from zoo.pages_models import Article, CompanyInfo, FAQ, Vacancy, Recall, PromoCode, PrivacyPolicy
 from django.contrib.auth.admin import UserAdmin
-from .models import User, TicketType, ExtraService, Ticket
+from .models import User, TicketType, ExtraService, Ticket, PartnerCompany
 
 @admin.register(Article)    
 class ArticleAdmin(admin.ModelAdmin):
@@ -71,3 +71,8 @@ class TicketAdmin(admin.ModelAdmin):
     search_fields = ('visitor__username', 'visitor__email')
     filter_horizontal = ('services',)
     date_hierarchy = 'visit_date'
+    
+@admin.register(PartnerCompany)
+class PartnerCompanyAdmin(admin.ModelAdmin):
+    list_display = ("name", "website", "created_at", "updated_at")
+    search_fields = ("name",)

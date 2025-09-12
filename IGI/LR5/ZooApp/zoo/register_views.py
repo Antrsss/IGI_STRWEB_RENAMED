@@ -8,37 +8,57 @@ import pytz
 
 User = get_user_model()
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import CustomUserCreationForm
+from django.contrib.auth import get_user_model
+from django.utils import timezone
+import pytz
+from .models import PartnerCompany, TicketType
+from .pages_models import Article
+
+User = get_user_model()
+
 def home(request):
     context = {}
+
     if request.user.is_authenticated:
-        user_timezone = request.user.timezone if hasattr(request.user, 'timezone') else 'UTC'
+        user_timezone = getattr(request.user, 'timezone', 'UTC')
         try:
             tz = pytz.timezone(user_timezone)
-            local_time = timezone.now().astimezone(tz)
-            utc_time = timezone.now().astimezone(pytz.UTC)
-            time_diff = local_time - utc_time
-            hours_diff = time_diff.total_seconds() / 3600
-            
-            context.update({
-                'user_timezone': user_timezone,
-                'local_time': local_time,
-                'utc_time': utc_time,
-                'hours_diff': hours_diff,
-                'current_date': local_time.date(),
-            })
         except pytz.UnknownTimeZoneError:
             tz = pytz.UTC
-            local_time = timezone.now().astimezone(tz)
-            utc_time = timezone.now().astimezone(pytz.UTC)
-            
-            context.update({
-                'user_timezone': 'UTC',
-                'local_time': local_time,
-                'utc_time': utc_time,
-                'hours_diff': 0,
-                'current_date': local_time.date(),
-            })
-    
+            user_timezone = 'UTC'
+
+        local_time = timezone.now().astimezone(tz)
+        utc_time = timezone.now().astimezone(pytz.UTC)
+        hours_diff = (local_time - utc_time).total_seconds() / 3600
+
+        context.update({
+            'user_timezone': user_timezone,
+            'local_time': local_time,
+            'utc_time': utc_time,
+            'hours_diff': hours_diff,
+            'current_date': local_time.date(),
+        })
+
+    latest_article = Article.objects.order_by('-pub_date').first()
+    partners = PartnerCompany.objects.all()
+    ticket_types = TicketType.objects.all()
+
+    context.update({
+        'latest_article': latest_article,
+        'partners': partners,
+        'ticket_types': ticket_types,
+        'banners': [
+            '/static/banners/banner_1.png',
+            '/static/banners/banner_2.png',
+            '/static/banners/banner_3.png',
+            '/static/banners/banner_4.png',
+        ]
+    })
+
     return render(request, 'home.html', context)
 
 def register(request, role):

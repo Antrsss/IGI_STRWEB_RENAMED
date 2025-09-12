@@ -17,15 +17,5 @@
         <li><a href="vacancies/">Vacancies</a></li>
         <li><a href="privacy-policy/">Privacy Policy</a></li>
     </ul>
-
-    {% if latest_article %}
-        <h2>Latest Article</h2>
-        <h3>{{ latest_article.title }}</h3>
-        <p>{{ latest_article.short_description }}</p>
-        <img src="{{ latest_article.image.url }}" alt="{{ latest_article.title }}" width="300">
-        <p>Published on: {{ latest_article.pub_date|date:"d M Y" }}</p>
-    {% else %}
-        <p>No articles published yet.</p>
-    {% endif %}
 </body>
 </html>

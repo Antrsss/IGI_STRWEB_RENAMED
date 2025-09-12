@@ -1,0 +1,6 @@
+<h2>{{ ticket.name }}</h2>
+<p>Weekday price: {{ ticket.weekday_price }} ₽</p>
+<p>Weekend price: {{ ticket.weekend_price }} ₽</p>
+<a href="{% url 'add_to_cart' ticket.id %}">
+    <button>Add to cart</button>
+</a>

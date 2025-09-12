@@ -3,14 +3,68 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Home page</title>
+    <title>Main page</title>
     <!--icon-->
-    <img src="{% static "images/site_icon.png" %}"/>
 </head>
 <body>
-    <!--banner-->
-    <h1>Welcome to zoo!</h1>
+    <header>
+        <img src="{% static "images/site_icon.png" %}" alt="Zoo Logo" width="100" height="100">
+        <h1>Welcome to zoo!</h1>
+    </header>
 
+    {% for banner in banners %}
+        <img src="{{ banner }}" alt="Banner {{ forloop.counter }}" width="200" height="120">
+    {% endfor %}
+
+    <hr>
+    {% if latest_article %}
+        <h2>Latest Article</h2>
+        <h3>{{ latest_article.title }}</h3>
+        <p>{{ latest_article.short_description }}</p>
+        <img src="{{ latest_article.image.url }}" alt="{{ latest_article.title }}" width="300">
+        <p>Published on: {{ latest_article.pub_date|date:"d M Y" }}</p>
+    {% else %}
+        <p>No articles published yet.</p>
+    {% endif %}
+
+    <hr>
+    <div class="section">
+        <h2>Our Partners</h2>
+        <div class="partners">
+            {% for partner in partners %}
+                <div class="card">
+                    <img src="{{ partner.logo.url }}" alt="{{ partner.name }}" width="20" height="20">
+                    <a href="{{ partner.website }}" target="_blank">
+                        {{ partner.name }}
+                    </a>
+                </div>
+            {% empty %}
+                <p>No partner companies added yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <hr>
+    <div class="section">
+        <h2>Tickets Catalog</h2>
+        <div class="tickets">
+            {% for ticket in ticket_types %}
+                <div class="ticket-card">
+                    <h3>{{ ticket.name }}</h3>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'ticket_detail' ticket.id %}">
+                            <button>Buy Ticket</button>
+                        </a>
+                    {% else %}
+                        <p><a href="{% url 'login' %}">Login to buy</a></p>
+                    {% endif %}
+                </div>
+                <hr>
+            {% empty %}
+                <p>No tickets available at the moment.</p>
+            {% endfor %}
+        </div>
+    </div>
     {% if user.is_authenticated %}
         {% if user.is_superuser %}
             <h2>You authenticated as superuser</h2>
@@ -89,5 +143,9 @@
         <p><a href="{% url 'register_employee' %}">Register employee</a></p>
         <p><a href="{% url 'register_visitor' %}">Register visitor</a></p>
     {% endif %}
+
+    <footer>
+        <p>&copy; {{ current_date.year }} Zoo Company. All rights reserved.</p>
+    </footer>
 </body>
 </html>

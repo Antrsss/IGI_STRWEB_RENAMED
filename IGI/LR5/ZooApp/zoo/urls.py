@@ -3,6 +3,7 @@ from . import permission_views as views
 from . import statistics_view as st_view
 from .pages_views import recall_views
 from .pages_views import privacy_policy_views
+from .pages_views import ticket_detail
 
 urlpatterns = [
     path('superuser/', views.superuser_dashboard, name='superuser_dashboard'),
@@ -20,4 +21,9 @@ urlpatterns = [
     path("recalls/<int:id>/delete/", recall_views.recall_delete, name="recall_delete"),
     
     path("pages/privacy-policy/", privacy_policy_views.privacy_policy, name="privacy_policy"),
+    
+    path("tickets/<int:id>/", ticket_detail.ticket_detail, name="ticket_detail"),
+    path("tickets/<int:id>/add/", ticket_detail.add_to_cart, name="add_to_cart"),
+    path("cart/", ticket_detail.cart_view, name="cart"),
+    path("checkout/", ticket_detail.checkout, name="checkout"),
 ]
