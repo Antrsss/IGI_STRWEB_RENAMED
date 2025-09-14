@@ -17,14 +17,15 @@
 
     <nav>
         <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
             <li><a href="{% url 'common_info_dashboard' %}">Common Info</a></li>
-            <li><a href="pages/company-info/">Company Info</a></li>
-            <li><a href="pages/articles/">News</a></li>
+            <li><a href="{% url 'company-info' %}">Company Info</a></li>
+            <li><a href="{% url 'articles' %}">News</a></li>
             <li><a href="{% url 'recalls' %}">Recalls</a></li>
-            <li><a href="pages/faqs/">FAQs</a></li>
-            <li><a href="pages/contacts/">Contacts</a></li>
-            <li><a href="pages/positions/">Employee Positions</a></li>
-            <li><a href="pages/vacancies/">Vacancies</a></li>
+            <li><a href="{% url 'faqs' %}">FAQs</a></li>
+            <li><a href="{% url 'contacts' %}">Contacts</a></li>
+            <li><a href="{% url 'positions' %}">Employee Positions</a></li>
+            <li><a href="{% url 'vacancies' %}">Vacancies</a></li>
             <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
         </ul>
     </nav>
@@ -42,10 +43,11 @@
                 <li><a href="{% url 'login' %}">Login</a></li>
                 <li><a href="{% url 'register_employee' %}">Register employee</a></li>
                 <li><a href="{% url 'register_visitor' %}">Register visitor</a></li>
-
+                <hr>
+                <li><a href="{% url 'home' %}#tickets_catalog">Tickets</a></li>
                 <li><a href="{% url 'buy_ticket' %}">Buy Ticket</a></li>
                 <li><a href="{% url 'cart' %}">Cart</a></li>
-                <li><a href="pages/promocodes/">Promo Codes</a></li>
+                <li><a href="{% url 'promocodes' %}">Promo Codes</a></li>
             </ul>
             {% endblock sidebar %}
         </aside>
