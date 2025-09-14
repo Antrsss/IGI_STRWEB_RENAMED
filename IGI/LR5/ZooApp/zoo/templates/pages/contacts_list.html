@@ -1,20 +1,24 @@
-<head>
-    <title>Contatcts</title>
-</head>
-<body>
-    <h1>Employees' Contacts</h1>
+{% extends "base.html" %}
 
+{% block title %}Contacts{% endblock %}
+{% block header %}Employees' Contacts{% endblock %}
+
+{% block content %}
     {% for contact in contacts %}
         <hr>
-        <figure>
+        <figure style="margin-bottom: 20px;">
             {% if contact.photo %}
-                <img src="{{ contact.photo.url }}"  width="150">
+                <img src="{{ contact.photo.url }}" alt="{{ contact.name }}" width="150" style="border-radius: 8px;">
             {% endif %}
-            <figcaption>{{ contact.name }}</figcaption>
+            <figcaption><strong>{{ contact.name }}</strong></figcaption>
             <p><strong>Position:</strong> {{ contact.position.name }}</p>
-            <p>{{ contact.info }}</p>
+            {% if contact.info %}
+                <p>{{ contact.info }}</p>
+            {% endif %}
             <p><em>Phone:</em> {{ contact.phone }}</p>
             <p><em>Email:</em> {{ contact.email }}</p>
         </figure>
+    {% empty %}
+        <p>No contacts available.</p>
     {% endfor %}
-</body>
+{% endblock %}

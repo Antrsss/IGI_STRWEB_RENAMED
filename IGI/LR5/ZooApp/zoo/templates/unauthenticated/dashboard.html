@@ -1,142 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zoo Information Dashboard</title>
-</head>
-<body>
-    <div class="container">
-        <h1>Common Information Dashboard</h1>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>Total Animals</h3>
-                <p>{{ animals.count }}</p>
-            </div>
-            <div class="stat-card">
-                <h3>Habitats</h3>
-                <p>{{ rooms.count }}</p>
-            </div>
-            <div class="stat-card">
-                <h3>Animal Families</h3>
-                <p>{{ families.count }}</p>
-            </div>
-            <div class="stat-card">
-                <h3>Countries of Origin</h3>
-                <p>{{ countries.count }}</p>
-            </div>
-        </div>
+{% extends "base.html" %}
 
-        <div class="section">
-            <h2>Animals Information</h2>
-            
-            <div class="animal-grid">
-                {% for animal in animals %}
-                <a href="{% url 'animal_detail' animal.id %}" class="animal-card">
-                    {% if animal.photo %}
-                    <img src="{{ animal.photo.url }}" alt="{{ animal.name }}" class="animal-photo">
-                    {% else %}
-                    <div class="animal-photo" style="background: #eee; display: flex; align-items: center; justify-content: center;">
-                        No photo
-                    </div>
-                    {% endif %}
-                    <div class="animal-name">{{ animal.name }}</div>
-                </a>
-                {% endfor %}
-            </div>
+{% block title %}Zoo Information Dashboard{% endblock %}
+
+{% block header %}Common Information Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Animals</h3>
+            <p>{{ animals.count }}</p>
         </div>
-        
-        <div class="section">
-            <h2>Habitats & Rooms</h2>
-            {% for room in rooms %}
-            <div class="card">
-                <h3>{{ room.name }} (Room №{{ room.number }})</h3>
-                <p><strong>Size:</strong> {{ room.square }} m²</p>
-                
-                <p><strong>Features:</strong>
-                    {% if room.has_swimming %}<span class="feature-badge">Swimming Pool</span>{% endif %}
-                    {% if room.has_heating %}<span class="feature-badge">Heating System</span>{% endif %}
-                    {% if not room.has_swimming and not room.has_heating %}<span class="feature-badge">None</span>{% endif %}
-                </p>
-                
-                <p><strong>Animals:</strong> {{ room.animal_count }} ({{ room.species_count }} species)</p>
-                
-                <h4>Current Residents:</h4>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px;">
-                    {% for animal in room.animals.all %}
-                    <div style="border: 1px solid #eee; padding: 10px; border-radius: 4px;">
-                        <h5>{{ animal.name }}</h5>
-                        <p>Family: {{ animal.family.name }}</p>
-                        <p>Origin: {{ animal.country.name }}</p>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endfor %}
+        <div class="stat-card">
+            <h3>Habitats</h3>
+            <p>{{ rooms.count }}</p>
         </div>
-        
-        <div class="section">
-            <h2>Visitor Information</h2>
-            
-            <h3>Ticket Prices</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Ticket Type</th>
-                        <th>Weekday Price</th>
-                        <th>Weekend Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for ticket in ticket_types %}
-                    <tr>
-                        <td>{{ ticket.name }}</td>
-                        <td class="price">${{ ticket.weekday_price }}</td>
-                        <td class="price">${{ ticket.weekend_price }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            
-            <h3>Extra Services</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
-                {% for service in services %}
-                <div class="card">
-                    <h4>{{ service.name }}</h4>
-                    <p class="price">${{ service.price }}</p>
-                    <p>{{ service.description }}</p>
-                </div>
-                {% endfor %}
-            </div>
-            
-            <h3>Active Promotions</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
-                {% for promo in promocodes %}
-                <div class="card">
-                    <span class="promo-badge">{{ promo.code }}</span>
-                    <span>{{ promo.discount }}% discount</span>
-                    <p>Valid until: {{ promo.expiry_date|date:"Y-m-d" }}</p>
-                    <p>{{ promo.description }}</p>
-                </div>
-                {% endfor %}
-            </div>
+        <div class="stat-card">
+            <h3>Animal Families</h3>
+            <p>{{ families.count }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Countries of Origin</h3>
+            <p>{{ countries.count }}</p>
         </div>
     </div>
 
-    <script>
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-    </script>
-</body>
-</html>
+    <div class="section">
+        <h2>Animals Information</h2>
+        <div class="animal-grid">
+            {% for animal in animals %}
+            <a href="{% url 'animal_detail' animal.id %}" class="animal-card">
+                {% if animal.photo %}
+                    <img src="{{ animal.photo.url }}" alt="{{ animal.name }}" class="animal-photo">
+                {% else %}
+                    <div class="animal-photo" style="background: #eee; display: flex; align-items: center; justify-content: center;">
+                        No photo
+                    </div>
+                {% endif %}
+                <div class="animal-name">{{ animal.name }}</div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Habitats & Rooms</h2>
+        {% for room in rooms %}
+        <div class="card">
+            <h3>{{ room.name }} (Room №{{ room.number }})</h3>
+            <p><strong>Size:</strong> {{ room.square }} m²</p>
+
+            <p><strong>Features:</strong>
+                {% if room.has_swimming %}<span class="feature-badge">Swimming Pool</span>{% endif %}
+                {% if room.has_heating %}<span class="feature-badge">Heating System</span>{% endif %}
+                {% if not room.has_swimming and not room.has_heating %}<span class="feature-badge">None</span>{% endif %}
+            </p>
+
+            <p><strong>Animals:</strong> {{ room.animal_count }} ({{ room.species_count }} species)</p>
+
+            <h4>Current Residents:</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px;">
+                {% for animal in room.animals.all %}
+                <div style="border: 1px solid #eee; padding: 10px; border-radius: 4px;">
+                    <h5>{{ animal.name }}</h5>
+                    <p>Family: {{ animal.family.name }}</p>
+                    <p>Origin: {{ animal.country.name }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <h2>Visitor Information</h2>
+
+        <h3>Ticket Prices</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ticket Type</th>
+                    <th>Weekday Price</th>
+                    <th>Weekend Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in ticket_types %}
+                <tr>
+                    <td>{{ ticket.name }}</td>
+                    <td class="price">${{ ticket.weekday_price }}</td>
+                    <td class="price">${{ ticket.weekend_price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Extra Services</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+            {% for service in services %}
+            <div class="card">
+                <h4>{{ service.name }}</h4>
+                <p class="price">${{ service.price }}</p>
+                <p>{{ service.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h3>Active Promotions</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+            {% for promo in promocodes %}
+            <div class="card">
+                <span class="promo-badge">{{ promo.code }}</span>
+                <span>{{ promo.discount }}% discount</span>
+                <p>Valid until: {{ promo.expiry_date|date:"Y-m-d" }}</p>
+                <p>{{ promo.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

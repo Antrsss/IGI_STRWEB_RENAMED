@@ -1,8 +1,9 @@
-<head>
-  <title>Zoo Privacy Policy</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy — Greenfield City Zoo{% endblock %}
+{% block header %}Privacy Policy{% endblock %}
+
+{% block content %}
 <main>
   <header>
     <h1>Privacy Policy — Greenfield City Zoo</h1>
@@ -101,19 +102,16 @@
           <td headers="h-memberships h-metrics">85</td>
           <td headers="h-revenue h-metrics">28,750</td>
         </tr>
-
         <tr>
           <td headers="h-visitors h-metrics">9,890</td>
           <td headers="h-memberships h-metrics">60</td>
           <td headers="h-revenue h-metrics">22,430</td>
         </tr>
-
         <tr>
           <td headers="h-visitors h-metrics">15,200</td>
           <td headers="h-memberships h-metrics">110</td>
           <td headers="h-revenue h-metrics">36,900</td>
         </tr>
-
         <tr>
           <td headers="h-period" rowspan="3">Q2 2025 (Apr–Jun)</td>
           <td headers="h-visitors h-metrics">14,100</td>
@@ -130,7 +128,6 @@
           <td headers="h-memberships h-metrics">90</td>
           <td headers="h-revenue h-metrics">36,800</td>
         </tr>
-
         <tr>
           <th id="h-totals" scope="row">Total YTD</th>
           <td headers="h-visitors h-totals">78,240</td>
@@ -147,4 +144,4 @@
     <p>Greenfield City Zoo — Registered address: 123 Meadow Lane, Greenfield. For legal inquiries contact <strong>privacy@greenfieldzoo.example</strong>.</p>
   </footer>
 </main>
-</body>
+{% endblock %}

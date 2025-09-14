@@ -19,6 +19,32 @@ def add_to_cart(request, id):
 
     return redirect("cart")
 
+def remove_from_cart(request, id):
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    cart = get_object_or_404(Cart, user=request.user, is_paid=False)
+    item = get_object_or_404(CartItem, cart=cart, ticket_type_id=id)
+
+    if item.quantity > 1:
+        item.quantity -= 1
+        item.save()
+    else:
+        item.delete()
+
+    return redirect("cart")
+
+
+def delete_from_cart(request, id):
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    cart = get_object_or_404(Cart, user=request.user, is_paid=False)
+    item = get_object_or_404(CartItem, cart=cart, ticket_type_id=id)
+    item.delete()
+
+    return redirect("cart")
+
 def cart_view(request):
     if not request.user.is_authenticated:
         return redirect("login")

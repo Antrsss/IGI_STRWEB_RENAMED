@@ -1,16 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Ticket Statistics</title>
-</head>
-<body>
-    <h1>Ticket Sales Statistics</h1>
-    
+{% extends "base.html" %}
+
+{% block title %}Ticket Statistics{% endblock %}
+
+{% block header %}Ticket Sales Statistics{% endblock %}
+
+{% block content %}
     <h2>Ticket Type Distribution</h2>
     <div>
         <img src="data:image/png;base64,{{ graphic }}" alt="Ticket Type Distribution Chart">
     </div>
-    
+
     <h3>Raw Data</h3>
     <table border="1">
         <tr>
@@ -24,11 +23,12 @@
         </tr>
         {% endfor %}
     </table>
-    
+
     <p>Generated on: {% now "DATETIME_FORMAT" %}</p>
-    
+
     <div>
-        <a href="/">Back to Home</a>
+        <a href="{% url 'statistics' %}">Visitor Statistics</a> |
+        <a href="{% url 'ticket_statistics' %}">Ticket Statistics</a> |
+        <a href="{% url 'common_info_dashboard' %}">Back to Home</a>
     </div>
-</body>
-</html>
+{% endblock %}

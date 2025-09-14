@@ -1,46 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Buy Ticket</title>
-    <style>
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        select, input[type="date"], input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .error {
-            color: red;
-            font-size: 0.9em;
-        }
-    </style>
-</head>
-<body>
-    <h1>Buy New Ticket</h1>
+{% extends "base.html" %}
+
+{% block title %}Buy Ticket{% endblock %}
+
+{% block header %}Buy New Ticket{% endblock %}
+
+{% block content %}
     <form method="post">
         {% csrf_token %}
         
-        <!-- Ticket Type -->
         <div class="form-group">
             <label for="{{ form.ticket_type.id_for_label }}">{{ form.ticket_type.label }}</label>
             {{ form.ticket_type }}
@@ -49,7 +16,6 @@
             {% endif %}
         </div>
         
-        <!-- Visit Date -->
         <div class="form-group">
             <label for="{{ form.visit_date.id_for_label }}">{{ form.visit_date.label }}</label>
             {{ form.visit_date }}
@@ -58,7 +24,6 @@
             {% endif %}
         </div>
         
-        <!-- Extra Service (optional) -->
         <div class="form-group">
             <label for="{{ form.extra_service.id_for_label }}">{{ form.extra_service.label }}</label>
             {{ form.extra_service }}
@@ -67,7 +32,6 @@
             {% endif %}
         </div>
         
-        <!-- Promo Code -->
         <div class="form-group">
             <label for="{{ form.promo_code.id_for_label }}">{{ form.promo_code.label }}</label>
             {{ form.promo_code }}
@@ -78,6 +42,8 @@
         
         <button type="submit">Purchase Ticket</button>
     </form>
-    <a href="{% url 'visitor_dashboard' %}">Back to Dashboard</a>
-</body>
-</html>
+
+    <p>
+        <a href="{% url 'visitor_dashboard' %}">Back to Dashboard</a>
+    </p>
+{% endblock %}

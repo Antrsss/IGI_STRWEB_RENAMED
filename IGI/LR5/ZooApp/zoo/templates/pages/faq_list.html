@@ -1,35 +1,41 @@
-<head>
-    <title>FAQ</title>
-</head>
-<body>
-    <h1>Frequently Asked Questions</h1>
+{% extends "base.html" %}
 
+{% block title %}FAQ{% endblock %}
+{% block header %}Frequently Asked Questions{% endblock %}
+
+{% block content %}
     {% for faq in faqs %}
-        <details>
-            <summary><strong>Q:</strong> {{ faq.question }}<br></summary>
-            <em>Asked by:</em> {{ faq.asked_by.username }}<br>
-            <em>Date published:</em> {{ faq.date_added|date:"d.m.Y H:i"}}<br>
+        <details style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+            <summary>
+                <strong>Q:</strong> {{ faq.question }}
+            </summary>
+            <p><em>Asked by:</em> {{ faq.asked_by.username }}</p>
+            <p><em>Date published:</em> {{ faq.date_added|date:"d.m.Y H:i"}}</p>
+
             {% if faq.answer %}
-                <strong>A:</strong> {{ faq.answer }}<br>
-                <em>Answered by:</em> {{ faq.answered_by.username }}
+                <p><strong>A:</strong> {{ faq.answer }}</p>
+                <p><em>Answered by:</em> {{ faq.answered_by.username }}</p>
             {% else %}   
-                <em>No answer yet.</em>
-                {% if user.is_authenticated and user.is_employee or user.is_authenticated and user.is_superuser %}
+                <p><em>No answer yet.</em></p>
+                {% if user.is_authenticated and (user.is_employee or user.is_superuser) %}
                     <a href="{% url 'faq_answer' faq.id %}">Answer</a>
                 {% endif %}
             {% endif %}
             
-            {% if user.is_authenticated and user == faq.asked_by or user.is_superuser %}
-                <a href="{% url 'faq_edit' faq.id %}">Edit</a>
-                <a href="{% url 'faq_delete' faq.id %}">Delete</a>
-            {% elif user.is_authenticated and user == faq.answered_by %}
-                <a href="{% url 'faq_delete' faq.id %}">Delete</a>
-            {% endif %}
+            <div style="margin-top: 8px;">
+                {% if user.is_authenticated and user == faq.asked_by or user.is_superuser %}
+                    <a href="{% url 'faq_edit' faq.id %}">Edit</a> |
+                    <a href="{% url 'faq_delete' faq.id %}">Delete</a>
+                {% elif user.is_authenticated and user == faq.answered_by %}
+                    <a href="{% url 'faq_delete' faq.id %}">Delete</a>
+                {% endif %}
+            </div>
         </details>
-        <hr>
+    {% empty %}
+        <p>No questions available.</p>
     {% endfor %}
 
     {% if user.is_authenticated and user.is_visitor %}
-        <a href="{% url 'faq_ask' %}">Ask a Question</a>
+        <p><a href="{% url 'faq_ask' %}">Ask a Question</a></p>
     {% endif %}
-</body>
+{% endblock %}

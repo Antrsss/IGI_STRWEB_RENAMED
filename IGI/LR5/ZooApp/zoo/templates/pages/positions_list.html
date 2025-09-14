@@ -1,7 +1,13 @@
-<h1>Employee Positions</h1>
-<label for="positions">Choose position:</label>
-<select id="positions" name="positions">
-    {% for position in positions %}
-        <option value="{{position.name}}">{{ position.name }}</option>
-    {% endfor %}
-</select>
+{% extends "base.html" %}
+
+{% block title %}Employee Positions{% endblock %}
+{% block header %}Employee Positions{% endblock %}
+
+{% block content %}
+    <label for="positions">Choose position:</label>
+    <select id="positions" name="positions">
+        {% for position in positions %}
+            <option value="{{ position.name }}">{{ position.name }}</option>
+        {% endfor %}
+    </select>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Zoo Website{% endblock title %}</title>
+    <link rel="icon" href="{% static 'images/zoo_icon.png' %}" type="image/png">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/zoo_icon.png' %}" alt="Zoo Logo" width="100" height="100">
+            <h1>{% block header %}Welcome to the Zoo!{% endblock header %}</h1>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="{% url 'common_info_dashboard' %}">Common Info</a></li>
+            <li><a href="pages/company-info/">Company Info</a></li>
+            <li><a href="pages/articles/">News</a></li>
+            <li><a href="{% url 'recalls' %}">Recalls</a></li>
+            <li><a href="pages/faqs/">FAQs</a></li>
+            <li><a href="pages/contacts/">Contacts</a></li>
+            <li><a href="pages/positions/">Employee Positions</a></li>
+            <li><a href="pages/vacancies/">Vacancies</a></li>
+            <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <article>
+            {% block content %}
+            {% endblock content %}
+        </article>
+
+        <aside>
+            {% block sidebar %}
+            <h2>Useful Links</h2>
+            <ul>
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'register_employee' %}">Register employee</a></li>
+                <li><a href="{% url 'register_visitor' %}">Register visitor</a></li>
+
+                <li><a href="{% url 'buy_ticket' %}">Buy Ticket</a></li>
+                <li><a href="{% url 'cart' %}">Cart</a></li>
+                <li><a href="pages/promocodes/">Promo Codes</a></li>
+            </ul>
+            {% endblock sidebar %}
+        </aside>
+    </main>
+
+    <footer>
+        <p>&copy; {{ current_date.year }} Zoo Company. All rights reserved.</p>
+    </footer>
+</body>
+</html>

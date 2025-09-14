@@ -1,24 +1,28 @@
+{% extends "base.html" %}
 
-<head>
-    <title>Zoo News</title>
-<head>
+{% block title %}Zoo News{% endblock %}
 
-<body>
-    <h1>News</h1>
-    <hr>
+{% block header %}News{% endblock %}
+
+{% block content %}
     {% for article in articles %}
-        <h2>{{ article.title }}</h2>
-        <p>{{ article.short_description }}</p>
-        {% if article.image %}            
-            <img src="{{ article.image.url }}" alt="{{ article.title }}" width="300">
-        {% endif %}
-        <p>{{ article.pub_date }}</p>
-        <details>
-            <summary>Read more</summary>
-            <p>{{ article.full_text }}</p>
-        </details>
-        <hr>
+        <div class="news-article">
+            <h2>{{ article.title }}</h2>
+            <p>{{ article.short_description }}</p>
+
+            {% if article.image %}            
+                <img src="{{ article.image.url }}" alt="{{ article.title }}" width="300">
+            {% endif %}
+
+            <p><em>Published: {{ article.pub_date }}</em></p>
+
+            <details>
+                <summary>Read more</summary>
+                <p>{{ article.full_text }}</p>
+            </details>
+            <hr>
+        </div>
     {% empty %}
         <p>No articles available.</p>
     {% endfor %}
-</body>
+{% endblock %}

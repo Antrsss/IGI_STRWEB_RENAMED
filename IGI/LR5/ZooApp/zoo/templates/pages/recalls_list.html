@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Recalls</title>
-</head>
-<body>
-    <h1>Recalls List</h1>
+{% extends "base.html" %}
 
+{% block title %}Recalls{% endblock %}
+{% block header %}Recalls List{% endblock %}
+
+{% block content %}
     {% for recall in recalls %}
         <hr>
-        <h4>{{ recall.author_name }} - {{ recall.rating }}/5</h4>
-        {{ recall.text }}<br>
+        <h4>{{ recall.author_name }} — {{ recall.rating }}/5</h4>
+        <p>{{ recall.text }}</p>
         <small>Published on: {{ recall.pub_date|date:"Y-m-d H:i" }}</small>
     {% empty %}
         <p>No recalls yet.</p>
@@ -22,6 +20,4 @@
             <a href="{% url 'login' %}?next={% url 'recall_create' %}">Leave Recall</a>
         {% endif %}
     </p>
-
-</body>
-</html>
+{% endblock %}

@@ -10,7 +10,7 @@
     <form method="post">
         {% csrf_token %}
         
-        <div>
+        <div class="username">
             <label>Username:</label>
             <input type="text" name="username" required>
             {% if form.username.errors %}
@@ -20,7 +20,7 @@
             {% endif %}
         </div>
         
-        <div>
+        <div class="password">
             <label>Password:</label>
             <input type="password" name="password" required>
             {% if form.password.errors %}
@@ -33,11 +33,9 @@
         <button type="submit">Log In</button>
     </form>
 
-    <div>
-        <p>Or log in with: <a href="{% url 'social:begin' 'google-oauth2' %}">Google</a></p>
-    </div>
+    <p>Or log in with: <a href="{% url 'social:begin' 'google-oauth2' %}">Google</a></p>
 
-    <div>
+    <div class="no_account">
         <p>Don't have an account?</p>
         <a href="{% url 'register_visitor' %}">Register as Visitor</a>
         <a href="{% url 'register_employee' %}">Register as Employee</a>

@@ -24,6 +24,8 @@ urlpatterns = [
     
     path("tickets/<int:id>/", ticket_detail.ticket_detail, name="ticket_detail"),
     path("tickets/<int:id>/add/", ticket_detail.add_to_cart, name="add_to_cart"),
+    path("tickets/<int:id>/remove/", ticket_detail.remove_from_cart, name="remove_from_cart"),
+    path("tickets/<int:id>/delete/", ticket_detail.delete_from_cart, name="delete_from_cart"),
     path("cart/", ticket_detail.cart_view, name="cart"),
     path("checkout/", ticket_detail.checkout, name="checkout"),
 ]

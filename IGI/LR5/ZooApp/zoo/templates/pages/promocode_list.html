@@ -1,26 +1,34 @@
-<head>
-    <title>Promo Codes</title>
-</head>
-<body>
-    <h1>Promo Codes</h1>
+{% extends "base.html" %}
 
+{% block title %}Promo Codes{% endblock %}
+{% block header %}Promo Codes{% endblock %}
+
+{% block content %}
     <h2>Active</h2>
     <ol>
-    {% for promo in active_promocodes %}
-        <h3><li>{{ promo.code }}</li></h3>
-        <strong>Discount:</strong> {{ promo.discount }}% off<br>
-        {{ promo.description }}<br>
-        <p><em>Expires: </em> {{ promo.expiry_date }}<br>
-    {% endfor %}
+        {% for promo in active_promocodes %}
+            <li>
+                <h3>{{ promo.code }}</h3>
+                <p><strong>Discount:</strong> {{ promo.discount }}% off</p>
+                <p>{{ promo.description }}</p>
+                <p><em>Expires:</em> {{ promo.expiry_date }}</p>
+            </li>
+        {% empty %}
+            <p>No active promo codes.</p>
+        {% endfor %}
     </ol>
 
     <h2>Expired</h2>
     <ul>
         {% for promo in expired_promocodes %}
-            <h3><li>{{ promo.code }}</li></h3>
-            <strong>Discount:</strong> {{ promo.discount }}% off<br>
-            {{ promo.description }}<br>
-            <p><em>Expired: </em> {{ promo.expiry_date }}<br>
+            <li>
+                <h3>{{ promo.code }}</h3>
+                <p><strong>Discount:</strong> {{ promo.discount }}% off</p>
+                <p>{{ promo.description }}</p>
+                <p><em>Expired:</em> {{ promo.expiry_date }}</p>
+            </li>
+        {% empty %}
+            <p>No expired promo codes.</p>
         {% endfor %}
-    </ul>    
-</body>    
+    </ul>
+{% endblock %}

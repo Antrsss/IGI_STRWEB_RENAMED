@@ -1,17 +1,21 @@
-<head>
-    <title>Vacancies</title>
-</head>
-<body>
-    <h1>Job Vacancies</h1>
+{% extends "base.html" %}
 
+{% block title %}Vacancies{% endblock %}
+{% block header %}Job Vacancies{% endblock %}
+
+{% block content %}
     <dl>
         {% for vacancy in vacancies %}
             <hr>
             <dt><strong>{{ vacancy.title }}</strong></dt>
             <dd>{{ vacancy.description }}</dd>
-            <p><em>Requirements:</em> {{ vacancy.requirements }}<br>
-            <em>Salary:</em> {{ vacancy.salary }}<br>
-            <em>Posted on:</em> {{ vacancy.created_at }}</p>
+            <p>
+                <em>Requirements:</em> {{ vacancy.requirements }}<br>
+                <em>Salary:</em> {{ vacancy.salary }}<br>
+                <em>Posted on:</em> {{ vacancy.created_at|date:"d.m.Y H:i" }}
+            </p>
+        {% empty %}
+            <p>No vacancies available.</p>
         {% endfor %}
-    </dl>  
-</body>
+    </dl>
+{% endblock %}
