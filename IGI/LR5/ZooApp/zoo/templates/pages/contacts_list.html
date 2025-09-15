@@ -8,7 +8,7 @@
         <hr>
         <figure style="margin-bottom: 20px;">
             {% if contact.photo %}
-                <img src="{{ contact.photo.url }}" alt="{{ contact.name }}" width="150" style="border-radius: 8px;">
+                <img src="{{ contact.photo.url }}" alt="{{ contact.name }}" width="150">
             {% endif %}
             <figcaption><strong>{{ contact.name }}</strong></figcaption>
             <p><strong>Position:</strong> {{ contact.position.name }}</p>

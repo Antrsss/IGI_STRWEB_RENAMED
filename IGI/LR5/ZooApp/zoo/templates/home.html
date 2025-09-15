@@ -5,7 +5,20 @@
 {% block header %}Welcome to zoo!{% endblock header %}
 
 {% block content %}
-    <p>Open from <time>10:00</time> to <time>21.00</time> every day.</p>
+    <div itemscope itemtype="https://schema.org/Zoo">
+        <meta itemprop="name" content="Minsk Zoo">
+        <meta itemprop="url" content="https://minskzoo.by/">
+        <p>
+            Open from 
+            <time itemprop="openingHours" datetime="10:00">10:00</time> 
+            to 
+            <time itemprop="closingHours" datetime="21:00">21.00</time> 
+            every day.
+        </p>
+    </div>
+
+    <a href="https://minskzoo.by/" target="fr">Minsk Zoo</a>
+    <iframe name="fr" width="400" height="150">Old browser</iframe>
 
     <article name="zoo_banners">
         {% for banner in banners %}
@@ -21,12 +34,12 @@
     </p>
 
     <p>
-        <q lang="eng" cite="https://chatgpt.com/">
+        <q dir="rtl" lang="eng" cite="https://chatgpt.com/">
             A zoo is not just a place to see animals<wbr> — it’s a place to learn how to <wbr><mark>live in harmony</mark> with them.
         </q>
     </p>
 
-    <blockquote lang="eng">
+    <blockquote trancletable contenteditable lang="eng">
         <pre>
             Animals speak a silent language,
             written in their eyes and carried in their movements.
@@ -36,7 +49,9 @@
         </pre>
     </blockquote>
 
-    <hr>
+    <p><textarea lang="en" spellcheck>Helo wrld</textarea></p>
+
+    <hr color="red">
     {% if latest_article %}
         <h2>Latest Article</h2>
         <h3>{{ latest_article.title }}</h3>

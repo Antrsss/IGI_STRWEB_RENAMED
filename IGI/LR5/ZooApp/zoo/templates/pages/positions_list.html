@@ -7,7 +7,7 @@
     <label for="positions">Choose position:</label>
     <select id="positions" name="positions">
         {% for position in positions %}
-            <option value="{{ position.name }}">{{ position.name }}</option>
+            <option selected value="{{ position.name }}">{{ position.name }}</option>
         {% endfor %}
     </select>
 {% endblock %}

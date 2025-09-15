@@ -5,7 +5,7 @@
 
 {% block content %}
     <h2>Active</h2>
-    <ol>
+    <ol type="A">
         {% for promo in active_promocodes %}
             <li>
                 <h3>{{ promo.code }}</h3>
@@ -19,7 +19,7 @@
     </ol>
 
     <h2>Expired</h2>
-    <ul>
+    <ul type="square">
         {% for promo in expired_promocodes %}
             <li>
                 <h3>{{ promo.code }}</h3>

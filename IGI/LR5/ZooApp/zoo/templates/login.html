@@ -10,7 +10,7 @@
     <form method="post">
         {% csrf_token %}
         
-        <div class="username">
+        <fieldset name="user"
             <label>Username:</label>
             <input type="text" name="username" required>
             {% if form.username.errors %}
@@ -18,9 +18,7 @@
                     <div>{{ error }}</div>
                 {% endfor %}
             {% endif %}
-        </div>
         
-        <div class="password">
             <label>Password:</label>
             <input type="password" name="password" required>
             {% if form.password.errors %}
@@ -28,10 +26,14 @@
                     <div>{{ error }}</div>
                 {% endfor %}
             {% endif %}
-        </div>
+        </fieldset>
         
         <button type="submit">Log In</button>
     </form>
+
+    <input type="radio" name="sex" value="male">Male<br>
+    <input type="radio" name="sex" value="female" checked>Female<br>
+
 
     <p>Or log in with: <a href="{% url 'social:begin' 'google-oauth2' %}">Google</a></p>
 
