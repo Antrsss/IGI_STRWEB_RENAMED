@@ -1,7 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Vacancies{% endblock %}
 {% block header %}Job Vacancies{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'styles/vacancy_list.css' %}">
+{% endblock extra_css %}
 
 {% block content %}
     <dl>

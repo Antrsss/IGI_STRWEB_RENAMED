@@ -1,0 +1,8 @@
+ul[type="square"] {
+    padding-left: 1.2em;
+    list-style-type: none;
+}
+
+ul[type="square"] li::marker {
+    content: "π ";
+}

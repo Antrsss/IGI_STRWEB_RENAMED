@@ -1,8 +1,12 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+
+    <link rel="stylesheet" href="{% static 'styles/login.css' %}">
 </head>
 <body>
     <h1>Login</h1>
@@ -10,7 +14,7 @@
     <form method="post">
         {% csrf_token %}
         
-        <fieldset name="user"
+        <fieldset name="user">
             <label>Username:</label>
             <input type="text" name="username" required>
             {% if form.username.errors %}
@@ -27,6 +31,11 @@
                 {% endfor %}
             {% endif %}
         </fieldset>
+
+        <label>Repeat Password:</label>
+        <input type="password" name="repeat_password" disabled required>
+        <label>Country:</label>
+        <input type="text" name="country" optional>
         
         <button type="submit">Log In</button>
     </form>

@@ -1,14 +1,17 @@
 {% extends "base.html" %}
+
 {% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'styles/home.css' %}">
+{% endblock extra_css %}
 
 {% block title %}Main page{% endblock title %}
-{% block header %}Welcome to zoo!{% endblock header %}
 
 {% block content %}
     <div itemscope itemtype="https://schema.org/Zoo">
         <meta itemprop="name" content="Minsk Zoo">
         <meta itemprop="url" content="https://minskzoo.by/">
-        <p>
+        <p class="small-caps">
             Open from 
             <time itemprop="openingHours" datetime="10:00">10:00</time> 
             to 
@@ -27,19 +30,24 @@
     </article>
 
     <p>
-        <audio controls>
+        <audio title="audio" controls>
             <source src="{% static "audio/zoo_audio.mp3" %}" type="audio/mpeg">
             Your browser doesn't support audio.
         </audio>
     </p>
 
     <p>
-        <q dir="rtl" lang="eng" cite="https://chatgpt.com/">
+        <q dir="rtl" lang="en" cite="https://chatgpt.com/">
+            A zoo is not just a place to see animals<wbr> — it’s a place to learn how to <wbr><mark>live in harmony</mark> with them.
+        </q>
+    </p>
+    <p>
+        <q dir="rtl" lang="fr" cite="https://chatgpt.com/">
             A zoo is not just a place to see animals<wbr> — it’s a place to learn how to <wbr><mark>live in harmony</mark> with them.
         </q>
     </p>
 
-    <blockquote trancletable contenteditable lang="eng">
+    <blockquote trancletable contenteditable lang="en">
         <pre>
             Animals speak a silent language,
             written in their eyes and carried in their movements.
@@ -51,7 +59,7 @@
 
     <p><textarea lang="en" spellcheck>Helo wrld</textarea></p>
 
-    <hr color="red">
+    <article class="latest-article">
     {% if latest_article %}
         <h2>Latest Article</h2>
         <h3>{{ latest_article.title }}</h3>
@@ -61,14 +69,14 @@
     {% else %}
         <p>No articles published yet.</p>
     {% endif %}
+    </article>
 
-    <hr>
     <section name="partners">
         <h2>Our Partners</h2>
         {% for partner in partners %}
-            <article name="card">
-                <img src="{{ partner.logo.url }}" alt="{{ partner.name }}" width="20" height="20">
-                <a href="{{ partner.website }}" target="_blank">
+            <article name="partner_card">
+                <img name="partner_icon" src="{{ partner.logo.url }}" alt="{{ partner.name }}">
+                <a name="partner_name" href="{{ partner.website }}" target="_blank">
                     {{ partner.name }}
                 </a>
             </article>
@@ -77,24 +85,22 @@
         {% endfor %}
     </section>
 
-    <hr>
     <section id="tickets_catalog">
         <h2>Tickets Catalog</h2>
-        {% for ticket in ticket_types %}
-            <article name="ticket-card">
-                <h3>{{ ticket.name }}</h3>
-                {% if user.is_authenticated %}
-                    <a href="{% url 'ticket_detail' ticket.id %}">
-                        <button>Buy Ticket</button>
-                    </a>
-                {% else %}
-                    <p><a href="{% url 'login' %}">Login to buy</a></p>
-                {% endif %}
-            </article>
-            <hr>
-        {% empty %}
-            <p>No tickets available at the moment.</p>
-        {% endfor %}
+        <div class="grid-container">
+            {% for ticket in ticket_types %}
+                <article class="ticket-card">
+                    <h3>{{ ticket.name }}</h3>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'ticket_detail' ticket.id %}" class="btn">Buy Ticket</a>
+                    {% else %}
+                        <p><a href="{% url 'login' %}">Login to buy</a></p>
+                    {% endif %}
+                </article>
+            {% empty %}
+                <p>No tickets available at the moment.</p>
+            {% endfor %}
+        </div>
     </section>
 
     {% if user.is_authenticated %}

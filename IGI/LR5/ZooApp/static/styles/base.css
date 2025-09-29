@@ -1,0 +1,117 @@
+* {
+    background-color: rgb(212, 238, 190);
+    font-family: 'Roboto', 'Arial', sans-serif;
+}
+nav * {
+    background-color: transparent;
+    text-decoration: none;
+}
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: darkgreen;
+    border-bottom: 2px solid darkgreen;
+    z-index: 1000;
+}
+nav ul {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+    margin: 0;
+    list-style: none;
+}
+aside * {
+    background-color: transparent;
+    text-decoration: none;
+}
+aside {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 150px;
+    height: 100%;
+    background-color: greenyellow;
+    padding: 1%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+#line {
+    padding-bottom: 10px;
+}
+[tabindex] {
+    color: green;
+}
+[tabindex="-1"] {
+    color: red;
+}
+
+a:link {
+    color: green;
+}
+a:hover {
+    color: rgb(118, 197, 0);
+}
+a:visited {
+    color: goldenrod;
+}
+a:focus {
+    background-color: green;
+}
+
+@media (min-width: 1024px) {
+  body {
+    background-color: lightblue;
+  }
+}
+@media (max-width: 600px) {
+  body {
+    background-color: lightcoral;
+  }
+}
+@media (max-height: 500px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+button {
+    cursor: pointer;
+}
+button:hover {
+    background-color: #ffcccc;
+}
+p {
+    text-indent: 2em;
+    line-height: 1.6;
+    font-weight: 400;
+    margin: 10px;
+    padding: 5px;
+    word-spacing: 10px;
+    hyphens: auto; 
+    word-wrap: break-word;   /* ломать слова если длинные */
+}
+article {
+    margin: 10px;
+}
+h1 {
+    text-transform: uppercase;
+    text-align: center;
+}
+h2 {
+    text-transform: capitalize;
+    text-align: center;
+}
+h3 {
+    text-transform: lowercase;
+}
+.logo h1 {
+    text-transform: capitalize;
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 5px;
+}
+body {
+    margin-left: 200px;
+    margin-top: 80px;
+}

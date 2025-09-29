@@ -1,0 +1,66 @@
+dl * {
+    background-color: transparent;
+}
+dl {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Содержит float элементы */
+}
+hr {
+    border: 2px solid #4CAF50;
+    margin: 30px 0 20px 0;
+    clear: both; /* Очищает float */
+}
+hr:first-of-type {
+    margin-top: 0;
+}
+dt {
+    float: left;
+    width: 25%;
+    margin: 0;
+    padding: 15px;
+    padding-right: 0;
+    background: green;
+    color: white;
+    border-radius: 8px 0 0 8px;
+    font-size: 1.2em;
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+dd {
+    float: right;
+    width: 70%;
+    margin: 0;
+    margin-bottom: 10px;
+    padding: 20px;
+    background: #f8fff8;
+    border: 2px solid #4CAF50;
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+    line-height: 1.6;
+    min-height: 80px;
+}
+dl p {
+    clear: both; /* Очень важно - очищает оба float */
+    margin: 15px 0 0 0;
+    padding: 15px;
+    background: #e8f5e8;
+    border-radius: 8px;
+    border-left: 4px solid #4CAF50;
+}
+
+/* Стили для текста внутри дополнительной информации */
+dl p em {
+    font-weight: bold;
+    color: #2E7D32;
+    font-style: normal;
+}
+
+dl p br {
+    margin-bottom: 8px;
+    display: block;
+    content: "";
+}

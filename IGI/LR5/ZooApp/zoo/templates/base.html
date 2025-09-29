@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +9,11 @@
 
     <title>{% block title %}Zoo Website{% endblock title %}</title>
     <link rel="icon" href="{% static 'images/zoo_icon.png' %}" type="image/png">
+
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    {% block extra_css %}{% endblock extra_css %}
 </head>
 <body>
     <header>
@@ -21,7 +27,6 @@
                         1400px"
                 alt="Zoo Logo">
 
-            <!--<img src="{% static 'images/zoo_icon.png' %}" alt="Zoo Logo" width="100" height="100">-->
             <h1>{% block header %}Welcome to the Zoo!{% endblock header %}</h1>
         </div>
     </header>
@@ -29,10 +34,10 @@
     <nav>
         <ul tabindex>
             <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a  tabindex="-1" href="{% url 'common_info_dashboard' %}">Common Info</a></li>
+            <li><a tabindex="-1" href="{% url 'common_info_dashboard' %}">Common Info</a></li>
             <li><a href="{% url 'company-info' %}">Company Info</a></li>
             <li><a href="{% url 'articles' %}">News</a></li>
-            <li><a href="{% url 'recalls' %}">Recalls</a></li>
+            <li><a tabindex href="{% url 'recalls' %}">Recalls</a></li>
             <li><a href="{% url 'faqs' %}">FAQs</a></li>
             <li><a href="{% url 'contacts' %}">Contacts</a></li>
             <li><a href="{% url 'positions' %}">Employee Positions</a></li>
@@ -53,8 +58,7 @@
             <ul>
                 <li><a href="{% url 'login' %}">Login</a></li>
                 <li><a href="{% url 'register_employee' %}">Register employee</a></li>
-                <li><a href="{% url 'register_visitor' %}">Register visitor</a></li>
-                <hr>
+                <li id="line"><a href="{% url 'register_visitor' %}">Register visitor</a></li>
                 <li><a href="{% url 'home' %}#tickets_catalog">Tickets</a></li>
                 <li><a href="{% url 'cart' %}">Cart</a></li>
                 <li><a href="{% url 'promocodes' %}">Promo Codes</a></li>
@@ -63,7 +67,7 @@
         </aside>
     </main>
 
-    <footer>
+    <footer style="color: gray;">
         <p>&copy; {{ current_date.year }} Zoo Company. All rights reserved.</p>
         <abbr title="Zoological Nature Organisation">ZNO</abbr>
         <p><a href="mailto:zoo@example.com" accesskey="a">Write to us</a></p>

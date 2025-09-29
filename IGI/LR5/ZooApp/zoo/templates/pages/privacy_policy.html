@@ -1,4 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+  <style media="all">
+    @import url("{% static 'styles/privacy_policy.css' %}");
+  </style>
+{% endblock%}
 
 {% block title %}Privacy Policy — Greenfield City Zoo{% endblock %}
 {% block header %}Privacy Policy{% endblock %}
@@ -6,7 +13,7 @@
 {% block content %}
 <main>
   <header>
-    <h1>Privacy Policy — Greenfield City Zoo</h1>
+    <h1 class="title">Privacy Policy — Greenfield City Zoo</h1>
     <p class="small">Effective date: <time datetime="2024-09-12">September 12, 2025</time></p>
   </header>
 
@@ -70,18 +77,18 @@
     </p>
   </section>
 
-  <section id="contact">
+  <section id="contact" class="contacts changes">
     <h2>7. Contact & changes</h2>
     <p>Questions or complaints: <strong>privacy@greenfieldzoo.example</strong> or postal mail to Greenfield City Zoo, Attn: Privacy Officer, 123 Meadow Lane, Greenfield.</p>
     <p>We may update this Policy — the effective date above indicates when it was last revised.</p>
   </section>
 
-  <section id="stats">
+  <section id="stats" class="data">
     <h2>8. Annual Visitor & Membership Summary (example data)</h2>
-    <p class="small">The table below is provided as an example dataset. Header cells have <var>id</var> attributes and data cells use the <var>headers</var> attribute for accessibility.</p>
+    <p class="small">The table below is provided as an example dataset. Header cells have <var id="stats" class="data">id</var> attributes and data cells use the <var>headers</var> attribute for accessibility.</p>
     <code>print("Hello World!")</code>
     
-    <table bgcolor="green" bordercolor="yellow" aria-describedby="stats-note" border="1">
+    <table>
       <caption>Monthly visitors, memberships and revenue — 2025 (example)</caption>
 
       <thead>
@@ -133,7 +140,7 @@
           <th id="h-totals" scope="row">Total YTD</th>
           <td headers="h-visitors h-totals">78,240</td>
           <td headers="h-memberships h-totals">560</td>
-          <td headers="h-revenue h-totals">203,480</td>
+          <td headers="h-revenue h-totals"></td>
         </tr>
       </tbody>
     </table>
