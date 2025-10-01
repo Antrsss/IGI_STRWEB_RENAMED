@@ -1,0 +1,110 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Times New Roman", Georgia, serif;
+
+    background: radial-gradient(circle at center,
+                rgba(255, 255, 255, 0.5) 40%,
+                rgba(103, 103, 103, 0.5) 70%,
+                rgba(56, 56, 56, 0.5) 100%),
+                url("../images/certificate-bg.png") no-repeat center center fixed;
+    background-size: cover;
+}
+
+.certificate {
+    position: relative;
+    width: 80%;
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 60px;
+    background: rgba(255, 255, 255, 0.95);
+    text-align: center;
+
+    border: 40px solid transparent;
+    -webkit-border-image: url("../images/border.png") 40 round;
+    -moz-border-image: url("../images/border.png") 40 round;
+    -o-border-image: url("../images/border.png") 40 round;
+    border-image: url("../images/border.png") 40 round;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    z-index: 1;
+}
+
+.certificate h1 {
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 0;
+    color: #2a2a2a;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    z-index: 2;
+}
+
+.certificate .title {
+    font-size: 26px;
+    font-weight: normal;
+    margin: 10px 0 30px 0;
+    color: #444;
+}
+
+.certificate .name {
+    font-size: 34px;
+    margin: 20px 0;
+    font-style: italic;
+    font-weight: bold;
+    color: transparent;
+
+    background: linear-gradient(45deg, #d4af37, #ffd700, #b8860b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.certificate .role {
+    font-size: 24px;
+    margin: 15px 0 30px 0;
+    font-weight: bold;
+    color: transparent;
+
+    background: linear-gradient(90deg, #ffd700, #f1c40f, #daa520);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+}
+
+.certificate .date {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    color: #666;
+}
+
+.signature-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.signature {
+    font-size: 14px;
+    text-align: left;
+    line-height: 1.5;
+    flex: 1;
+    color: #333;
+}
+
+.stamp {
+    flex: 0 0 150px;
+    text-align: right;
+    z-index: 3;
+}
+
+.stamp img {
+    max-width: 120px;
+    opacity: 0.9;
+}

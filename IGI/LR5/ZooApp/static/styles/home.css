@@ -145,3 +145,206 @@ a[name="partner_name"] {
     padding: 15px;
     border: 1px solid #ccc;
 }
+
+
+/* --- Прелоадер --- */
+#preloader {
+    position: relative; /* добавлено */
+    width: 200px;       /* можно задать фиксированную ширину */
+    height: 200px;      /* высоту, чтобы круги были видны */
+    margin: 50px auto;  /* центрирование */
+    text-align: center;
+}
+
+#preloader .circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); /* центрирование по обеим осям */
+}
+
+#preloader .solid {
+    border: 4px solid darkgreen;
+    border-color: darkgreen transparent transparent transparent; /* сегмент */
+    animation: spin 1s linear infinite;
+    z-index: 2; /* поверх dotted */
+}
+
+#preloader .dotted {
+    border: 4px dotted green;
+    width: 80px; 
+    height: 80px;
+    animation: spin 3s linear infinite reverse;
+}
+
+#preloader p {
+    position: relative;
+    margin-top: 150px; /* сдвиг под кругами */
+    font-weight: bold;
+    color: darkgreen;
+}
+
+@keyframes spin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* --- Анимация на главной --- */
+.zoo-animation {
+    position: relative;
+    width: 300px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.panda {
+    position: relative;
+    width: 80px;
+    height: 100px;
+    margin: 0 auto;
+}
+/* Панда */
+.panda-body {
+    position: relative;
+    width: 80px;
+    height: 100px;
+    background: white;
+    border-radius: 50% 50% 40% 40%;
+    margin: 0 auto;
+    z-index: 100;
+}
+.panda .left-ear {
+    width: 25px; height: 25px;
+    background: black;
+    border-radius: 50%;
+    position: absolute;
+    top: -5px; left: 2px;
+    z-index: 50;
+}
+.panda .right-ear {
+    width: 25px; height: 25px;
+    background: black;
+    border-radius: 50%;
+    position: absolute;
+    top: -5px; right: 2px;
+    z-index: 50;
+}
+.panda-body .left-eye {
+    width: 15px; height: 20px;
+    background: black;
+    border-radius: 50%;
+    position: absolute;
+    top: 25px; left: 20px;
+    animation: blink 3s infinite;
+}
+.panda-body .right-eye {
+    width: 15px; height: 20px;
+    background: black;
+    border-radius: 50%;
+    position: absolute;
+    top: 25px; right: 20px;
+    animation: blink 3s infinite;
+}
+@keyframes blink {
+    0%, 90%, 100% { height: 20px; }
+    95% { height: 2px; }
+}
+.panda-body .chest {
+    position: absolute;
+    width: 90px;
+    height: 20px;
+    background: black;
+    border-radius: 10px;
+    top: 50px; left: -5px;
+    z-index: 110;
+}
+.panda-body .left-paw {
+    width: 20px; height: 40px;
+    background: black;
+    border-radius: 10px;
+    position: absolute;
+    top: 30px; left: -7px;
+    transform-origin: bottom center;
+    animation: swing 2s infinite ease-in-out;
+}
+.panda-body .right-paw {
+    width: 20px; height: 40px;
+    background: black;
+    border-radius: 10px;
+    position: absolute;
+    top: 50px; right: -7px;
+}
+@keyframes swing {
+    0%, 100% { transform: rotate(-30deg); }
+    50% { transform: rotate(5deg); }
+}
+
+/* Пальма */
+.palm-1 {
+    width: 10px; height: 80px;
+    background: sienna;
+    position: absolute;
+    left: 0; top: 20px;
+    transform-origin: bottom center;
+    animation: sway 4s infinite ease-in-out;
+}
+.palm-2 {
+    width: 10px; height: 80px;
+    background: sienna;
+    position: absolute;
+    left: 20px;   /* добавил px */
+    top: 30px;    /* добавил px */
+    transform-origin: bottom center;
+    animation: sway 4s infinite ease-in-out;
+}
+.palm-3 {
+    width: 10px; height: 80px;
+    background: sienna;
+    position: absolute;
+    left: 40px;    /* добавил px */
+    top: 20px;    /* добавил px */
+    transform-origin: bottom center;
+    animation: sway 4s infinite ease-in-out;
+}
+.palm-1::before {
+    content: "";
+    position: absolute;
+    top: -10px; left: -20px;
+    width: 50px; height: 20px;
+    background: green;
+    border-radius: 50%;
+}
+.palm-2::before {
+    content: "";
+    position: absolute;
+    top: -10px; left: -20px;
+    width: 50px; height: 20px;
+    background: darkgreen;
+    border-radius: 50%;
+}
+.palm-3::before {
+    content: "";
+    position: absolute;
+    top: -10px; left: -20px;
+    width: 50px; height: 20px;
+    background: green;
+    border-radius: 50%;
+}
+@keyframes sway {
+    0%, 100% { transform: rotate(5deg); }
+    50% { transform: rotate(-5deg); }
+}
+
+.zoo-title {
+    margin-top: 20px;
+    font-size: 24px;
+    color: darkgreen;
+    opacity: 0;
+    animation: fadeIn 5s forwards;
+}
+@keyframes fadeIn {
+    to { opacity: 1; }
+}

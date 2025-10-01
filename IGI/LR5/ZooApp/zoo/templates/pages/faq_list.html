@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'styles/faq_list.css' %}">
+{% endblock extra_css %}
+
 {% block title %}FAQ{% endblock %}
 {% block header %}Frequently Asked Questions{% endblock %}
 
@@ -17,12 +22,12 @@
                 <p><em>Answered by:</em> {{ faq.answered_by.username }}</p>
             {% else %}   
                 <p><em>No answer yet.</em></p>
-                {% if user.is_authenticated and (user.is_employee or user.is_superuser) %}
+                {% if user.is_authenticated and user.is_employee or user.is_authenticated and user.is_superuser %}
                     <a href="{% url 'faq_answer' faq.id %}">Answer</a>
                 {% endif %}
             {% endif %}
             
-            <div style="margin-top: 8px;">
+            <div>
                 {% if user.is_authenticated and user == faq.asked_by or user.is_superuser %}
                     <a href="{% url 'faq_edit' faq.id %}">Edit</a> |
                     <a href="{% url 'faq_delete' faq.id %}">Delete</a>

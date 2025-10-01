@@ -1,0 +1,32 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Certificate</title>
+    <link rel="stylesheet" href="{% static 'styles/certificate.css' %}">
+</head>
+<body>
+    <div class="certificate">
+        <h1>MINISK ZOO</h1>
+        <h2 class="title">CERTIFICATE OF MEMBERSHIP</h2>
+        <p>This is to certify that</p>
+        <h3 class="name">John Doe</h3>
+        <p>has been officially registered as a</p>
+        <h3 class="role">Friend of the Zoo Program Member</h3>
+
+        <p class="date">Issued on: October 1, 2025</p>
+
+        <div class="signature-block">
+            <div class="signature">
+                ___________________________<br>
+                Director of Minsk Zoo
+            </div>
+            <div class="stamp">
+                <img src="{% static 'images/zoo-stamp.png' %}" alt="Stamp">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

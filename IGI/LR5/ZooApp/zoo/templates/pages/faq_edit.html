@@ -1,3 +1,9 @@
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'styles/faq_forms.css' %}">
+</head>
+
 <h2>Edit Question</h2>
 <p><strong>Original Q:</strong> {{ faq.question }}</p>
 <form method="post">

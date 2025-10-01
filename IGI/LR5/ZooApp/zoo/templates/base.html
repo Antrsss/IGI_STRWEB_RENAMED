@@ -18,7 +18,7 @@
 <body>
     <header>
         <div class="logo">
-            <img src="{% static 'images/zoo_icon.png' %}"
+            <img name="logo" src="{% static 'images/zoo_icon.png' %}"
                 srcset="{% static 'images/zoo_icon.png' %} 600w,
                         {% static 'images/zoo_icon.png' %} 1000w,
                         {% static 'images/zoo_icon.png' %} 1400w"
@@ -34,6 +34,7 @@
     <nav>
         <ul tabindex>
             <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'certificate' %}">Certificate</a></li>
             <li><a tabindex="-1" href="{% url 'common_info_dashboard' %}">Common Info</a></li>
             <li><a href="{% url 'company-info' %}">Company Info</a></li>
             <li><a href="{% url 'articles' %}">News</a></li>

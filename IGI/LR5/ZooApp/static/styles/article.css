@@ -1,0 +1,68 @@
+.news-article * {
+    background-color: transparent;
+}
+
+.news-article {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px 0;
+    background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Заголовки статей */
+.news-article h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: darkgreen;
+}
+
+/* Краткое описание с обрезкой и многоточием */
+.news-article p:first-of-type {
+    max-height: 3.6em;          /* ограничение высоты */
+    line-height: 1.2em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;      /* число строк */
+    -webkit-box-orient: vertical;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* Изображения */
+.news-article img {
+    display: block;
+    margin: 0 auto 10px auto;
+    border-radius: 8px;
+}
+
+/* Дата публикации */
+.news-article em {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+/* Кнопка "Read more" */
+.news-article summary {
+    cursor: pointer;
+    font-weight: bold;
+    color: darkgreen;
+    margin: 10px 0;
+    transition: color 0.3s;
+}
+
+.news-article summary:hover {
+    color: yellowgreen;
+}
+
+/* Текст полной статьи в многоколоночном макете */
+.news-article details p {
+    margin-top: 10px;
+    text-align: justify;
+    column-count: 2;       /* количество колонок */
+    column-gap: 30px;      /* отступ между колонками */
+    column-rule: 1px solid #555;
+    line-height: 1.5;
+}

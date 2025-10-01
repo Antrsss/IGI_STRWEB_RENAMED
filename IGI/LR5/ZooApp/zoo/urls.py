@@ -4,6 +4,7 @@ from . import statistics_view as st_view
 from .pages_views import recall_views
 from .pages_views import privacy_policy_views
 from .pages_views import ticket_detail
+from .pages_views import certificate_views
 
 urlpatterns = [
     path('superuser/', views.superuser_dashboard, name='superuser_dashboard'),
@@ -28,4 +29,6 @@ urlpatterns = [
     path("tickets/<int:id>/delete/", ticket_detail.delete_from_cart, name="delete_from_cart"),
     path("cart/", ticket_detail.cart_view, name="cart"),
     path("checkout/", ticket_detail.checkout, name="checkout"),
+    
+    path("certificate/", certificate_views.certificate, name="certificate"),
 ]

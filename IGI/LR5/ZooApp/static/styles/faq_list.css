@@ -1,0 +1,77 @@
+details * {
+    background-color: transparent;
+}
+/* Контейнер FAQ */
+details {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 15px;
+    background: #fdfdfd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+/* При раскрытии карточка слегка подсвечивается */
+details[open] {
+    border-color: #2980b9;
+    background: #f9fbfd;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* Заголовок вопроса */
+summary {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1em;
+    color: darkgreen;
+    list-style: none; /* убрать стандартный треугольник */
+    position: relative;
+    padding-right: 20px;
+}
+
+/* Пользовательский индикатор раскрытия */
+summary::after {
+    content: "›";
+    position: absolute;
+    right: 0;
+    font-size: 1.2em;
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+    color: yellowgreen;
+}
+
+details[open] summary::after {
+    transform: rotate(90deg);
+}
+
+/* Информация о вопросе */
+details p {
+    margin: 8px 0;
+    color: #444;
+    font-size: 0.95rem;
+}
+
+/* Дата */
+details em {
+    color: #777;
+    font-size: 0.85rem;
+}
+
+/* Ответ */
+details p strong {
+    color: #27ae60; /* зелёный акцент для ответа */
+}
+
+/* Ссылки (Answer/Edit/Delete) */
+details a {
+    color: #2980b9;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+details a:hover {
+    color: #1a5276;
+    text-decoration: underline;
+}

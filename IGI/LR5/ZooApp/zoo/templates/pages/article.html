@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'styles/article.css' %}">
+{% endblock extra_css %}
+
 {% block title %}Zoo News{% endblock %}
 
 {% block header %}News{% endblock %}
