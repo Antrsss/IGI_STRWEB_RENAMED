@@ -103,78 +103,15 @@
         </div>
     </section>
 
-    {% if user.is_authenticated %}
-        {% if user.is_superuser %}
-            <h2>You authenticated as superuser</h2>
-            <p><a href="{% url 'superuser_dashboard' %}">Superuser Dashboard</a></p>
-        {% elif user.is_employee %}
-            <h2>You authenticated as employee</h2>
-            <p><a href="{% url 'employee_dashboard' %}">Employee Dashboard</a></p>
-        {% elif user.is_visitor %}
-            <h2>You authenticated as visitor</h2>
-            <p><a href="{% url 'visitor_dashboard' %}">Visitor Dashboard</a></p>
-        {% endif %}
-
-        <div class="time-info">
-            <div class="time-row">
-                <span class="time-label">Your timezone:</span>
-                <span>{{ user_timezone }}</span>
-            </div>
-            <div class="time-row">
-                <span class="time-label">Local time:</span>
-                <span>{{ local_time|time }}</span>
-            </div>
-            <div class="time-row">
-                <span class="time-label">UTC time:</span>
-                <span>{{ utc_time|time }}</span>
-            </div>
-            <div class="time-row">
-                <span class="time-label">Time difference:</span>
-                <span>
-                    {% if hours_diff > 0 %}
-                        UTC+{{ hours_diff|floatformat:1 }} hours
-                    {% elif hours_diff < 0 %}
-                        UTC{{ hours_diff|floatformat:1 }} hours
-                    {% else %}
-                        UTC±0 hours
-                    {% endif %}
-                </span>
-            </div>
-        </div>
-
-        <div class="calendar">
-            <div class="calendar-header">
-                <span class="calendar-title">{{ local_time|date:"F Y" }}</span>
-            </div>
-            <div class="calendar-weekdays">
-                <div>Mon</div>
-                <div>Tue</div>
-                <div>Wed</div>
-                <div>Thu</div>
-                <div>Fri</div>
-                <div>Sat</div>
-                <div>Sun</div>
-            </div>
-            <div class="calendar-days">
-                {% with local_time.day as today %}
-                    {% for day in "12345678910111213141516171819202122232425262728293031" %}
-                        {% if forloop.counter <= 31 %}
-                            <div class="calendar-day {% if forloop.counter == today %}today{% endif %}">
-                                {{ forloop.counter }}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% endwith %}
-            </div>
-        </div>
-
-        <p><a href="{% url 'common_info_dashboard' %}">Common Information</a></p>
-        <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
-    {% else %}
-        <h2>You are not authenticated</h2>
+    {% if user.is_superuser %}
+        <h2>You authenticated as superuser</h2>
+        <p><a href="{% url 'superuser_dashboard' %}">Superuser Dashboard</a></p>
+    {% elif user.is_employee %}
+        <h2>You authenticated as employee</h2>
+        <p><a href="{% url 'employee_dashboard' %}">Employee Dashboard</a></p>
+    {% elif user.is_visitor %}
+        <h2>You authenticated as visitor</h2>
+        <p><a href="{% url 'visitor_dashboard' %}">Visitor Dashboard</a></p>
     {% endif %}
 
     <div id="preloader">

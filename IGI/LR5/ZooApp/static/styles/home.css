@@ -4,9 +4,6 @@
 [dir="rtl"] {
     color: red;
 }
-[class~="today"] {
-    background-color: yellow;
-}
 [lang|="en"] {
     font-style: italic;
 }
@@ -146,13 +143,11 @@ a[name="partner_name"] {
     border: 1px solid #ccc;
 }
 
-
-/* --- Прелоадер --- */
 #preloader {
-    position: relative; /* добавлено */
-    width: 200px;       /* можно задать фиксированную ширину */
-    height: 200px;      /* высоту, чтобы круги были видны */
-    margin: 50px auto;  /* центрирование */
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 50px auto;
     text-align: center;
 }
 
@@ -163,14 +158,14 @@ a[name="partner_name"] {
     position: absolute;
     top: 50%; 
     left: 50%;
-    transform: translate(-50%, -50%); /* центрирование по обеим осям */
+    transform: translate(-50%, -50%);
 }
 
 #preloader .solid {
     border: 4px solid darkgreen;
-    border-color: darkgreen transparent transparent transparent; /* сегмент */
+    border-color: darkgreen transparent transparent transparent;
     animation: spin 1s linear infinite;
-    z-index: 2; /* поверх dotted */
+    z-index: 2;
 }
 
 #preloader .dotted {
@@ -182,7 +177,7 @@ a[name="partner_name"] {
 
 #preloader p {
     position: relative;
-    margin-top: 150px; /* сдвиг под кругами */
+    margin-top: 150px;
     font-weight: bold;
     color: darkgreen;
 }
@@ -192,21 +187,18 @@ a[name="partner_name"] {
     to   { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* --- Анимация на главной --- */
 .zoo-animation {
     position: relative;
     width: 300px;
     margin: 50px auto;
     text-align: center;
 }
-
 .panda {
     position: relative;
     width: 80px;
     height: 100px;
     margin: 0 auto;
 }
-/* Панда */
 .panda-body {
     position: relative;
     width: 80px;
@@ -282,7 +274,6 @@ a[name="partner_name"] {
     50% { transform: rotate(5deg); }
 }
 
-/* Пальма */
 .palm-1 {
     width: 10px; height: 80px;
     background: sienna;
@@ -295,8 +286,8 @@ a[name="partner_name"] {
     width: 10px; height: 80px;
     background: sienna;
     position: absolute;
-    left: 20px;   /* добавил px */
-    top: 30px;    /* добавил px */
+    left: 20px;
+    top: 30px; 
     transform-origin: bottom center;
     animation: sway 4s infinite ease-in-out;
 }
@@ -304,8 +295,8 @@ a[name="partner_name"] {
     width: 10px; height: 80px;
     background: sienna;
     position: absolute;
-    left: 40px;    /* добавил px */
-    top: 20px;    /* добавил px */
+    left: 40px;
+    top: 20px;
     transform-origin: bottom center;
     animation: sway 4s infinite ease-in-out;
 }

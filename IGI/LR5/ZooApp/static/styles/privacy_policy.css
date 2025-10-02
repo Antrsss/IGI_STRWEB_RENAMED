@@ -27,6 +27,7 @@ h2 + p {
 h2 ~ p {
     color: gray;
 }
+
 li:first-child strong {
     background-color: darkgreen;
     color: white;

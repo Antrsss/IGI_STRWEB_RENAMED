@@ -43,21 +43,18 @@ figure img {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
 }
-
 figure:hover img {
     border-color: #45a049;
     transform: scale(1.05);
 }
 
-/* Блок с информацией (flex container для текста) */
+
 figcaption {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
-
-/* Имя сотрудника */
 figcaption strong {
     font-size: 1.5em;
     color: #2E7D32;
@@ -66,16 +63,12 @@ figcaption strong {
     border-bottom: 2px solid #4CAF50;
     padding-bottom: 8px;
 }
-
-/* Параграфы с информацией */
 figcaption p {
     margin: 0;
     padding: 8px 0;
     line-height: 1.5;
     color: #333;
 }
-
-/* Стили для различных типов информации */
 figcaption p strong {
     font-size: 1em;
     color: #388E3C;
@@ -84,24 +77,19 @@ figcaption p strong {
     margin: 0;
     display: inline;
 }
-
 figcaption p em {
     color: #F57C00;
     font-style: normal;
     font-weight: bold;
 }
-
-/* Специфичные стили для разных типов данных */
 p strong:first-child {
     font-size: 1.1em;
 }
-
 p em + a {
     color: #1976D2;
     text-decoration: none;
     transition: color 0.3s ease;
 }
-
 p em + a:hover {
     color: #1565C0;
     text-decoration: underline;

@@ -62,7 +62,7 @@ a:focus {
 
 @media (min-width: 1024px) {
   body {
-    background-color: lightblue;
+    background-color: darkgreen;
   }
 }
 @media (max-width: 600px) {
