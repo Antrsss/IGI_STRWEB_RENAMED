@@ -2,7 +2,31 @@
 
 {% block extra_css %}
     <style>
-        label { color: red; }
+        label { 
+            color: #006401; 
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        select {
+            padding: 8px 12px;
+            border: 2px solid #888;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            font-size: 14px;
+            cursor: pointer;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        select:focus {
+            border-color: #006401;
+            outline: none;
+            box-shadow: 0 0 5px rgb(173, 255, 48, 0.8);
+        }
+
+        option {
+            padding: 6px;
+        }
     </style>
 {% endblock %}
 
@@ -13,7 +37,7 @@
     <label for="positions">Choose position:</label>
     <select id="positions" name="positions">
         {% for position in positions %}
-            <option selected value="{{ position.name }}">{{ position.name }}</option>
+            <option value="{{ position.name }}">{{ position.name }}</option>
         {% endfor %}
     </select>
 {% endblock %}

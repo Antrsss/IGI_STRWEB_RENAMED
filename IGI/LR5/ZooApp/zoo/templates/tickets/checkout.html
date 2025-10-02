@@ -1,6 +1,52 @@
-<h2>Checkout</h2>
-<p>Total: {{ cart.total_price }}</p>
-<form method="post">
+<h2 class="checkout-title">Checkout</h2>
+<p class="checkout-total">Total: ${{ cart.total_price }}</p>
+<form method="post" class="checkout-form">
     {% csrf_token %}
-    <button type="submit">Pay</button>
+    <button type="submit" class="pay-button">Pay</button>
 </form>
+
+<style>
+    .checkout-title {
+        font-size: 26px;
+        color: #333;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .checkout-total {
+        font-size: 18px;
+        font-weight: bold;
+        color: #444;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .checkout-form {
+        display: flex;
+        justify-content: center;
+    }
+
+    .pay-button {
+        padding: 12px 25px;
+        font-size: 16px;
+        font-weight: bold;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .pay-button:hover {
+        background: #218838;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+        font-family: Arial, sans-serif;
+    }
+</style>

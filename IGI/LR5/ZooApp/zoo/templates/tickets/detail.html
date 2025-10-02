@@ -1,6 +1,55 @@
-<h2>{{ ticket.name }}</h2>
-<p>Weekday price: {{ ticket.weekday_price }} ₽</p>
-<p>Weekend price: {{ ticket.weekend_price }} ₽</p>
-<a href="{% url 'add_to_cart' ticket.id %}">
-    <button>Add to cart</button>
-</a>
+<div class="ticket-card">
+    <h2 class="ticket-title">{{ ticket.name }}</h2>
+    <p class="ticket-price">Weekday price: <span>{{ ticket.weekday_price }} ₽</span></p>
+    <p class="ticket-price">Weekend price: <span>{{ ticket.weekend_price }} ₽</span></p>
+    <a href="{% url 'add_to_cart' ticket.id %}">
+        <button class="add-button">Add to cart</button>
+    </a>
+</div>
+
+<style>
+    .ticket-card {
+        max-width: 400px;
+        margin: 40px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background: #f9f9f9;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        font-family: Arial, sans-serif;
+    }
+
+    .ticket-title {
+        font-size: 24px;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .ticket-price {
+        font-size: 18px;
+        margin: 10px 0;
+        color: #444;
+    }
+
+    .ticket-price span {
+        font-weight: bold;
+        color: #000;
+    }
+
+    .add-button {
+        padding: 12px 25px;
+        font-size: 16px;
+        font-weight: bold;
+        background: darkgreen;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .add-button:hover {
+        background: green;
+    }
+</style>

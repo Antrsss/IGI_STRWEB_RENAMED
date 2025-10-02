@@ -1,3 +1,45 @@
-<h2>Payment successful!</h2>
-<p>Your order #{{ cart.id }} has been confirmed.</p>
-<a href="{% url 'home' %}">Return to Home</a>
+<h2 class="success-title">Payment successful!</h2>
+<p class="success-message">Your order #{{ cart.id }} has been confirmed.</p>
+<a href="{% url 'home' %}" class="home-link">Return to Home</a>
+
+<style>
+    .success-title {
+        color: #28a745;
+        font-size: 28px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .success-message {
+        font-size: 16px;
+        color: #444;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .home-link {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #007bff;
+        color: #fff;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background 0.3s;
+        text-align: center;
+    }
+
+    .home-link:hover {
+        background: #0056b3;
+    }
+
+    /* Центровка всей страницы */
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 70vh;
+        margin: 0;
+    }
+</style>

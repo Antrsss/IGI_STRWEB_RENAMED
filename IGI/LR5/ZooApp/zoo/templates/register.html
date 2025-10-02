@@ -2,10 +2,97 @@
 <html>
 <head>
     <title>Registration {% if role %}({{ role }}){% endif %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        div {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        small {
+            display: block;
+            margin-top: 3px;
+            color: #888;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 3px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h2>Registration {% if role %}({{ role }}){% endif %}</h2>
     <form method="post">
+        <h2>Registration {% if role %}({{ role }}){% endif %}</h2>
         {% csrf_token %}
         
         {% for field in form %}
@@ -16,13 +103,13 @@
                     <small>{{ field.help_text }}</small>
                 {% endif %}
                 {% for error in field.errors %}
-                    <div style="color: red;">{{ error }}</div>
+                    <div class="error">{{ error }}</div>
                 {% endfor %}
             </div>
         {% endfor %}
         
         <button type="submit">Register</button>
+        <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
     </form>
-    <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
 </body>
 </html>

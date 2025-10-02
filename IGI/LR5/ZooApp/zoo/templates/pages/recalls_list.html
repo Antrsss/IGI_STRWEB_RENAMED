@@ -1,23 +1,29 @@
 {% extends "base.html" %}
 
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'styles/recalls_list.css' %}">
+{% endblock extra_css %}
+
 {% block title %}Recalls{% endblock %}
 {% block header %}Recalls List{% endblock %}
 
 {% block content %}
     {% for recall in recalls %}
-        <hr>
-        <h4>{{ recall.author_name }} — {{ recall.rating }}/5</h4>
-        <p>{{ recall.text }}</p>
-        <small>Published on: {{ recall.pub_date|date:"Y-m-d H:i" }}</small>
+        <div class="recall">
+            <h4>{{ recall.author_name }} — <span>{{ recall.rating }}/5</span></h4>
+            <p>{{ recall.text }}</p>
+            <small>Published on: {{ recall.pub_date|date:"Y-m-d H:i" }}</small>
+        </div>
     {% empty %}
         <p>No recalls yet.</p>
     {% endfor %}
 
     <p>
         {% if user_authenticated %}
-            <a href="{% url 'recall_create' %}" target="_blank">Leave Recall</a>
+            <a class="recall-link" href="{% url 'recall_create' %}" target="_blank">Leave Recall</a>
         {% else %}
-            <a href="{% url 'login' %}?next={% url 'recall_create' %}">Leave Recall</a>
+            <a class="recall-link" href="{% url 'login' %}?next={% url 'recall_create' %}">Leave Recall</a>
         {% endif %}
     </p>
 {% endblock %}

@@ -1,0 +1,46 @@
+.recall * {
+    background-color: transparent;
+}
+.recall {
+    padding: 15px;
+    margin: 15px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fafafa;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.recall h4 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.recall h4 span {
+    color: green;
+    font-weight: bold;
+}
+
+.recall p {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.recall small {
+    color: #888;
+    font-size: 12px;
+}
+
+.recall-link {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: darkgreen;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+}
+
+.recall-link:hover {
+    background-color: greenyellow;
+}
