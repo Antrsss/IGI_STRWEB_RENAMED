@@ -45,6 +45,13 @@
             <li><a href="{% url 'vacancies' %}">Vacancies</a></li>
             <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
         </ul>
+
+        <div class="theme-switcher">
+            <button id="themeToggle" aria-label="Switch theme">
+                <span class="theme-icon">🌙</span>
+                <span class="theme-text">Dark Mode</span>
+            </button>
+        </div>
     </nav>
 
     <main>
@@ -74,5 +81,9 @@
         <p><a href="mailto:zoo@example.com" accesskey="a">Write to us</a></p>
         <a hidden href="tel:+1234567890">Call to us</a>
     </footer>
+
+    <script src="{% static 'js/theme.js' %}"></script>
+
+    {% block extra_js %}{% endblock extra_js %}
 </body>
 </html>

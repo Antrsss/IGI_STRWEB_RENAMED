@@ -23,11 +23,40 @@
     <a href="https://minskzoo.by/" target="fr">Minsk Zoo</a>
     <iframe name="fr" width="400" height="150">Old browser</iframe>
 
-    <article name="zoo_banners">
-        {% for banner in banners %}
-            <img src="{{ banner }}" alt="Banner {{ forloop.counter }}" width="200" height="120">
-        {% endfor %}
+    <article class="zoo_banners" 
+            data-loop="true"
+            data-navs="true" 
+            data-pags="true" 
+            data-auto="true"
+            data-stopmousehover="true" 
+            data-delay="3">
+
+        <div class="slides">
+            {% for banner in banners %}
+                <div class="slide" data-link="{{ banner.url }}">
+                    <img src="{{ banner }}" alt="Banner {{ forloop.counter }}" width="200" height="120">
+                    <div class="caption">Banner {{ forloop.counter }}</div>
+                </div>
+            {% endfor %}
+        </div>
     </article>
+
+    {% if user.is_superuser %}
+    <div class="admin-controls">
+        <h3>Admin Slider Controls</h3>
+        <form id="sliderSettingsForm">
+            <label>
+                Auto Play:
+                <input type="checkbox" id="autoPlay" checked>
+            </label>
+            <label>
+                Delay (seconds):
+                <input type="number" id="sliderDelay" min="1" max="60" value="3">
+            </label>
+            <button type="submit">Apply Settings</button>
+        </form>
+    </div>
+    {% endif %}
 
     <p>
         <audio title="audio" controls>
@@ -138,3 +167,7 @@
         <h2 class="zoo-title">Minsk Zoo</h2>
     </div>
 {% endblock content %}
+
+{% block extra_js %}
+    <script src="{% static 'js/home_slider.js' %}"></script>
+{% endblock extra_js %}

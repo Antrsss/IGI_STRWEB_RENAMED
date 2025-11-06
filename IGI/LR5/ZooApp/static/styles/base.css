@@ -128,3 +128,88 @@ img[name="logo"] {
 img[name="logo"]:hover {
     transform: rotate(10deg) scale(1.2);
 }
+
+
+
+.theme-switcher {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+}
+
+#themeToggle {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid darkgreen;
+    border-radius: 25px;
+    padding: 4px 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    color: inherit;
+}
+
+#themeToggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.theme-icon {
+    font-size: 1.2em;
+}
+
+.theme-text {
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+/* Светлая тема (по умолчанию) */
+[data-theme="light"] {
+    --bg-color: rgb(212, 238, 190);
+    --text-color: #333;
+    --nav-bg: darkgreen;
+    --aside-bg: greenyellow;
+    --header-bg: transparent;
+}
+
+/* Темная тема */
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --nav-bg: #0a3d0a;
+    --aside-bg: #2d5016;
+    --header-bg: #2d2d2d;
+}
+
+/* Применяем CSS переменные */
+* {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Roboto', 'Arial', sans-serif;
+}
+
+nav {
+    background-color: var(--nav-bg);
+    border-bottom: 2px solid var(--nav-bg);
+}
+
+aside {
+    background-color: var(--aside-bg);
+}
+
+header {
+    background-color: var(--header-bg);
+}
+
+/* Обновляем стили для навигации и сайдбара */
+nav * {
+    background-color: transparent;
+    text-decoration: none;
+}
+
+aside * {
+    background-color: transparent;
+    text-decoration: none;
+}

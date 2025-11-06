@@ -1,0 +1,442 @@
+.stats-grid * {
+    background-color: transparent;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.section {
+    margin: 30px 0;
+}
+
+.section * {
+    background-color: transparent;
+}
+
+.section h2 {
+    margin-bottom: 15px;
+    font-size: 22px;
+    border-bottom: 2px solid darkgreen;
+    display: inline-block;
+    padding-bottom: 5px;
+    color: darkgreen;
+}
+
+.animal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.animal-card {
+    background: #fff;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    padding: 10px;
+}
+
+.animal-card:hover {
+    transform: scale(1.05);
+}
+
+.animal-photo {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.animal-name {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.card h3, .card h4 {
+    margin-top: 0;
+    color: darkgreen;
+}
+
+.feature-badge {
+    background: green;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    margin-right: 5px;
+}
+
+.promo-badge {
+    display: inline-block;
+    background: greenyellow;
+    color: #000;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+table th, table td {
+    border: 1px solid darkgreen;
+    padding: 10px;
+    text-align: center;
+}
+
+.container table th {
+    background-color: darkgreen;
+    color: #fff;
+}
+
+table tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.price {
+    font-weight: bold;
+    color: green;
+}
+
+.select-generator {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 30px 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.select-generator * {
+    background: transparent;
+}
+
+.generator-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: yellowgreen;
+    border-radius: 8px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: darkgreen;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid green;
+    border-radius: 4px;
+    background: white;
+}
+
+.checkbox-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* УВЕЛИЧИВАЕМ ШИРИНУ КОНТЕЙНЕРОВ */
+.generated-selects {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Увеличил с 300px до 450px */
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* УВЕЛИЧИВАЕМ ШИРИНУ КОНТЕЙНЕРА SELECT */
+.select-container {
+    min-width: 200px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid darkgreen;
+    position: relative;
+    background: #fafafa;
+}
+
+.select-container h4 {
+    margin-top: 0;
+    color: darkgreen;
+    border-bottom: 1px solid darkgreen;
+    padding-bottom: 8px;
+    font-size: 18px;
+}
+
+.select-attributes {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 15px;
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+}
+
+/* УВЕЛИЧИВАЕМ ШИРИНУ САМОГО SELECT ЭЛЕМЕНТА */
+.select-container select {
+    width: 100%;
+    min-width: 100px; /* Минимальная ширина select */
+    padding: 12px;
+    border: 2px solid darkgreen;
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+/* Улучшаем отображение option */
+.select-container select option {
+    min-height: 30px; /* Увеличил высоту опций */
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Стили для блока с выбранными значениями */
+.selection-display {
+    min-width: 200px; /* Ширина блока с выбранными значениями */
+    min-height: 50px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+    margin: 15px 0;
+    font-size: 14px;
+}
+
+.selected-values {
+    display: inline-block;
+    min-width: 200px; /* Ширина текста выбранных значений */
+    min-height: 25px;
+    word-break: break-word;
+    padding: 5px;
+}
+
+#generateBtn {
+    background: darkgreen; 
+    color: white; 
+    padding: 12px 25px; 
+    margin-top: 20px;
+    border: none; 
+    border-radius: 6px; 
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#generateBtn:hover {
+    background: #006400;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.delete-btn:hover {
+    background: #c82333;
+}
+
+.empty-message {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 30px;
+    font-size: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+}
+
+/*Pagination*/
+/* Стили для пагинации */
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.pagination-settings {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination-settings label {
+    font-weight: bold;
+    color: darkgreen;
+    margin: 0;
+}
+
+.pagination-settings select {
+    padding: 5px 10px;
+    border: 1px solid darkgreen;
+    border-radius: 4px;
+    background: white;
+}
+
+.pagination-info {
+    font-size: 14px;
+    color: #666;
+    font-weight: bold;
+}
+
+.pagination-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    padding: 15px;
+}
+
+.pagination-btn {
+    padding: 8px 16px;
+    border: 1px solid darkgreen;
+    background: white;
+    color: darkgreen;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: darkgreen;
+    color: white;
+}
+
+.pagination-btn:disabled {
+    background: #e9ecef;
+    color: #6c757d;
+    border-color: #dee2e6;
+    cursor: not-allowed;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 5px;
+}
+
+.page-number {
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    background: white;
+    color: #495057;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    min-width: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.page-number:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.page-number.active {
+    background: darkgreen;
+    color: white;
+    border-color: darkgreen;
+}
+
+.page-number.dots {
+    background: transparent;
+    border: none;
+    cursor: default;
+}
+
+.page-number.dots:hover {
+    background: transparent;
+}
+
+/* Анимация для смены страниц */
+.service-item {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.service-item.hidden {
+    display: none;
+}
+
+.service-item.visible {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
