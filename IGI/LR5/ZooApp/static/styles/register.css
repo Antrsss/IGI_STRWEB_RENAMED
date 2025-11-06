@@ -1,0 +1,151 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+form {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.field-container {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+small {
+    display: block;
+    margin-top: 3px;
+    color: #888;
+}
+
+.error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 3px;
+}
+
+.success {
+    color: green;
+    font-size: 0.9em;
+    margin-top: 3px;
+    font-weight: bold;
+}
+
+.warning {
+    color: orange;
+    font-size: 0.9em;
+    margin-top: 3px;
+    font-weight: bold;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+p {
+    text-align: center;
+    margin-top: 15px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.age-info {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+}
+
+.age-info.success {
+    border-left-color: #28a745;
+    background-color: #d4edda;
+}
+
+.age-info.warning {
+    border-left-color: #ffc107;
+    background-color: #fff3cd;
+}
+
+.parent-consent {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.consent-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.consent-checkbox input {
+    width: auto;
+    margin-top: 3px;
+}
+
+.consent-checkbox label {
+    margin: 0;
+    font-weight: normal;
+}
+
+.age-result {
+    min-height: 20px;
+}

@@ -1,3 +1,70 @@
+class ParallaxCards {
+    constructor() {
+        this.cards = document.querySelectorAll('.parallax-card');
+        this.walk = { x: 5, y: 3 }; // Интенсивность эффекта
+        
+        this.init();
+    }
+
+    init() {
+        this.cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => this.parallax(e, card));
+            card.addEventListener('mouseleave', () => this.reset(card));
+            card.addEventListener('mouseenter', () => this.enter(card));
+        });
+    }
+
+    parallax(e, card) {
+        const width = card.offsetWidth;
+        const height = card.offsetHeight;
+        
+        const x = e.offsetX;
+        const y = e.offsetY;
+        
+        const xWalk = ((x / width) * this.walk.x) - (this.walk.x / 2);
+        const yWalk = ((y / height) * this.walk.y) - (this.walk.y / 2);
+        
+        // Применяем трансформации
+        card.style.transform = `
+            rotateY(${-xWalk}deg) 
+            rotateX(${yWalk}deg) 
+            translateZ(10px)
+        `;
+        
+        // Параллакс для внутренних элементов
+        const price = card.querySelector('.parallax-card__price');
+        const category = card.querySelector('.parallax-card__category');
+        const text = card.querySelector('.parallax-card__text');
+        const pagers = card.querySelectorAll('.parallax-card__pager');
+        
+        if (price) price.style.transform = `translateZ(35px) translateX(${xWalk * 2}px)`;
+        if (category) category.style.transform = `translateZ(30px) translateX(${-xWalk * 2}px)`;
+        if (text) text.style.transform = `translateZ(45px) translateY(${yWalk * 2}px)`;
+        
+        pagers.forEach(pager => {
+            pager.style.transform = `translateZ(30px) translateY(${yWalk * 3}px)`;
+        });
+    }
+
+    reset(card) {
+        card.style.transform = 'rotateY(0deg) rotateX(0deg) translateZ(0)';
+        
+        const price = card.querySelector('.parallax-card__price');
+        const category = card.querySelector('.parallax-card__category');
+        const text = card.querySelector('.parallax-card__text');
+        const pagers = card.querySelectorAll('.parallax-card__pager');
+        
+        if (price) price.style.transform = 'translateZ(30px)';
+        if (category) category.style.transform = 'translateZ(25px)';
+        if (text) text.style.transform = 'translateZ(40px)';
+        if (pagers) pagers.forEach(pager => pager.style.transform = 'translateZ(25px)');
+    }
+
+    enter(card) {
+        card.style.transition = 'all 0.1s ease-out';
+    }
+}
+
 class ServicesPagination {
     constructor() {
         this.servicesContainer = document.getElementById('servicesContainer');
@@ -15,6 +82,8 @@ class ServicesPagination {
         this.currentPage = 1;
         this.itemsPerPage = 3;
         this.totalPages = 1;
+
+        this.parallax = new ParallaxCards();
         
         this.init();
     }
@@ -69,6 +138,10 @@ class ServicesPagination {
         // Обновляем информацию о показе
         this.shoppingStart.textContent = startIndex + 1;
         this.shoppingEnd.textContent = Math.min(endIndex, this.services.length);
+
+        setTimeout(() => {
+            this.parallax = new ParallaxCards();
+        }, 50);
     }
 
     updatePaginationControls() {
@@ -190,7 +263,7 @@ class ServicesPagination {
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
     const pagination = new ServicesPagination();
-    
+    new ParallaxCards();
     // Если нужно добавить тестовые данные для демонстрации
     // (раскомментируйте следующую строку если у вас меньше 10 услуг)
     // pagination.addTestServices();

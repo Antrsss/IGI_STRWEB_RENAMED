@@ -164,13 +164,26 @@
             </div>
         </div>
 
-        <!-- Контейнер для услуг -->
-        <div id="servicesContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+         <!-- Контейнер для услуг с параллаксом -->
+        <div id="servicesContainer" class="parallax-container" 
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 25px;">
             {% for service in services %}
-            <div class="card service-item" data-service-id="{{ forloop.counter0 }}">
-                <h4>{{ service.name }}</h4>
-                <p class="price">${{ service.price }}</p>
-                <p>{{ service.description }}</p>
+            <div class="card service-item parallax-card" data-service-id="{{ forloop.counter0 }}">
+                <div class="parallax-card__image">
+                    {% if service.image %}
+                        <img src="{{ service.image.url }}" alt="{{ service.name }}">
+                    {% else %}
+                        <div class="placeholder-image">{{ service.name|slice:":1" }}</div>
+                    {% endif %}
+                </div>
+                
+                <span class="parallax-card__price">${{ service.price }}</span>
+                <span class="parallax-card__category">Service</span>
+                
+                <div class="parallax-card__text">
+                    <h4 class="parallax-card__title">{{ service.name }}</h4>
+                    <p class="parallax-card__description">{{ service.description }}</p>
+                </div>
             </div>
             {% endfor %}
         </div>

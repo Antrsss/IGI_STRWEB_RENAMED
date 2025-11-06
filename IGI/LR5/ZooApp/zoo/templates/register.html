@@ -1,102 +1,18 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Registration {% if role %}({{ role }}){% endif %}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 30px 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        div {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-
-        small {
-            display: block;
-            margin-top: 3px;
-            color: #888;
-        }
-
-        .error {
-            color: red;
-            font-size: 0.9em;
-            margin-top: 3px;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        p {
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'styles/register.css' %}">
 </head>
 <body>
-    <form method="post">
+    <form method="post" id="registrationForm">
         <h2>Registration {% if role %}({{ role }}){% endif %}</h2>
         {% csrf_token %}
         
         {% for field in form %}
-            <div>
+            <div class="field-container">
                 <label>{{ field.label_tag }}</label>
                 {{ field }}
                 {% if field.help_text %}
@@ -105,11 +21,30 @@
                 {% for error in field.errors %}
                     <div class="error">{{ error }}</div>
                 {% endfor %}
+                
+                <!-- Добавляем блок для отображения результата расчета возраста только для поля birth_date -->
+                {% if field.name == 'birth_date' %}
+                    <div id="ageResult" class="age-result"></div>
+                {% endif %}
             </div>
         {% endfor %}
+
+        <!-- Блок согласия родителей (изначально скрыт) -->
+        <div id="parentConsentSection" class="parent-consent" style="display: none;">
+            <h3 style="color: #856404; margin-top: 0;">Parental Consent Required</h3>
+            <p style="margin-bottom: 10px;">Since you are under 18 years old, parental consent is required to use this website.</p>
+            <div class="consent-checkbox">
+                <input type="checkbox" id="parent_consent" name="parent_consent">
+                <label for="parent_consent" style="margin: 0;">
+                    I confirm that my parent or legal guardian has given permission for me to use this website
+                </label>
+            </div>
+        </div>
         
-        <button type="submit">Register</button>
+        <button type="submit" id="submitButton">Register</button>
         <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
     </form>
+
+    <script src="{% static 'js/register.js' %}"></script>
 </body>
 </html>
