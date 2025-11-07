@@ -9,21 +9,249 @@
 {% block header %}Employees' Contacts{% endblock %}
 
 {% block content %}
-    {% for contact in contacts %}
-        <hr>
-        <figure style="margin-bottom: 20px;">
-            {% if contact.photo %}
-                <img src="{{ contact.photo.url }}" alt="{{ contact.name }}" width="150">
-            {% endif %}
-            <figcaption><strong>{{ contact.name }}</strong></figcaption>
-            <p><strong>Position:</strong> {{ contact.position.name }}</p>
-            {% if contact.info %}
-                <p>{{ contact.info }}</p>
-            {% endif %}
-            <p><em>Phone:</em> {{ contact.phone }}</p>
-            <p><em>Email:</em> {{ contact.email }}</p>
-        </figure>
-    {% empty %}
-        <p>No contacts available.</p>
-    {% endfor %}
+<div class="contacts-container">
+    
+    <div id="preloader" class="preloader-hidden">
+        <div class="circle solid"></div>
+        <div class="circle dotted"></div>
+        <p>Loading Contacts...</p>
+    </div>
+
+    <div class="actions-container">
+        <button id="addEmployeeBtn" class="add-employee-btn">
+            <span class="btn-icon">+</span>
+            Add Employee
+        </button>
+        <button id="premiumBtn" class="premium-btn" disabled>
+            Premium
+        </button>
+    </div>
+
+    <!-- Форма добавления сотрудника -->
+    <div id="addEmployeeForm" class="add-employee-form" style="display: none;">
+        <div class="form-header">
+            <h3>Add New Employee</h3>
+            <button type="button" id="closeFormBtn" class="close-form-btn">×</button>
+        </div>
+        
+        <form id="employeeForm" class="employee-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="employeeName">Full Name *</label>
+                    <input type="text" id="employeeName" name="name" required>
+                    <span class="error-message" id="employeeNameError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="employeePosition">Position *</label>
+                    <input type="text" id="employeePosition" name="position" required>
+                    <span class="error-message" id="employeePositionError"></span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="employeePhone">Phone *</label>
+                    <input type="text" id="employeePhone" name="phone" required 
+                        placeholder="+375 (29) 123-45-67">
+                    <span class="error-message" id="employeePhoneError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="employeeEmail">Email *</label>
+                    <input type="email" id="employeeEmail" name="email" required>
+                    <span class="error-message" id="employeeEmailError"></span>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="employeeInfo">Work Description</label>
+                <textarea id="employeeInfo" name="info" rows="3" 
+                        placeholder="Describe employee's responsibilities..."></textarea>
+                <span class="error-message" id="employeeInfoError"></span>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="employeePhoto">Photo URL</label>
+                    <input type="text" id="employeePhoto" name="photo" 
+                        placeholder="https://example.com/photo.jpg">
+                    <span class="error-message" id="employeePhotoError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="employeeWebsite">Website</label>
+                    <input type="text" id="employeeWebsite" name="website" 
+                        placeholder="https://example.com/page.html">
+                    <span class="error-message" id="employeeWebsiteError"></span>
+                </div>
+            </div>
+
+            <div class="validation-result" id="validationResult"></div>
+
+            <div class="form-actions">
+                <button type="button" id="validateBtn" class="validate-btn">
+                    Validate Fields
+                </button>
+                <button type="submit" id="addToTableBtn" class="add-to-table-btn" disabled>
+                    Add to Table
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Фильтрация -->
+    <div class="filter-container">
+        <form id="filterForm" class="filter-form">
+            <div class="filter-input-group">
+                <input type="text" 
+                       id="filterInput" 
+                       class="filter-input" 
+                       placeholder="Enter text to filter contacts...">
+                <button type="submit" class="filter-btn">
+                    <span class="btn-text">Find</span>
+                    <span class="btn-icon">🔍</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table class="contacts-table" id="contactsTable">
+            <thead>
+                <tr>
+                    <th class="checkbox-column">
+                        <input type="checkbox" id="selectAllCheckbox">
+                    </th>
+                    <th class="photo-column">Photo</th>
+                    <th class="name-column sortable" data-sort-by="name">
+                        Full Name <span class="sort-indicator"></span>
+                    </th>
+                    <th class="position-column sortable" data-sort-by="position">
+                        Position <span class="sort-indicator"></span>
+                    </th>
+                    <th class="work-column">Work Description</th>
+                    <th class="phone-column sortable" data-sort-by="phone">
+                        Phone <span class="sort-indicator"></span>
+                    </th>
+                    <th class="email-column sortable" data-sort-by="email">
+                        Email <span class="sort-indicator"></span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="contactsTableBody">
+                {% for contact in contacts %}
+                <tr class="contact-row" 
+                    data-contact-id="{{ contact.id }}"
+                    data-name="{{ contact.name|lower }}"
+                    data-position="{{ contact.position.name|lower }}"
+                    data-phone="{{ contact.phone }}"
+                    data-email="{{ contact.email|lower }}"
+                    data-info="{{ contact.info|default:''|lower }}">
+                    <td class="checkbox-column">
+                        <input type="checkbox" class="contact-checkbox" data-contact-id="{{ contact.id }}">
+                    </td>
+                    <td class="photo-column">
+                        <div class="contact-photo">
+                            {% if contact.photo %}
+                                <img src="{{ contact.photo.url }}" alt="{{ contact.name }}" class="employee-photo">
+                            {% else %}
+                                <div class="photo-placeholder">
+                                    {{ contact.name|slice:":1"|upper }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="name-column">
+                        <strong>{{ contact.name }}</strong>
+                    </td>
+                    <td class="position-column">
+                        {{ contact.position.name }}
+                    </td>
+                    <td class="work-column">
+                        {% if contact.info %}
+                            {{ contact.info }}
+                        {% else %}
+                            <span class="no-info">No description available</span>
+                        {% endif %}
+                    </td>
+                    <td class="phone-column">
+                        <a href="tel:{{ contact.phone }}" class="phone-link">
+                            {{ contact.phone }}
+                        </a>
+                    </td>
+                    <td class="email-column">
+                        <a href="mailto:{{ contact.email }}" class="email-link">
+                            {{ contact.email }}
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="no-contacts">
+                        No contacts available.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Детали контакта -->
+    <div id="contactDetails" class="contact-details" style="display: none;">
+        <div class="contact-details-header">
+            <h3>Contact Details</h3>
+            <button id="closeDetails" class="close-details-btn">×</button>
+        </div>
+        <div class="contact-details-content">
+            <div class="detail-photo-container"></div>
+            <div class="detail-item">
+                <label>Full Name:</label>
+                <span id="detailName"></span>
+            </div>
+            <div class="detail-item">
+                <label>Position:</label>
+                <span id="detailPosition"></span>
+            </div>
+            <div class="detail-item">
+                <label>Work Description:</label>
+                <span id="detailInfo"></span>
+            </div>
+            <div class="detail-item">
+                <label>Phone:</label>
+                <a id="detailPhone" href=""></a>
+            </div>
+            <div class="detail-item">
+                <label>Email:</label>
+                <a id="detailEmail" href=""></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Блок премирования -->
+    <div id="premiumBlock" class="premium-block" style="display: none;">
+        <div class="premium-header">
+            <h3>🎉 Employee Premium</h3>
+            <button id="closePremiumBtn" class="close-premium-btn">×</button>
+        </div>
+        <div class="premium-content">
+            <p id="premiumText"></p>
+        </div>
+    </div>
+
+    <!-- Навигация пагинации -->
+    <div class="pagination-nav">
+        <button id="firstPage" class="pagination-btn">First</button>
+        <button id="prevPage" class="pagination-btn">Previous</button>
+        
+        <div class="page-numbers" id="pageNumbers"></div>
+        
+        <button id="nextPage" class="pagination-btn">Next</button>
+        <button id="lastPage" class="pagination-btn">Last</button>
+    </div>
+</div>
 {% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/contacts.js' %}"></script>
+{% endblock extra_js %}
