@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>График функции arcsin(x)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .controls {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .chart-container {
+            position: relative;
+            height: 600px;
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>График функции arcsin(x) и её разложение в ряд Тейлора</h1>
+        
+        <div class="controls">
+            <label for="nTerms">Количество членов ряда (n): </label>
+            <input type="number" id="nTerms" value="10" min="1" max="50">
+            <label for="step">Шаг по x: </label>
+            <input type="number" id="step" value="0.1" step="0.01" min="0.01" max="0.5">
+            <button onclick="updateChart()">Построить графики</button>
+            <button onclick="saveChart()">Сохранить график</button>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <div id="dataTable"></div>
+    </div>
+
+    <script>
+        // Факториал числа
+        function factorial(n) {
+            if (n === 0 || n === 1) return 1;
+            let result = 1;
+            for (let i = 2; i <= n; i++) {
+                result *= i;
+            }
+            return result;
+        }
+
+        // Разложение arcsin(x) в ряд Тейлора
+        function arcsinSeries(x, nTerms) {
+            let sum = 0;
+            for (let n = 0; n < nTerms; n++) {
+                const numerator = factorial(2 * n);
+                const denominator = Math.pow(4, n) * Math.pow(factorial(n), 2) * (2 * n + 1);
+                const term = (numerator / denominator) * Math.pow(x, 2 * n + 1);
+                sum += term;
+            }
+            return sum;
+        }
+
+        // Создание данных для графиков
+        function generateData(nTerms = 10, step = 0.1) {
+            const data = [];
+            
+            for (let x = -0.95; x <= 0.95; x += step) {
+                const seriesValue = arcsinSeries(x, nTerms);
+                const mathValue = Math.asin(x);
+                
+                data.push({
+                    x: parseFloat(x.toFixed(3)),
+                    series: parseFloat(seriesValue.toFixed(6)),
+                    math: parseFloat(mathValue.toFixed(6)),
+                    n: nTerms
+                });
+            }
+            
+            return data;
+        }
+
+        // Обновление таблицы с данными
+        function updateTable(data) {
+            const tableContainer = document.getElementById('dataTable');
+            let tableHTML = `
+                <h3>Таблица значений (первые 20 точек)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>x</th>
+                            <th>F(x) - ряд Тейлора</th>
+                            <th>Math F(x)</th>
+                            <th>n</th>
+                            <th>Погрешность</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            // Показываем только первые 20 точек для читабельности
+            const displayData = data.slice(0, 20);
+            
+            displayData.forEach(point => {
+                const error = Math.abs(point.math - point.series);
+                tableHTML += `
+                    <tr>
+                        <td>${point.x}</td>
+                        <td>${point.series}</td>
+                        <td>${point.math}</td>
+                        <td>${point.n}</td>
+                        <td>${error.toFixed(6)}</td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += '</tbody></table>';
+            tableContainer.innerHTML = tableHTML;
+        }
+
+        let myChart;
+
+        // Создание и обновление графика
+        function updateChart() {
+            const nTerms = parseInt(document.getElementById('nTerms').value);
+            const step = parseFloat(document.getElementById('step').value);
+            const data = generateData(nTerms, step);
+            
+            updateTable(data);
+            
+            const ctx = document.getElementById('myChart').getContext('2d');
+            
+            // Уничтожаем предыдущий график если он существует
+            if (myChart) {
+                myChart.destroy();
+            }
+            
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(point => point.x),
+                    datasets: [
+                        {
+                            label: 'Ряд Тейлора arcsin(x)',
+                            data: data.map(point => point.series),
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.1,
+                            pointRadius: 2
+                        },
+                        {
+                            label: 'Math.asin(x)',
+                            data: data.map(point => point.math),
+                            borderColor: 'rgb(54, 162, 235)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.1,
+                            pointRadius: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Сравнение разложения arcsin(x) в ряд Тейлора и математической реализации',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        },
+                        annotation: {
+                            annotations: {
+                                line1: {
+                                    type: 'line',
+                                    scaleID: 'y',
+                                    value: 0,
+                                    borderColor: 'black',
+                                    borderWidth: 1,
+                                    label: {
+                                        display: true,
+                                        content: 'y = 0',
+                                        position: 'end'
+                                    }
+                                },
+                                line2: {
+                                    type: 'line',
+                                    scaleID: 'x',
+                                    value: 0,
+                                    borderColor: 'black',
+                                    borderWidth: 1,
+                                    label: {
+                                        display: true,
+                                        content: 'x = 0',
+                                        position: 'end'
+                                    }
+                                }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'x',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'arcsin(x)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'nearest'
+                    }
+                }
+            });
+        }
+
+        // Сохранение графика в файл
+        function saveChart() {
+            if (myChart) {
+                const link = document.createElement('a');
+                link.download = 'arcsin-graph.png';
+                link.href = document.getElementById('myChart').toDataURL();
+                link.click();
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            updateChart();
+        });
+    </script>
+</body>
+</html>

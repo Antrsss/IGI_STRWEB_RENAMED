@@ -2,55 +2,7 @@
 {% load static %}
 
 {% block extra_css %}
-    <style>
-        section * {
-            background-color: transparent;
-        }
-        section {
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background-color: #fafafa;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
-
-        section h2 {
-            margin-bottom: 12px;
-            font-size: 20px;
-            color: darkgreen;
-            border-bottom: 2px solid darkgreen;
-            padding-bottom: 5px;
-        }
-
-        section p {
-            font-size: 15px;
-            color: #444;
-            line-height: 1.6;
-        }
-
-        video {
-            display: block;
-            max-width: 100%;
-            border-radius: 8px;
-            margin: 10px 0;
-        }
-
-        img {
-            display: block;
-            margin: 10px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        small {
-            display: block;
-            margin-top: 20px;
-            font-size: 12px;
-            color: #888;
-            text-align: right;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'styles/company_info.css' %}">
 {% endblock %}
 
 {% block title %}About Company{% endblock %}
@@ -102,6 +54,23 @@
             </a>
         </p>
     </section>
-    
+
     <small>Last updated: {{ company_info.last_updated|date:"d M Y H:i" }}</small>
+
+    <section id="animals-section">
+        <img src="{% static 'images/animals/lion.png' %}" 
+             alt="Lion" class="animal-moving" id="moving-lion">
+        <img src="{% static 'images/animals/elephant.jpg' %}" 
+             alt="Elephant" class="animal-moving" id="moving-elephant">
+        <img src="{% static 'images/animals/giraffe.png' %}" 
+             alt="Giraffe" class="animal-moving" id="moving-giraffe">
+        <img src="{% static 'images/animals/monkey.png' %}" 
+             alt="Monkey" class="animal-moving" id="moving-monkey">
+        <img src="{% static 'images/animals/bird.jpg' %}" 
+             alt="Bird" class="animal-moving" id="moving-bird">
+    </section>
 {% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/company_info.js' %}"></script>
+{% endblock extra_js %}

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Батареи - Демонстрация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .api-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+            text-align: center;
+        }
+        .api-section h2 {
+            margin-top: 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background-color: #cce7ff;
+            color: #004085;
+            border: 1px solid #b3d7ff;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .data-display {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            text-align: left;
+        }
+        .battery-level {
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
+            border: 2px solid #dee2e6;
+        }
+        .battery-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .battery-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .info-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .info-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="api-section">
+        <h2>API Батареи</h2>
+        <div id="batteryStatus" class="status info">Загрузка информации о батарее...</div>
+        
+        <div class="battery-level">
+            <div id="batteryFill" class="battery-fill" style="width: 0%">0%</div>
+        </div>
+        
+        <div class="battery-info">
+            <div class="info-item">
+                <div>Состояние</div>
+                <div id="batteryState" class="info-value">-</div>
+            </div>
+            <div class="info-item">
+                <div>Уровень</div>
+                <div id="batteryLevel" class="info-value">-</div>
+            </div>
+        </div>
+        
+        <div id="batteryData" class="data-display"></div>
+        <button onclick="getBatteryInfo()">Обновить информацию</button>
+    </div>
+
+    <script>
+        async function getBatteryInfo() {
+            const batteryStatus = document.getElementById('batteryStatus');
+            const batteryData = document.getElementById('batteryData');
+            const batteryFill = document.getElementById('batteryFill');
+            const batteryState = document.getElementById('batteryState');
+            const batteryLevel = document.getElementById('batteryLevel');
+
+            // Проверка поддержки API
+            if (!navigator.getBattery) {
+                batteryStatus.className = 'status error';
+                batteryStatus.textContent = 'API батареи не поддерживается вашим браузером';
+                return;
+            }
+
+            try {
+                const battery = await navigator.getBattery();
+                
+                function updateBatteryInfo() {
+                    const level = battery.level * 100;
+                    const charging = battery.charging;
+                    const chargingTime = battery.chargingTime;
+                    const dischargingTime = battery.dischargingTime;
+                    
+                    // Обновляем индикатор уровня
+                    batteryFill.style.width = `${level}%`;
+                    batteryFill.textContent = `${Math.round(level)}%`;
+                    
+                    // Обновляем состояние
+                    batteryState.textContent = charging ? 'Заряжается' : 'Разряжается';
+                    batteryLevel.textContent = `${Math.round(level)}%`;
+                    
+                    // Обновляем статус
+                    let statusText = '';
+                    if (charging) {
+                        statusText = 'Устройство заряжается';
+                        if (chargingTime !== Infinity) {
+                            statusText += ` - до полной зарядки: ${Math.round(chargingTime / 60)} минут`;
+                        }
+                    } else {
+                        statusText = 'Устройство разряжается';
+                        if (dischargingTime !== Infinity) {
+                            statusText += ` - осталось работы: ${Math.round(dischargingTime / 60)} минут`;
+                        }
+                    }
+                    
+                    batteryStatus.className = charging ? 'status success' : 'status info';
+                    batteryStatus.textContent = statusText;
+                    
+                    // Обновляем детальную информацию
+                    batteryData.textContent = `Детальная информация:
+                        Уровень заряда: ${Math.round(level)}%
+                        Состояние: ${charging ? 'Заряжается' : 'Разряжается'}
+                        Время до полной зарядки: ${chargingTime === Infinity ? 'Неизвестно' : Math.round(chargingTime / 60) + ' минут'}
+                        Время до полной разрядки: ${dischargingTime === Infinity ? 'Неизвестно' : Math.round(dischargingTime / 60) + ' минут'}`;
+                }
+
+                // Добавляем обработчики событий
+                battery.addEventListener('levelchange', updateBatteryInfo);
+                battery.addEventListener('chargingchange', updateBatteryInfo);
+                battery.addEventListener('chargingtimechange', updateBatteryInfo);
+                battery.addEventListener('dischargingtimechange', updateBatteryInfo);
+                
+                // Первоначальное обновление
+                updateBatteryInfo();
+                
+            } catch (error) {
+                batteryStatus.className = 'status error';
+                batteryStatus.textContent = 'Ошибка получения информации о батарее';
+                console.error('Battery API error:', error);
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            getBatteryInfo();
+            
+            // Периодическое обновление информации о батарее (каждые 30 секунд)
+            setInterval(getBatteryInfo, 30000);
+        });
+    </script>
+</body>
+</html>

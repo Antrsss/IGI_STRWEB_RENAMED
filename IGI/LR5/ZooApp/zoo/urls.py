@@ -5,6 +5,7 @@ from .pages_views import recall_views
 from .pages_views import privacy_policy_views
 from .pages_views import ticket_detail
 from .pages_views import certificate_views
+from .pages_views import task_8_9_10
 
 urlpatterns = [
     path('superuser/', views.superuser_dashboard, name='superuser_dashboard'),
@@ -31,4 +32,8 @@ urlpatterns = [
     path("checkout/", ticket_detail.checkout, name="checkout"),
     
     path("certificate/", certificate_views.certificate, name="certificate"),
+    
+    path('task_8/', task_8_9_10.task_8, name='task_8'),
+    path('task_9/', task_8_9_10.task_9, name='task_9'),
+    path('task_10/', task_8_9_10.task_10, name='task_10'),
 ]
