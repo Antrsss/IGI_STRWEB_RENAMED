@@ -146,7 +146,6 @@
 
         <h3>Extra Services</h3>
     
-        <!-- Добавляем контролы пагинации -->
         <div class="pagination-controls">
             <div class="pagination-settings">
                 <label for="itemsPerPage">Items per page:</label>
@@ -164,7 +163,6 @@
             </div>
         </div>
 
-         <!-- Контейнер для услуг с параллаксом -->
         <div id="servicesContainer" class="parallax-container" 
             style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 25px;">
             {% for service in services %}
@@ -188,7 +186,6 @@
             {% endfor %}
         </div>
 
-        <!-- Навигация пагинации -->
         <div class="pagination-nav">
             <button id="firstPage" class="pagination-btn">First</button>
             <button id="prevPage" class="pagination-btn">Previous</button>

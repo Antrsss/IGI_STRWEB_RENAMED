@@ -2,7 +2,6 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Управление веществами</title>
     <style>
         .container {
@@ -91,7 +90,6 @@
     </div>
 
     <script>
-        // Базовый массив веществ
         let substances = [
             { name: "Медь", density: 8.96, conductivity: "проводник" },
             { name: "Кремний", density: 2.33, conductivity: "полупроводник" },
@@ -102,16 +100,12 @@
 
         let currentManager = null;
 
-        // ========== ВАРИАНТ 1: Прототипное наследование ==========
-
-        // Базовый конструктор вещества
         function BaseSubstance(name, density, conductivity) {
             this.name = name;
             this.density = density;
             this.conductivity = conductivity;
         }
 
-        // Методы базового класса
         BaseSubstance.prototype.getName = function() {
             return this.name;
         };
@@ -140,17 +134,14 @@
             return `${this.name} (${this.density} г/см³, ${this.conductivity})`;
         };
 
-        // Конструктор наследника (полупроводник)
         function Semiconductor(name, density, conductivity, bandGap) {
             BaseSubstance.call(this, name, density, conductivity);
             this.bandGap = bandGap;
         }
 
-        // Наследование прототипа
         Semiconductor.prototype = Object.create(BaseSubstance.prototype);
         Semiconductor.prototype.constructor = Semiconductor;
 
-        // Дополнительные методы для полупроводника
         Semiconductor.prototype.getBandGap = function() {
             return this.bandGap;
         };
@@ -163,7 +154,6 @@
             return `${this.name} (${this.density} г/см³, ${this.conductivity}, запрещенная зона: ${this.bandGap} эВ)`;
         };
 
-        // Менеджер веществ с прототипным наследованием
         function SubstanceManagerPrototype() {
             this.substances = [];
         }
@@ -225,7 +215,7 @@
             container.appendChild(list);
         };
 
-        // ========== ВАРИАНТ 2: Классы ES6 ==========
+
 
         class BaseSubstanceClass {
             constructor(name, density, conductivity) {
@@ -234,7 +224,6 @@
                 this.conductivity = conductivity;
             }
 
-            // Геттеры
             getName() {
                 return this.name;
             }
@@ -247,7 +236,6 @@
                 return this.conductivity;
             }
 
-            // Сеттеры
             setName(name) {
                 this.name = name;
             }
@@ -260,7 +248,6 @@
                 this.conductivity = conductivity;
             }
 
-            // Метод вывода информации
             getInfo() {
                 return `${this.name} (${this.density} г/см³, ${this.conductivity})`;
             }
@@ -272,7 +259,6 @@
                 this.bandGap = bandGap;
             }
 
-            // Дополнительные геттеры/сеттеры
             getBandGap() {
                 return this.bandGap;
             }
@@ -281,7 +267,6 @@
                 this.bandGap = bandGap;
             }
 
-            // Переопределенный метод
             getInfo() {
                 return `${this.name} (${this.density} г/см³, ${this.conductivity}, запрещенная зона: ${this.bandGap} эВ)`;
             }
@@ -350,17 +335,14 @@
             }
         }
 
-        // ========== ОБЩИЕ ФУНКЦИИ ==========
+ 
 
         function usePrototypeInheritance() {
-            console.log('Используем прототипное наследование');
             currentManager = new SubstanceManagerPrototype();
             
-            // Добавляем начальные данные
             substances.forEach(sub => {
                 let substance;
                 if (sub.conductivity === "полупроводник") {
-                    // Для полупроводников генерируем случайную запрещенную зону
                     const bandGap = (Math.random() * 3 + 0.1).toFixed(2);
                     substance = new Semiconductor(sub.name, sub.density, sub.conductivity, parseFloat(bandGap));
                 } else {
@@ -375,10 +357,8 @@
         }
 
         function useClassInheritance() {
-            console.log('Используем классы ES6');
             currentManager = new SubstanceManagerClass();
             
-            // Добавляем начальные данные
             substances.forEach(sub => {
                 let substance;
                 if (sub.conductivity === "полупроводник") {
@@ -392,21 +372,18 @@
             
             updateDisplay();
             document.getElementById('currentMethod').innerHTML = 
-                '<div><strong>Текущий метод: Классы ES6</strong></div>';
+                '<div><strong>Текущий метод: Классы</strong></div>';
         }
 
         function updateDisplay() {
-            console.log('Обновляем отображение');
             if (currentManager) {
                 currentManager.displayAllSubstances();
                 currentManager.displaySemiconductors();
             }
         }
 
-        // Обработчик формы
         document.getElementById('substanceForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log('Добавляем новое вещество');
             
             if (!currentManager) {
                 alert('Сначала выберите метод наследования!');
@@ -422,14 +399,12 @@
             let substance;
             
             if (conductivity === "полупроводник" && bandGap) {
-                // Создаем полупроводник с дополнительным параметром
                 if (currentManager instanceof SubstanceManagerPrototype) {
                     substance = new Semiconductor(name, density, conductivity, bandGap);
                 } else {
                     substance = new SemiconductorClass(name, density, conductivity, bandGap);
                 }
             } else {
-                // Создаем базовое вещество
                 if (currentManager instanceof SubstanceManagerPrototype) {
                     substance = new BaseSubstance(name, density, conductivity);
                 } else {
@@ -440,14 +415,11 @@
             currentManager.addSubstance(substance);
             updateDisplay();
             
-            // Очистка формы
             this.reset();
         });
 
-        // Инициализация по умолчанию
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Документ загружен');
-            useClassInheritance(); // Запускаем с классами по умолчанию
+            useClassInheritance();
         });
     </script>
 </body>

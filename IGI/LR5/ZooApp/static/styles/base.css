@@ -90,7 +90,7 @@ p {
     padding: 5px;
     word-spacing: 10px;
     hyphens: auto; 
-    word-wrap: break-word;   /* ломать слова если длинные */
+    word-wrap: break-word;
 }
 article {
     margin: 10px;
@@ -165,7 +165,8 @@ img[name="logo"]:hover {
     font-weight: bold;
 }
 
-/* Светлая тема (по умолчанию) */
+
+
 [data-theme="light"] {
     --bg-color: rgb(212, 238, 190);
     --text-color: #333;
@@ -174,7 +175,6 @@ img[name="logo"]:hover {
     --header-bg: transparent;
 }
 
-/* Темная тема */
 [data-theme="dark"] {
     --bg-color: #1a1a1a;
     --text-color: #ffffff;
@@ -183,7 +183,6 @@ img[name="logo"]:hover {
     --header-bg: #2d2d2d;
 }
 
-/* Применяем CSS переменные */
 * {
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -203,7 +202,6 @@ header {
     background-color: var(--header-bg);
 }
 
-/* Обновляем стили для навигации и сайдбара */
 nav * {
     background-color: transparent;
     text-decoration: none;

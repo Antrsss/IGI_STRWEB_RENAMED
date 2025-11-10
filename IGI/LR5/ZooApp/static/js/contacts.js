@@ -8,34 +8,27 @@ class ContactsManager {
             direction: 'asc'
         };
         
-        // Пагинация
         this.currentPage = 1;
         this.itemsPerPage = 3;
         this.totalPages = 1;
         this.allContacts = [];
         this.filteredContacts = [];
         
-        // Фильтрация
         this.filterText = '';
         
-        // Счетчик для новых ID
         this.nextContactId = 1000;
 
-        // Прелоадер
         this.preloader = document.getElementById('preloader');
         
         this.init();
     }
 
     init() {
-        // Гарантируем, что прелоадер скрыт при инициализации
         this.hidePreloader();
         
-        // Сохраняем все контакты
         this.allContacts = Array.from(this.tableBody.querySelectorAll('.contact-row'));
         this.filteredContacts = [...this.allContacts];
         
-        // Инициализируем nextContactId на основе существующих ID
         this.allContacts.forEach(contact => {
             const id = parseInt(contact.dataset.contactId);
             if (id >= this.nextContactId) {
@@ -52,7 +45,6 @@ class ContactsManager {
         this.updatePremiumButton();
     }
 
-    // Методы для работы с прелоадером
     showPreloader(message = 'Loading...') {
         console.log('Showing preloader:', message);
         
@@ -61,14 +53,13 @@ class ContactsManager {
             if (messageElement && message) {
                 messageElement.textContent = message;
             }
-            // Убираем hidden класс и добавляем visible
+
             this.preloader.classList.remove('preloader-hidden');
             this.preloader.classList.add('preloader-visible');
         } else {
             console.error('Preloader element not found!');
         }
         
-        // Блокируем интерфейс
         this.createLoadingOverlay();
     }
 
@@ -76,25 +67,20 @@ class ContactsManager {
         console.log('Hiding preloader');
         
         if (this.preloader) {
-            // Убираем visible класс и добавляем hidden
             this.preloader.classList.remove('preloader-visible');
             this.preloader.classList.add('preloader-hidden');
         }
         
-        // Разблокируем интерфейс
         this.removeLoadingOverlay();
     }
 
     createLoadingOverlay() {
-        // Удаляем старый оверлей если есть
         this.removeLoadingOverlay();
         
         const overlay = document.createElement('div');
         overlay.className = 'loading-overlay';
         overlay.id = 'loadingOverlay';
         document.body.appendChild(overlay);
-        
-        console.log('Loading overlay created');
     }
 
     removeLoadingOverlay() {
@@ -105,7 +91,6 @@ class ContactsManager {
         }
     }
 
-    // ОБНОВЛЕННЫЙ метод фильтрации с правильным прелоадером
     handleFilter() {
         console.log('Starting filter operation');
         this.showPreloader('Filtering contacts...');
@@ -113,7 +98,6 @@ class ContactsManager {
         const filterInput = document.getElementById('filterInput');
         this.filterText = filterInput.value.trim().toLowerCase();
         
-        // Используем более короткую задержку для лучшего UX
         setTimeout(() => {
             try {
                 if (this.filterText === '') {
@@ -134,7 +118,6 @@ class ContactsManager {
                     });
                 }
                 
-                // Сбрасываем выделение при фильтрации
                 this.selectedContacts.clear();
                 document.querySelectorAll('.contact-checkbox').forEach(cb => {
                     cb.checked = false;
@@ -147,18 +130,14 @@ class ContactsManager {
                 this.calculateTotalPages();
                 this.renderPage();
                 this.updatePaginationControls();
-                
-                console.log(`Filtered to ${this.filteredContacts.length} contacts`);
             } catch (error) {
                 console.error('Error during filtering:', error);
             } finally {
-                // Всегда скрываем прелоадер, даже если была ошибка
                 this.hidePreloader();
             }
         }, 800);
     }
 
-    // ДОБАВИМ прелоадер также для сортировки (по желанию)
     handleSort(header) {
         this.showPreloader('Sorting contacts...');
         
@@ -187,7 +166,6 @@ class ContactsManager {
         }, 600);
     }
 
-    // ДОБАВИМ прелоадер для пагинации (по желанию)
     goToPage(pageNumber) {
         if (pageNumber >= 1 && pageNumber <= this.totalPages && pageNumber !== this.currentPage) {
             this.showPreloader(`Loading page ${pageNumber}...`);
@@ -206,7 +184,6 @@ class ContactsManager {
         }
     }
 
-    // ДОБАВИМ прелоадер для добавления сотрудника (по желанию)
     addEmployeeToTable() {
         if (!this.validateForm()) {
             alert('Please fix validation errors before adding.');
@@ -226,7 +203,6 @@ class ContactsManager {
             website: document.getElementById('employeeWebsite').value.trim()
         };
 
-        // Форматируем телефон для единообразия
         formData.phone = this.formatPhoneNumber(formData.phone);
 
         setTimeout(() => {
@@ -234,14 +210,11 @@ class ContactsManager {
                 const newRow = this.createTableRow(formData);
                 this.tableBody.appendChild(newRow);
 
-                // Обновляем данные
                 this.allContacts = Array.from(this.tableBody.querySelectorAll('.contact-row'));
                 this.filteredContacts = [...this.allContacts];
 
-                // Сбрасываем форму
                 this.hideAddForm();
                 
-                // Пересчитываем страницы и показываем первую
                 this.currentPage = 1;
                 this.calculateTotalPages();
                 this.renderPage();
@@ -256,7 +229,6 @@ class ContactsManager {
         }, 1000);
     }
 
-    // ДОБАВИМ прелоадер для премирования (по желанию)
     generatePremiumText() {
         if (this.selectedContacts.size === 0) {
             alert('Please select employees to premium.');
@@ -281,7 +253,6 @@ class ContactsManager {
                 document.getElementById('premiumText').textContent = premiumText;
                 document.getElementById('premiumBlock').style.display = 'block';
                 
-                // Прокручиваем к блоку премирования
                 document.getElementById('premiumBlock').scrollIntoView({ behavior: 'smooth' });
             } catch (error) {
                 console.error('Error generating premium text:', error);
@@ -290,9 +261,8 @@ class ContactsManager {
             }
         }, 700);
     }
-    // Остальные методы остаются без изменений
+
     bindEvents() {
-        // Обработчики для чекбоксов
         document.addEventListener('change', (e) => {
             if (e.target.classList.contains('contact-checkbox')) {
                 this.handleContactSelection(e.target);
@@ -302,26 +272,22 @@ class ContactsManager {
             }
         });
 
-        // Обработчики для сортировки
         document.querySelectorAll('.sortable').forEach(header => {
             header.addEventListener('click', (e) => {
                 this.handleSort(header);
             });
         });
 
-        // Обработчики пагинации
         document.getElementById('firstPage').addEventListener('click', () => this.goToPage(1));
         document.getElementById('prevPage').addEventListener('click', () => this.goToPage(this.currentPage - 1));
         document.getElementById('nextPage').addEventListener('click', () => this.goToPage(this.currentPage + 1));
         document.getElementById('lastPage').addEventListener('click', () => this.goToPage(this.totalPages));
 
-        // Фильтрация - ЕДИНСТВЕННОЕ место где используется прелоадер
         document.getElementById('filterForm').addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleFilter();
         });
 
-        // Клик по строке таблицы
         document.addEventListener('click', (e) => {
             const row = e.target.closest('.contact-row');
             if (row && !e.target.classList.contains('contact-checkbox')) {
@@ -329,12 +295,10 @@ class ContactsManager {
             }
         });
 
-        // Закрытие деталей контакта
         document.getElementById('closeDetails').addEventListener('click', () => {
             this.hideContactDetails();
         });
 
-        // Добавление сотрудника
         document.getElementById('addEmployeeBtn').addEventListener('click', () => {
             this.showAddForm();
         });
@@ -343,7 +307,6 @@ class ContactsManager {
             this.hideAddForm();
         });
 
-        // Валидация и добавление
         document.getElementById('validateBtn').addEventListener('click', () => {
             this.validateForm();
         });
@@ -353,12 +316,10 @@ class ContactsManager {
             this.addEmployeeToTable();
         });
 
-        // Изменения в форме
         document.getElementById('employeeForm').addEventListener('input', () => {
             this.checkFormCompletion();
         });
 
-        // Премирование
         document.getElementById('premiumBtn').addEventListener('click', () => {
             this.generatePremiumText();
         });
@@ -368,7 +329,6 @@ class ContactsManager {
         });
     }
 
-    // Остальные существующие методы остаются без изменений
     validateForm() {
         const website = document.getElementById('employeeWebsite').value.trim();
         const phone = document.getElementById('employeePhone').value.trim();
@@ -380,10 +340,8 @@ class ContactsManager {
         let isValid = true;
         let validationMessage = '';
 
-        // Сбрасываем все ошибки
         this.resetValidationStyles();
 
-        // Валидация обязательных полей
         if (!name) {
             this.markFieldInvalid('employeeName', 'Full name is required');
             isValid = false;
@@ -418,7 +376,6 @@ class ContactsManager {
             this.markFieldValid('employeeEmail');
         }
 
-        // Валидация опциональных полей
         if (website && !this.validateURL(website)) {
             this.markFieldInvalid('employeeWebsite', 'Invalid URL format. Must start with http:// or https:// and end with .php or .html');
             isValid = false;
@@ -434,10 +391,10 @@ class ContactsManager {
         }
 
         if (isValid) {
-            validationMessage = '✅ All fields are valid! You can add the employee to the table.';
+            validationMessage = 'All fields are valid! You can add the employee to the table.';
             document.getElementById('addToTableBtn').disabled = false;
         } else {
-            validationMessage = '❌ Please fix the validation errors above.';
+            validationMessage = 'Please fix the validation errors above.';
             document.getElementById('addToTableBtn').disabled = true;
         }
 
@@ -451,35 +408,30 @@ class ContactsManager {
         // Очищаем номер от пробелов, скобок и дефисов для проверки
         const cleanPhone = phone.replace(/[\s\(\-\+\)]/g, '');
         
-        // Проверяем основные форматы:
         // 80291112233, 8 (029) 1112233, +375 (29) 111-22-33, +375 (29) 111 22 33
         
-        // Проверка для формата 8xxxxxxxxxx (11 цифр)
+        // 8xxxxxxxxxx (11 цифр)
         if (cleanPhone.startsWith('8') && cleanPhone.length === 11 && /^\d+$/.test(cleanPhone)) {
             return true;
         }
         
-        // Проверка для формата +375xxxxxxxxx (13 символов, 12 цифр после +)
+        // +375xxxxxxxxx (13 символов, 12 цифр после +)
         if (cleanPhone.startsWith('375') && cleanPhone.length === 12 && /^\d+$/.test(cleanPhone)) {
             return true;
         }
         
-        // Дополнительная проверка с учетом оригинального формата
         const phonePattern = /^(\+375|8)[\s\-]?\(?\d{2}\)?[\s\-]?\d{3}[\s\-]?\d{2}[\s\-]?\d{2}$/;
         return phonePattern.test(phone);
     }
 
     validateURL(url) {
-        // Должен начинаться с http:// или https:// и заканчиваться на .php или .html
         const urlPattern = /^https?:\/\/.+(\.php|\.html)$/;
         return urlPattern.test(url);
     }
 
     validatePhotoURL(url) {
-        // Базовая валидация URL для фото
         try {
             new URL(url);
-            // Дополнительно проверяем, что это изображение (опционально)
             const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
             return imageExtensions.some(ext => url.toLowerCase().includes(ext));
         } catch {
@@ -532,18 +484,18 @@ class ContactsManager {
     }
 
     formatPhoneNumber(phone) {
-        // Приводим телефон к единому формату: +375 (29) XXX-XX-XX
+        //+375 (29) XXX-XX-XX
         const cleanPhone = phone.replace(/[\s\(\-\+\)]/g, '');
         
         if (cleanPhone.startsWith('8') && cleanPhone.length === 11) {
-            // Формат 8XXXXXXXXXX -> +375 (XX) XXX-XX-XX
+            //8XXXXXXXXXX -> +375 (XX) XXX-XX-XX
             const code = cleanPhone.substring(1, 4);
             const part1 = cleanPhone.substring(4, 7);
             const part2 = cleanPhone.substring(7, 9);
             const part3 = cleanPhone.substring(9, 11);
             return `+375 (${code}) ${part1}-${part2}-${part3}`;
         } else if (cleanPhone.startsWith('375') && cleanPhone.length === 12) {
-            // Формат 375XXXXXXXXX -> +375 (XX) XXX-XX-XX
+            //375XXXXXXXXX -> +375 (XX) XXX-XX-XX
             const code = cleanPhone.substring(3, 5);
             const part1 = cleanPhone.substring(5, 8);
             const part2 = cleanPhone.substring(8, 10);
@@ -551,7 +503,6 @@ class ContactsManager {
             return `+375 (${code}) ${part1}-${part2}-${part3}`;
         }
         
-        // Если номер уже в хорошем формате, возвращаем как есть
         return phone;
     }
 
@@ -565,7 +516,6 @@ class ContactsManager {
         row.dataset.email = contact.email.toLowerCase();
         row.dataset.info = (contact.info || '').toLowerCase();
 
-        // Получаем первую букву имени для placeholder
         const firstLetter = contact.name.charAt(0).toUpperCase();
 
         row.innerHTML = `
@@ -604,7 +554,6 @@ class ContactsManager {
         return row;
     }
 
-    // Функции для премирования
     handleSelectAll(checkbox) {
         const isChecked = checkbox.checked;
         const visibleCheckboxes = this.getVisibleCheckboxes();
@@ -631,7 +580,6 @@ class ContactsManager {
         } else {
             this.selectedContacts.delete(contactId);
             checkbox.closest('tr').classList.remove('selected');
-            // Снимаем выделение с "Select All"
             document.getElementById('selectAllCheckbox').checked = false;
         }
         
@@ -652,12 +600,10 @@ class ContactsManager {
     }
 
     renderPage() {
-        // Скрываем все строки
         this.allContacts.forEach(row => {
             row.style.display = 'none';
         });
         
-        // Показываем только отфильтрованные строки текущей страницы
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
         const endIndex = startIndex + this.itemsPerPage;
         
@@ -772,11 +718,9 @@ class ContactsManager {
         const detailsContainer = document.getElementById('contactDetails');
         const content = detailsContainer.querySelector('.contact-details-content');
         
-        // Устанавливаем фото
         const photoContainer = content.querySelector('.detail-photo-container');
         photoContainer.innerHTML = contact.photoHTML;
         
-        // Устанавливаем остальные данные
         document.getElementById('detailName').textContent = contact.name;
         document.getElementById('detailPosition').textContent = contact.position;
         document.getElementById('detailInfo').textContent = contact.info;
@@ -835,7 +779,6 @@ class ContactsManager {
     }
 }
 
-// Инициализация
 document.addEventListener('DOMContentLoaded', function() {
     new ContactsManager();
 });

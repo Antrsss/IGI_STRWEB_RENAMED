@@ -10,22 +10,19 @@ class SelectGenerator {
     }
 
     init() {
-        // Обработчики событий
         this.checkbox.addEventListener('change', () => this.toggleConfigForm());
         this.generateBtn.addEventListener('click', () => this.generateSelect());
         
-        // Делегирование событий для удаления и изменения выбора
         this.container.addEventListener('click', (e) => {
             if (e.target.classList.contains('delete-btn')) {
                 this.deleteSelect(e.target.closest('.select-container'));
             }
         });
         
-        // Делегирование событий для отслеживания изменений в select
         this.container.addEventListener('change', (e) => {
             if (e.target.tagName === 'SELECT') {
                 this.updateSelectionDisplay(e.target);
-                this.saveSelects(); // Сохраняем состояние при изменении выбора
+                this.saveSelects();
             }
         });
     }
@@ -55,7 +52,6 @@ class SelectGenerator {
         this.addSelectToContainer(selectId, name, selectElement, { size, multiple, required, disabled });
         this.saveSelects();
         
-        // Сброс формы
         this.resetForm();
     }
 
@@ -69,7 +65,6 @@ class SelectGenerator {
         if (required) select.required = true;
         if (disabled) select.disabled = true;
         
-        // Добавляем опцию по умолчанию только для одиночного выбора
         if (!multiple) {
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
@@ -79,8 +74,7 @@ class SelectGenerator {
             select.appendChild(defaultOption);
         }
         
-        // Добавляем options
-        options.forEach((optionText, index) => {
+        options.forEach((optionText) => {
             const option = document.createElement('option');
             option.value = optionText.toLowerCase().replace(/\s+/g, '_');
             option.textContent = optionText;
@@ -110,7 +104,6 @@ class SelectGenerator {
         container.appendChild(selectElement);
         this.container.appendChild(container);
         
-        // Инициализируем отображение выбранных значений
         this.updateSelectionDisplay(selectElement);
     }
 
@@ -119,7 +112,6 @@ class SelectGenerator {
         const displayElement = container.querySelector('.selected-values');
         
         if (selectElement.multiple) {
-            // Для множественного выбора
             const selectedOptions = Array.from(selectElement.selectedOptions)
                 .map(option => option.textContent)
                 .filter(text => text !== 'Choose an option');
@@ -134,7 +126,6 @@ class SelectGenerator {
                 displayElement.style.fontWeight = 'normal';
             }
         } else {
-            // Для одиночного выбора
             const selectedValue = selectElement.value;
             const selectedText = selectElement.options[selectElement.selectedIndex]?.textContent;
             
@@ -167,7 +158,7 @@ class SelectGenerator {
     resetForm() {
         document.getElementById('selectName').value = '';
         document.getElementById('selectOptions').value = '';
-        document.getElementById('selectSize').value = '4';
+        document.getElementById('selectSize').value = '1';
         document.getElementById('selectMultiple').checked = false;
         document.getElementById('selectRequired').checked = false;
         document.getElementById('selectDisabled').checked = false;
@@ -218,7 +209,6 @@ class SelectGenerator {
                     selectData.disabled
                 );
                 
-                // Восстанавливаем выбранные значения
                 selectData.options.forEach((optionData, index) => {
                     if (optionData.selected) {
                         selectElement.options[index].selected = true;
@@ -245,7 +235,6 @@ class SelectGenerator {
     }
 }
 
-// Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
     new SelectGenerator();
 });

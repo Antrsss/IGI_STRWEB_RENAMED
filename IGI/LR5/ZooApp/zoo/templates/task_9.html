@@ -2,8 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Батареи - Демонстрация</title>
+    <title>API Батареи</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -142,13 +141,6 @@
             const batteryState = document.getElementById('batteryState');
             const batteryLevel = document.getElementById('batteryLevel');
 
-            // Проверка поддержки API
-            if (!navigator.getBattery) {
-                batteryStatus.className = 'status error';
-                batteryStatus.textContent = 'API батареи не поддерживается вашим браузером';
-                return;
-            }
-
             try {
                 const battery = await navigator.getBattery();
                 
@@ -158,15 +150,12 @@
                     const chargingTime = battery.chargingTime;
                     const dischargingTime = battery.dischargingTime;
                     
-                    // Обновляем индикатор уровня
                     batteryFill.style.width = `${level}%`;
                     batteryFill.textContent = `${Math.round(level)}%`;
                     
-                    // Обновляем состояние
                     batteryState.textContent = charging ? 'Заряжается' : 'Разряжается';
                     batteryLevel.textContent = `${Math.round(level)}%`;
                     
-                    // Обновляем статус
                     let statusText = '';
                     if (charging) {
                         statusText = 'Устройство заряжается';
@@ -183,7 +172,6 @@
                     batteryStatus.className = charging ? 'status success' : 'status info';
                     batteryStatus.textContent = statusText;
                     
-                    // Обновляем детальную информацию
                     batteryData.textContent = `Детальная информация:
                         Уровень заряда: ${Math.round(level)}%
                         Состояние: ${charging ? 'Заряжается' : 'Разряжается'}
@@ -191,13 +179,11 @@
                         Время до полной разрядки: ${dischargingTime === Infinity ? 'Неизвестно' : Math.round(dischargingTime / 60) + ' минут'}`;
                 }
 
-                // Добавляем обработчики событий
                 battery.addEventListener('levelchange', updateBatteryInfo);
                 battery.addEventListener('chargingchange', updateBatteryInfo);
                 battery.addEventListener('chargingtimechange', updateBatteryInfo);
                 battery.addEventListener('dischargingtimechange', updateBatteryInfo);
                 
-                // Первоначальное обновление
                 updateBatteryInfo();
                 
             } catch (error) {
@@ -207,11 +193,9 @@
             }
         }
 
-        // Инициализация при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
             getBatteryInfo();
             
-            // Периодическое обновление информации о батарее (каждые 30 секунд)
             setInterval(getBatteryInfo, 30000);
         });
     </script>

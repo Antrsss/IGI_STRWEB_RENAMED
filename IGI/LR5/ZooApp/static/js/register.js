@@ -16,10 +16,8 @@ class AgeCalculator {
             return;
         }
 
-        // Устанавливаем максимальную дату (сегодня)
         this.birthDateInput.max = new Date().toISOString().split('T')[0];
 
-        // Добавляем обработчик события
         this.birthDateInput.addEventListener('change', () => this.calculateAge());
         this.birthDateInput.addEventListener('input', () => this.updateSubmitButton());
 
@@ -27,10 +25,8 @@ class AgeCalculator {
             this.parentConsentCheckbox.addEventListener('change', () => this.updateSubmitButton());
         }
 
-        // Обработчик отправки формы
         this.form.addEventListener('submit', (event) => this.validateForm(event));
 
-        // Инициализация при загрузке
         this.updateSubmitButton();
     }
 
@@ -43,7 +39,6 @@ class AgeCalculator {
         const birthDate = new Date(this.birthDateInput.value);
         const today = new Date();
         
-        // Расчет возраста
         let age = today.getFullYear() - birthDate.getFullYear();
         const monthDiff = today.getMonth() - birthDate.getMonth();
         
@@ -51,11 +46,9 @@ class AgeCalculator {
             age--;
         }
 
-        // Получение дня недели
         const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const dayOfWeek = daysOfWeek[birthDate.getDay()];
 
-        // Форматирование даты для отображения
         const formattedDate = birthDate.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
@@ -71,10 +64,10 @@ class AgeCalculator {
         let messageClass = '';
 
         if (age >= 18) {
-            message = `🎉 You are <strong>${age} years old</strong>. Born on <strong>${dayOfWeek}</strong> (${formattedDate}). Welcome!`;
+            message = `You are <strong>${age} years old</strong>. Born on <strong>${dayOfWeek}</strong> (${formattedDate}). Welcome!`;
             messageClass = 'success';
         } else {
-            message = `👶 You are <strong>${age} years old</strong>. Born on <strong>${dayOfWeek}</strong> (${formattedDate}). Parental consent required.`;
+            message = `You are <strong>${age} years old</strong>. Born on <strong>${dayOfWeek}</strong> (${formattedDate}). Parental consent required.`;
             messageClass = 'warning';
         }
 
@@ -83,21 +76,19 @@ class AgeCalculator {
 
     handleAgeBasedActions(age) {
         if (age >= 18) {
-            // Совершеннолетний
             this.hideParentConsent();
             
             setTimeout(() => {
-                if (confirm(`🎊 Congratulations! You were born on ${this.getDayOfWeek()}. Welcome to our community!`)) {
-                    // Пользователь подтвердил
+                if (confirm(`Congratulations! You were born on ${this.getDayOfWeek()}. Welcome to our community!`)) {
+                    
                 }
             }, 500);
             
         } else {
-            // Несовершеннолетний
             this.showParentConsent();
             
             setTimeout(() => {
-                alert(`⚠️ ATTENTION: You are ${age} years old (under 18).\n\nParental consent is required to use this website. Please have your parent or legal guardian review and approve your registration.`);
+                alert(`ATTENTION: You are ${age} years old (under 18).\n\nParental consent is required to use this website. Please have your parent or legal guardian review and approve your registration.`);
             }, 500);
         }
     }
@@ -145,7 +136,6 @@ class AgeCalculator {
             return;
         }
 
-        // Если показан блок согласия родителей, проверяем галочку
         if (this.parentConsentSection && this.parentConsentSection.style.display !== 'none') {
             if (this.parentConsentCheckbox && !this.parentConsentCheckbox.checked) {
                 this.disableSubmitButton('Parental consent required');
@@ -186,7 +176,6 @@ class AgeCalculator {
             age--;
         }
 
-        // Проверка для несовершеннолетних
         if (age < 18) {
             const hasParentConsent = this.parentConsentCheckbox && this.parentConsentCheckbox.checked;
             
@@ -196,7 +185,6 @@ class AgeCalculator {
                 return;
             }
 
-            // Дополнительное подтверждение для несовершеннолетних
             const confirmed = confirm(`You are ${age} years old. By submitting this form, you confirm that you have obtained parental consent. Continue?`);
             if (!confirmed) {
                 event.preventDefault();
@@ -205,7 +193,6 @@ class AgeCalculator {
     }
 }
 
-// Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     new AgeCalculator();
 });

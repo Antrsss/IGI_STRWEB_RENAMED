@@ -22,14 +22,12 @@
                     <div class="error">{{ error }}</div>
                 {% endfor %}
                 
-                <!-- Добавляем блок для отображения результата расчета возраста только для поля birth_date -->
                 {% if field.name == 'birth_date' %}
                     <div id="ageResult" class="age-result"></div>
                 {% endif %}
             </div>
         {% endfor %}
 
-        <!-- Блок согласия родителей (изначально скрыт) -->
         <div id="parentConsentSection" class="parent-consent" style="display: none;">
             <h3 style="color: #856404; margin-top: 0;">Parental Consent Required</h3>
             <p style="margin-bottom: 10px;">Since you are under 18 years old, parental consent is required to use this website.</p>

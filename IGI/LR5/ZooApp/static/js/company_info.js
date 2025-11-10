@@ -1,22 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Анимация движущихся животных
     const movingLion = document.querySelector('#moving-lion');
     const movingElephant = document.querySelector('#moving-elephant');
     const movingGiraffe = document.querySelector('#moving-giraffe');
     const movingMonkey = document.querySelector('#moving-monkey');
     const movingBird = document.querySelector('#moving-bird');
 
-    // Начальные позиции животных
     let lionPosition = -200;
     let elephantPosition = -400;
     let giraffePosition = -600;
     let monkeyPosition = -800;
     let birdPosition = -100;
 
-    // Переменные для скролла
     let lastScrollY = window.scrollY;
 
-    // ПУЛЬСИРУЮЩИЕ АНИМАЦИИ ДЛЯ КАЖДОГО ЖИВОТНОГО
     movingLion.animate([
         { transform: 'scale(1)', filter: 'drop-shadow(3px 3px 8px rgba(0,0,0,0.7))' },
         { transform: 'scale(1.1)', filter: 'drop-shadow(5px 5px 12px rgba(0,0,0,0.9))' },
@@ -72,21 +68,17 @@ document.addEventListener('DOMContentLoaded', function() {
         delay: 600
     });
 
-    // Функция для обновления позиций животных при скролле
     function updateAnimalPositionsOnScroll() {
         const currentScrollY = window.scrollY;
         const scrollDelta = currentScrollY - lastScrollY;
                 
-        // УВЕЛИЧИЛ СКОРОСТЬ ДВИЖЕНИЯ ЖИВОТНЫХ:
         if (scrollDelta > 0) {
-            // Скролл вниз - двигаем животных вправо
             lionPosition += 16;
             elephantPosition += 12;
             giraffePosition += 10;
             monkeyPosition += 20;
             birdPosition += 24;
         } else if (scrollDelta < 0) {
-            // Скролл вверх - двигаем животных влево
             lionPosition -= 16;
             elephantPosition -= 12;
             giraffePosition -= 10;
@@ -94,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
             birdPosition -= 24;
         }
 
-        // Сбрасываем позицию, если животное ушло за края
         if (lionPosition > window.innerWidth + 200) lionPosition = -200;
         if (elephantPosition > window.innerWidth + 400) elephantPosition = -400;
         if (giraffePosition > window.innerWidth + 600) giraffePosition = -600;
@@ -107,23 +98,19 @@ document.addEventListener('DOMContentLoaded', function() {
         if (monkeyPosition < -900) monkeyPosition = window.innerWidth + 700;
         if (birdPosition < -200) birdPosition = window.innerWidth;
 
-        // Применяем позиции
         movingLion.style.left = `${lionPosition}px`;
         movingElephant.style.left = `${elephantPosition}px`;
         movingGiraffe.style.left = `${giraffePosition}px`;
         movingMonkey.style.left = `${monkeyPosition}px`;
         movingBird.style.left = `${birdPosition}px`;
 
-        // Добавляем легкое вертикальное движение для птицы
         movingBird.style.bottom = `${100 + Math.sin(Date.now() * 0.005) * 15}px`;
 
         lastScrollY = currentScrollY;
         requestAnimationFrame(updateAnimalPositionsOnScroll);
     }
 
-    // Обработчик скролла
     window.addEventListener('scroll', function() {
-        // Запускаем анимацию при скролле
         if (!this.scrollAnimationFrame) {
             this.scrollAnimationFrame = requestAnimationFrame(updateAnimalPositionsOnScroll);
         }

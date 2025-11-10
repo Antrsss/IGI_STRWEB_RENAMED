@@ -4,7 +4,6 @@ class Slider {
         this.slides = container.querySelectorAll('.slide');
         this.current = 0;
 
-        // Читаем настройки из data-атрибутов
         this.loop = container.dataset.loop === 'true';
         this.navs = container.dataset.navs === 'true';
         this.pags = container.dataset.pags === 'true';
@@ -22,7 +21,6 @@ class Slider {
     init() {
         this.showSlide(this.current);
 
-        // Делаем слайды кликабельными
         this.makeSlidesClickable();
 
         if (this.navs) this.createNavButtons();
@@ -54,7 +52,6 @@ class Slider {
             s.style.display = i === index ? 'block' : 'none';
         });
 
-        // Обновляем счетчик
         this.updateCounter(index);
         
         if (this.pags) this.updatePagination();
@@ -108,7 +105,6 @@ class Slider {
         prev.className = 'slider-prev';
         next.className = 'slider-next';
         
-        // Добавляем кнопки в контейнер слайдера
         this.container.appendChild(prev);
         this.container.appendChild(next);
         
@@ -161,7 +157,6 @@ class Slider {
         }
     }
 
-    // Метод для обновления задержки
     updateDelay(newDelay) {
         this.delay = newDelay * 1000;
         if (this.auto) {
@@ -170,7 +165,6 @@ class Slider {
         }
     }
 
-    // Метод для обновления авто-воспроизведения
     updateAutoPlay(auto) {
         this.auto = auto;
         if (this.auto) {
@@ -189,7 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
         sliderInstances.push(new Slider(slider));
     });
 
-    // Обработка формы для администратора
     const settingsForm = document.getElementById('sliderSettingsForm');
     if (settingsForm) {
         settingsForm.addEventListener('submit', (e) => {
@@ -198,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const autoPlay = document.getElementById('autoPlay').checked;
             const delay = parseInt(document.getElementById('sliderDelay').value);
             
-            // Применяем настройки ко всем слайдерам
             sliderInstances.forEach(slider => {
                 slider.updateAutoPlay(autoPlay);
                 slider.updateDelay(delay);
