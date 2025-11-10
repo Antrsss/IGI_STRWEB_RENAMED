@@ -36,8 +36,6 @@ class ContactsManager {
             }
         });
         
-        console.log('Found contacts:', this.allContacts.length);
-        
         this.calculateTotalPages();
         this.bindEvents();
         this.renderPage();
@@ -46,7 +44,6 @@ class ContactsManager {
     }
 
     showPreloader(message = 'Loading...') {
-        console.log('Showing preloader:', message);
         
         if (this.preloader) {
             const messageElement = this.preloader.querySelector('p');
@@ -64,7 +61,6 @@ class ContactsManager {
     }
 
     hidePreloader() {
-        console.log('Hiding preloader');
         
         if (this.preloader) {
             this.preloader.classList.remove('preloader-visible');
@@ -87,12 +83,10 @@ class ContactsManager {
         const overlay = document.getElementById('loadingOverlay');
         if (overlay) {
             overlay.remove();
-            console.log('Loading overlay removed');
         }
     }
 
     handleFilter() {
-        console.log('Starting filter operation');
         this.showPreloader('Filtering contacts...');
         
         const filterInput = document.getElementById('filterInput');
