@@ -10,6 +10,7 @@ server/node_modules/
 # Build directories
 client/build/
 server/dist/
+server/.env
 
 # Logs
 npm-debug.log*
