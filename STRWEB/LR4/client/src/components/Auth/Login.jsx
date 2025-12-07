@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const handleGoogleLogin = (e) => {
+  e.preventDefault(); // чтобы форма не перехватила
+  e.stopPropagation();
+  window.open('http://localhost:5000/api/auth/google', '_self');
+};
+
 function Login() {
   const [formData, setFormData] = useState({
     email: '',
@@ -10,9 +16,6 @@ function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  // 📡 URL backend-сервера
-  const API_URL = 'http://localhost:5000'; // Жёстко прописан для надёжности при локальной разработке
 
   const handleChange = (e) => {
     setFormData({
@@ -88,24 +91,16 @@ function Login() {
           <span>или</span>
         </div>
 
-        <a
-          href="http://localhost:5000/api/auth/google"
+        <button 
+          onClick={handleGoogleLogin}
           className="btn btn-google"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            textDecoration: 'none',
-          }}
         >
-          <img
-            src="https://img.icons8.com/color/16/000000/google-logo.png"
+          <img 
+            src="https://img.icons8.com/color/16/000000/google-logo.png" 
             alt="Google"
-            style={{ width: '18px', height: '18px' }}
           />
-          Войти через Google
-        </a>
+          Login with Google
+        </button>
 
         <div className="auth-links">
           <a href="/register">Нет аккаунта? Зарегистрироваться</a>

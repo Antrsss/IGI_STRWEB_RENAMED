@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
+
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -131,8 +134,7 @@ function App() {
   };
 
   const handleGoogleLogin = () => {
-    // Redirect to server for OAuth
-    window.location.href = '/api/auth/google';
+      window.location.href = 'http://localhost:5000/api/auth/google';
   };
 
   const handleLogout = () => {
@@ -146,191 +148,6 @@ function App() {
     setEmployees([]);
     setEnclosures([]);
     setFeedings([]);
-  };
-
-  // Authentication components
-  const LoginForm = () => (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>🔐 Login</h2>
-        
-        {authError && <div className="error-message">{authError}</div>}
-        
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          const formData = new FormData(e.target);
-          handleLogin(formData.get('email'), formData.get('password'));
-        }}>
-          <div className="form-group">
-            <label>Email:</label>
-            <input
-              type="email"
-              name="email"
-              required
-              className="form-control"
-            />
-          </div>
-          
-          <div className="form-group">
-            <label>Password:</label>
-            <input
-              type="password"
-              name="password"
-              required
-              className="form-control"
-            />
-          </div>
-          
-          <button type="submit" className="btn btn-primary">
-            Login
-          </button>
-        </form>
-        
-        <div className="divider">
-          <span>or</span>
-        </div>
-        
-        <button 
-          onClick={handleGoogleLogin}
-          className="btn btn-google"
-        >
-          <img 
-            src="https://img.icons8.com/color/16/000000/google-logo.png" 
-            alt="Google"
-          />
-          Login with Google
-        </button>
-        
-        <div className="auth-links">
-          <button 
-            className="btn-link"
-            onClick={() => setAuthView('register')}
-          >
-            No account? Register
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  const RegisterForm = () => {
-    const [formData, setFormData] = useState({
-      email: '',
-      username: '',
-      password: '',
-      confirmPassword: '',
-      role: 'user'
-    });
-
-    const handleChange = (e) => {
-      setFormData({
-        ...formData,
-        [e.target.name]: e.target.value
-      });
-    };
-
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      if (formData.password !== formData.confirmPassword) {
-        setAuthError('Passwords do not match');
-        return;
-      }
-      if (formData.password.length < 6) {
-        setAuthError('Password must be at least 6 characters long');
-        return;
-      }
-      handleRegister(formData);
-    };
-
-    return (
-      <div className="auth-container">
-        <div className="auth-card">
-          <h2>📝 Registration</h2>
-          
-          {authError && <div className="error-message">{authError}</div>}
-          
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Email:</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="form-control"
-              />
-            </div>
-            
-            <div className="form-group">
-              <label>Username:</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                required
-                minLength="3"
-                className="form-control"
-              />
-            </div>
-            
-            <div className="form-group">
-              <label>Password:</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                minLength="6"
-                className="form-control"
-              />
-            </div>
-            
-            <div className="form-group">
-              <label>Confirm Password:</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-                minLength="6"
-                className="form-control"
-              />
-            </div>
-            
-            <div className="form-group">
-              <label>Role:</label>
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="form-control"
-              >
-                <option value="user">User</option>
-                <option value="employee">Employee</option>
-                <option value="admin">Administrator</option>
-              </select>
-            </div>
-            
-            <button type="submit" className="btn btn-primary">
-              Register
-            </button>
-          </form>
-          
-          <div className="auth-links">
-            <button 
-              className="btn-link"
-              onClick={() => setAuthView('login')}
-            >
-              Already have an account? Login
-            </button>
-          </div>
-        </div>
-      </div>
-    );
   };
 
   // Existing rendering functions (keep unchanged)
@@ -476,11 +293,20 @@ function App() {
 
   // Main render
   if (authView === 'login') {
-    return <LoginForm />;
+    return <LoginForm
+      onLogin={handleLogin}
+      onGoogleLogin={handleGoogleLogin}
+      switchToRegister={() => setAuthView('register')}
+      authError={authError}
+    />;
   }
 
   if (authView === 'register') {
-    return <RegisterForm />;
+    return <RegisterForm
+      onRegister={handleRegister}
+      switchToLogin={() => setAuthView('login')}
+      authError={authError}
+    />;
   }
 
   // Main application (after authentication)
