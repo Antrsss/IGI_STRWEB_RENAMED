@@ -1,244 +1,114 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const Employee = require('../models/Employee');
-const { authMiddleware, roleMiddleware } = require('../middleware/auth');
+const jwt = require('jsonwebtoken');
+const authMiddleware = require('../middleware/auth');
 
-// Регистрация пользователя
+// Register new user
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, username, role } = req.body;
-
-    // Проверка существования пользователя
+    const { username, email, password, role } = req.body;
+    
+    // Check if user exists
     const existingUser = await User.findOne({ 
       $or: [{ email }, { username }] 
     });
-
+    
     if (existingUser) {
       return res.status(400).json({ 
-        error: 'Пользователь с таким email или именем уже существует' 
+        error: 'User with this email or username already exists' 
       });
     }
-
-    // Создание нового пользователя
+    
+    // Create new user
     const user = new User({
+      username,
       email,
       password,
-      username: username || email.split('@')[0],
-      role: role || 'user',
-      emailVerified: false
+      role: role || 'user'
     });
-
+    
     await user.save();
-
-    // Если роль employee, создаем профиль сотрудника
-    let employeeProfile = null;
-    if (role === 'employee') {
-      const employee = new Employee({
-        firstName: user.username,
-        lastName: 'Пользователь',
-        position: 'Смотритель',
-        email: user.email,
-        isActive: true
-      });
-      
-      await employee.save();
-      user.employeeProfile = employee._id;
-      await user.save();
-      employeeProfile = employee;
-    }
-
-    // Генерация токена
+    
+    // Generate token
     const token = user.generateAuthToken();
-
-    // Отправка ответа
+    
     res.status(201).json({
-      message: 'Регистрация успешна',
+      message: 'User registered successfully',
       user: {
         id: user._id,
-        email: user.email,
         username: user.username,
-        role: user.role,
-        avatar: user.avatar,
-        employeeProfile: employeeProfile
+        email: user.email,
+        role: user.role
       },
-      token,
-      tokenExpires: '7d'
+      token
     });
-
+    
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(400).json({ 
-      error: error.message || 'Ошибка при регистрации' 
-    });
+    res.status(500).json({ error: 'Registration failed' });
   }
 });
 
-// Вход пользователя
+// Login user
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // Поиск пользователя
-    const user = await User.findOne({ email })
-      .populate('employeeProfile', 'firstName lastName position');
     
+    // Find user
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ 
-        error: 'Неверный email или пароль' 
-      });
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
-
-    // Проверка активности аккаунта
-    if (!user.isActive) {
-      return res.status(401).json({ 
-        error: 'Аккаунт деактивирован. Обратитесь к администратору.' 
-      });
+    
+    // Check password
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
-
-    // Проверка пароля (только для локальных пользователей)
-    if (user.password) {
-      const isValidPassword = await user.comparePassword(password);
-      if (!isValidPassword) {
-        return res.status(401).json({ 
-          error: 'Неверный email или пароль' 
-        });
-      }
-    } else {
-      // Пользователь зарегистрирован через OAuth
-      return res.status(401).json({ 
-        error: 'Этот аккаунт использует вход через Google. Пожалуйста, войдите через Google.' 
-      });
-    }
-
-    // Обновление времени последнего входа
+    
+    // Update last login
     user.lastLogin = new Date();
     await user.save();
-
-    // Генерация токена
+    
+    // Generate token
     const token = user.generateAuthToken();
-
+    
     res.json({
-      message: 'Вход выполнен успешно',
+      message: 'Login successful',
       user: {
         id: user._id,
-        email: user.email,
         username: user.username,
-        displayName: user.displayName,
-        avatar: user.avatar,
+        email: user.email,
         role: user.role,
-        employeeProfile: user.employeeProfile
+        avatar: user.avatar
       },
-      token,
-      tokenExpires: '7d'
+      token
     });
-
+    
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ 
-      error: 'Ошибка сервера при входе' 
-    });
+    res.status(500).json({ error: 'Login failed' });
   }
 });
 
-// Получение профиля текущего пользователя
-router.get('/profile', authMiddleware, async (req, res) => {
+// Get current user profile (protected)
+router.get('/profile', authMiddleware(), async (req, res) => {
   try {
-    const user = await User.findById(req.user._id)
-      .select('-password -resetPasswordToken -resetPasswordExpires')
-      .populate('employeeProfile');
-
-    res.json({
-      user,
-      permissions: getPermissionsByRole(user.role)
-    });
-  } catch (error) {
-    res.status(500).json({ error: 'Ошибка при получении профиля' });
-  }
-});
-
-// Обновление профиля
-router.put('/profile', authMiddleware, async (req, res) => {
-  try {
-    const updates = req.body;
-    const allowedUpdates = ['username', 'avatar'];
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
     
-    // Фильтруем разрешенные поля
-    Object.keys(updates).forEach(key => {
-      if (!allowedUpdates.includes(key)) {
-        delete updates[key];
-      }
-    });
-
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      updates,
-      { new: true, runValidators: true }
-    ).select('-password -resetPasswordToken -resetPasswordExpires');
-
-    res.json({
-      message: 'Профиль обновлен',
-      user
-    });
+    res.json({ user });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: 'Failed to fetch profile' });
   }
 });
 
-// Смена пароля
-router.post('/change-password', authMiddleware, async (req, res) => {
-  try {
-    const { currentPassword, newPassword } = req.body;
-    const user = await User.findById(req.user._id);
-
-    if (!user.password) {
-      return res.status(400).json({ 
-        error: 'У этого аккаунта нет пароля (используется OAuth)' 
-      });
-    }
-
-    // Проверка текущего пароля
-    const isValid = await user.comparePassword(currentPassword);
-    if (!isValid) {
-      return res.status(401).json({ error: 'Неверный текущий пароль' });
-    }
-
-    // Установка нового пароля
-    user.password = newPassword;
-    await user.save();
-
-    res.json({ message: 'Пароль успешно изменен' });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+// Logout (client-side - just remove token)
+router.post('/logout', (req, res) => {
+  res.json({ message: 'Logged out successfully' });
 });
-
-// Выход (на клиенте просто удалить токен)
-router.post('/logout', authMiddleware, async (req, res) => {
-  // В JWT реализации выход происходит на клиенте
-  // Здесь можно добавить логику для blacklist токенов при необходимости
-  res.json({ message: 'Выход выполнен успешно' });
-});
-
-// Проверка токена
-router.post('/verify-token', authMiddleware, (req, res) => {
-  res.json({ 
-    valid: true, 
-    user: req.user,
-    permissions: getPermissionsByRole(req.user.role)
-  });
-});
-
-// Функция для получения разрешений по роли
-function getPermissionsByRole(role) {
-  const permissions = {
-    user: ['view:animals', 'view:enclosures', 'view:employees'],
-    employee: ['view:animals', 'view:enclosures', 'view:employees', 
-               'edit:animals', 'create:feedings', 'view:feedings'],
-    admin: ['view:*', 'edit:*', 'create:*', 'delete:*', 'manage:users']
-  };
-  
-  return permissions[role] || permissions.user;
-}
 
 module.exports = router;

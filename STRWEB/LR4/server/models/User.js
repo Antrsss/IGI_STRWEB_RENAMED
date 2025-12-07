@@ -2,64 +2,41 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-  // For local authentication
+  // Local authentication
   username: {
     type: String,
     unique: true,
     sparse: true,
     trim: true,
-    minlength: [3, 'Username must be at least 3 characters long']
+    minlength: 3
   },
   email: {
     type: String,
-    required: [true, 'Email is required'],
+    required: true,
     unique: true,
     lowercase: true,
-    match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email']
+    match: /^\S+@\S+\.\S+$/
   },
   password: {
     type: String,
-    minlength: [6, 'Password must be at least 6 characters long'],
-    // Password is not required for users registered via Google/Github
-    required: function() {
-      return !this.googleId && !this.githubId;
-    }
+    minlength: 6
   },
   
-  // For Google OAuth
-  googleId: {
-    type: String,
-    sparse: true
-  },
+  // Google OAuth
+  googleId: String,
   displayName: String,
   avatar: String,
   
-  // Roles and permissions
+  // Role-based access
   role: {
     type: String,
     enum: ['user', 'employee', 'admin'],
     default: 'user'
   },
   
-  // Connection to Employee model (if user is an employee)
-  employeeProfile: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Employee',
-    default: null
-  },
-  
-  // Account status
   isActive: {
     type: Boolean,
     default: true
-  },
-  
-  // Tokens for password reset and verification
-  resetPasswordToken: String,
-  resetPasswordExpires: Date,
-  emailVerified: {
-    type: Boolean,
-    default: false
   },
   
   lastLogin: Date
@@ -69,39 +46,28 @@ const userSchema = new mongoose.Schema({
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password') || !this.password) {
-    return;
-  }
-  
-  // Хешируем пароль
   const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+    this.password = await bcrypt.hash(this.password, salt);
 });
 
-// Method to check password
+// Compare password method
 userSchema.methods.comparePassword = async function(candidatePassword) {
-  if (!this.password) return false;
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// Method to generate JWT token
+// Generate JWT token
 userSchema.methods.generateAuthToken = function() {
   const jwt = require('jsonwebtoken');
   return jwt.sign(
     { 
-      userId: this._id,
+      id: this._id,
       email: this.email,
       role: this.role,
-      employeeProfile: this.employeeProfile 
+      username: this.username
     },
     process.env.JWT_SECRET,
     { expiresIn: '7d' }
   );
 };
-
-// Virtual field for full name
-userSchema.virtual('fullName').get(function() {
-  return this.displayName || this.username || this.email.split('@')[0];
-});
 
 module.exports = mongoose.model('User', userSchema);
