@@ -17,8 +17,7 @@ router.get('/callback',
       const token = jwt.sign(
         { 
           id: req.user.id,
-          email: req.user.email,
-          role: req.user.role 
+          email: req.user.email
         },
         process.env.JWT_SECRET,
         { expiresIn: '7d' }

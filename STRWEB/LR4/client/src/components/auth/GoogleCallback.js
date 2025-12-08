@@ -1,5 +1,5 @@
 // src/components/auth/GoogleCallback.js
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -20,12 +20,7 @@ const GoogleCallback = () => {
           
           // Получаем данные пользователя
           const response = await axios.get('/api/auth/profile');
-          const user = response.data.user;
-          
-          // Здесь можно обновить контекст аутентификации
-          // (нужно добавить метод в AuthContext)
-          
-          // Перенаправляем на дашборд
+
           navigate('/dashboard');
         } else {
           console.error('No token in URL');

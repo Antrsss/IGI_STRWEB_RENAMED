@@ -16,11 +16,6 @@ const authMiddleware = (requiredRole = null) => {
       // Add user to request
       req.user = decoded;
       
-      // Check role if required
-      if (requiredRole && decoded.role !== requiredRole) {
-        return res.status(403).json({ error: 'Insufficient permissions' });
-      }
-      
       next();
     } catch (error) {
       console.error('Auth error:', error);

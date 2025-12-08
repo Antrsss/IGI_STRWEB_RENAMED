@@ -9,8 +9,7 @@ const RegisterPage = () => {
     username: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    role: 'user'
+    confirmPassword: ''
   });
   
   const [errors, setErrors] = useState({});
@@ -85,8 +84,7 @@ const RegisterPage = () => {
       const response = await axios.post('http://localhost:5000/api/auth/register', {
         username: formData.username,
         email: formData.email,
-        password: formData.password,
-        role: formData.role
+        password: formData.password
       });
       
       // Сохраняем токен
@@ -233,49 +231,6 @@ const RegisterPage = () => {
               {errors.confirmPassword && (
                 <span className="error-message">{errors.confirmPassword}</span>
               )}
-            </div>
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="role" className="form-label">
-              Account Type
-            </label>
-            <select
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              className="form-input"
-              disabled={isLoading}
-            >
-              <option value="user">👤 Regular User</option>
-              <option value="employee">👨‍⚕️ Zoo Employee</option>
-              <option value="admin">🛡️ Administrator</option>
-            </select>
-            <small className="form-hint">
-              * Employee and Admin roles require approval
-            </small>
-          </div>
-          
-          <div className="form-group">
-            <div className="terms-agreement">
-              <input
-                type="checkbox"
-                id="terms"
-                name="terms"
-                required
-                disabled={isLoading}
-              />
-              <label htmlFor="terms" className="terms-label">
-                I agree to the{' '}
-                <Link to="/terms" className="terms-link">
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link to="/privacy" className="terms-link">
-                  Privacy Policy
-                </Link>
-              </label>
             </div>
           </div>
           

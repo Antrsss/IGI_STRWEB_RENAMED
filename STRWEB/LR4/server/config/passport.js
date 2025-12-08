@@ -29,8 +29,7 @@ passport.use(new GoogleStrategy({
             email: profile.emails[0].value,
             displayName: profile.displayName,
             avatar: profile.photos[0]?.value,
-            username: profile.emails[0].value.split('@')[0],
-            role: 'user'
+            username: profile.emails[0].value.split('@')[0]
           });
           
           await user.save();

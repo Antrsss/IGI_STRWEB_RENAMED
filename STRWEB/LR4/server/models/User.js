@@ -27,13 +27,6 @@ const userSchema = new mongoose.Schema({
   displayName: String,
   avatar: String,
   
-  // Role-based access
-  role: {
-    type: String,
-    enum: ['user', 'employee', 'admin'],
-    default: 'user'
-  },
-  
   isActive: {
     type: Boolean,
     default: true
@@ -62,7 +55,6 @@ userSchema.methods.generateAuthToken = function() {
     { 
       id: this._id,
       email: this.email,
-      role: this.role,
       username: this.username
     },
     process.env.JWT_SECRET,

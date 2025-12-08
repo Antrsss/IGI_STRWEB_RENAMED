@@ -7,7 +7,7 @@ const authMiddleware = require('../middleware/auth');
 // Register new user
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password, role } = req.body;
+    const { username, email, password } = req.body;
     
     // Check if user exists
     const existingUser = await User.findOne({ 
@@ -24,8 +24,7 @@ router.post('/register', async (req, res) => {
     const user = new User({
       username,
       email,
-      password,
-      role: role || 'user'
+      password
     });
     
     await user.save();
@@ -38,8 +37,7 @@ router.post('/register', async (req, res) => {
       user: {
         id: user._id,
         username: user.username,
-        email: user.email,
-        role: user.role
+        email: user.email
       },
       token
     });
@@ -80,7 +78,6 @@ router.post('/login', async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
-        role: user.role,
         avatar: user.avatar
       },
       token

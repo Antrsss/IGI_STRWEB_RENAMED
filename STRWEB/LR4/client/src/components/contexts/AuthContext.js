@@ -1,5 +1,5 @@
 // src/components/contexts/AuthContext.js
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
 const AuthContext = createContext({});
@@ -85,9 +85,7 @@ export const AuthProvider = ({ children }) => {
     loginWithGoogle,
     handleGoogleCallback,
     logout,
-    isAuthenticated: !!user,
-    isEmployee: user?.role === 'employee' || user?.role === 'admin',
-    isAdmin: user?.role === 'admin'
+    isAuthenticated: !!user
   };
 
   return (
