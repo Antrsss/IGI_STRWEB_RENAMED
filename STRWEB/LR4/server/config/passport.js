@@ -1,3 +1,4 @@
+// config/passport.js
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/User');
@@ -6,56 +7,55 @@ const User = require('../models/User');
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL
+    callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    passReqToCallback: true
   },
-  async (accessToken, refreshToken, profile, done) => {
+  async (req, accessToken, refreshToken, profile, done) => {
     try {
-      // Check if user already exists
+      console.log('🔐 Google OAuth profile received:', {
+        id: profile.id,
+        email: profile.emails[0].value,
+        name: profile.displayName
+      });
+
+      // 1. Проверяем по googleId
       let user = await User.findOne({ googleId: profile.id });
       
-      if (!user) {
-        // Check if user exists with same email
-        user = await User.findOne({ email: profile.emails[0].value });
-        
-        if (user) {
-          // Link Google account to existing user
-          user.googleId = profile.id;
-          user.avatar = profile.photos[0]?.value;
-          await user.save();
-        } else {
-          // Create new user
-          user = new User({
-            googleId: profile.id,
-            email: profile.emails[0].value,
-            displayName: profile.displayName,
-            avatar: profile.photos[0]?.value,
-            username: profile.emails[0].value.split('@')[0]
-          });
-          
-          await user.save();
-        }
+      if (user) {
+        console.log('✅ Existing Google user found:', user.email);
+        return done(null, user);
       }
+
+      // 2. Проверяем по email
+      user = await User.findOne({ email: profile.emails[0].value });
+      
+      if (user) {
+        // Объединяем аккаунт (локальный + Google)
+        console.log('🔄 Merging local account with Google:', user.email);
+        user.googleId = profile.id;
+        user.avatar = profile.photos[0]?.value || user.avatar;
+        user.displayName = profile.displayName || user.displayName;
+        await user.save();
+        return done(null, user);
+      }
+
+      // 3. Создаем нового пользователя
+      console.log('👤 Creating new Google user:', profile.emails[0].value);
+      user = new User({
+        googleId: profile.id,
+        email: profile.emails[0].value,
+        displayName: profile.displayName,
+        avatar: profile.photos[0]?.value,
+        username: profile.emails[0].value.split('@')[0] + '_google'
+      });
+
+      await user.save();
+      console.log('✅ New Google user created:', user._id);
       
       return done(null, user);
     } catch (error) {
+      console.error('❌ Google OAuth error:', error);
       return done(error, null);
     }
   }
 ));
-
-// Serialize user
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-// Deserialize user
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (error) {
-    done(error, null);
-  }
-});
-
-module.exports = passport;

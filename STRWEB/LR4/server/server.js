@@ -53,20 +53,8 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Сессии (для Passport)
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'zoo_management_secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000 // 1 день
-  }
-}));
-
 // Инициализация Passport
 app.use(passport.initialize());
-app.use(passport.session());
 require('./config/passport');
 
 // Подключение к MongoDB
