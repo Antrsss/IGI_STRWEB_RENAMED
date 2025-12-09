@@ -1,10 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const session = require('express-session');
 const passport = require('passport');
 const fs = require('fs');
 const path = require('path');
+const enclosureRoutes = require('./routes/enclosures');
+const feedingRoutes = require('./routes/feedings');
 
 // === ЖЕСТКАЯ ЗАГРУЗКА .env ===
 const envPath = path.join(__dirname, '.env');
@@ -66,6 +67,8 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/zoo_manag
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/auth/google', require('./routes/googleAuth'));
 app.use('/api/animals', require('./routes/animals'));
+app.use('/api/enclosures', enclosureRoutes);
+app.use('/api/feedings', feedingRoutes);
 
 // Базовая маршрутизация
 app.get('/', (req, res) => {
