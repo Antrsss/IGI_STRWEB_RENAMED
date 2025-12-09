@@ -90,18 +90,9 @@ userSchema.pre('save', async function() {
 
 userSchema.methods.comparePassword = async function(candidatePassword) {
   try {
-    console.log('🔐 ===== comparePassword called =====');
-    console.log('User email:', this.email);
-    console.log('User has password field?', !!this.password);
-    console.log('User password type:', typeof this.password);
-    console.log('User password length:', this.password?.length || 0);
-    
     if (!this.password || !candidatePassword) {
       return false;
     }
-    
-    console.log('Candidate password type:', typeof candidatePassword);
-    console.log('Candidate password length:', candidatePassword.length);
     
     const result = await bcrypt.compare(candidatePassword, this.password);
     
@@ -125,11 +116,7 @@ userSchema.methods.generateAuthToken = function() {
   if (this.googleId) payload.googleId = this.googleId;
   if (this.avatar) payload.avatar = this.avatar;
   
-  const secret = process.env.JWT_SECRET || 'your-fallback-secret-key-for-development-only';
-  
-  if (!secret || secret === 'your-fallback-secret-key-for-development-only') {
-    console.warn('⚠️  Using fallback JWT secret. Set JWT_SECRET in .env for production!');
-  }
+  const secret = process.env.JWT_SECRET;s
   
   return jwt.sign(
     payload,
