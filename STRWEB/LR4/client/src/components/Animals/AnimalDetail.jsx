@@ -38,7 +38,7 @@ const AnimalDetail = () => {
         <button onClick={() => navigate('/animals')} className="btn-back">
           ← Back to list
         </button>
-        <h1>🐾 {animal.name}</h1>
+        <h1>{animal.name}</h1>
       </div>
 
       <div className="animal-detail-content">

@@ -4,7 +4,7 @@ const router = express.Router();
 const Employee = require('../models/Employee');
 const auth = require('../middleware/auth');
 
-// GET всех сотрудников (публичный)
+// GET all employees (public)
 router.get('/', async (req, res) => {
   try {
     const employees = await Employee.find().sort({ lastName: 1 });
@@ -14,20 +14,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET одного сотрудника (публичный)
-router.get('/:id', async (req, res) => {
-  try {
-    const employee = await Employee.findById(req.params.id);
-    if (!employee) {
-      return res.status(404).json({ error: 'Employee not found' });
-    }
-    res.json(employee);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// POST нового сотрудника (требуется авторизация)
+// POST new employee (requires authentication)
 router.post('/', auth, async (req, res) => {
   try {
     const employee = new Employee(req.body);
@@ -38,26 +25,7 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// PUT обновление сотрудника (требуется авторизация)
-router.put('/:id', auth, async (req, res) => {
-  try {
-    const employee = await Employee.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    
-    if (!employee) {
-      return res.status(404).json({ error: 'Employee not found' });
-    }
-    
-    res.json(employee);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-// DELETE сотрудника (требуется авторизация)
+// DELETE employee (requires authentication)
 router.delete('/:id', auth, async (req, res) => {
   try {
     const employee = await Employee.findByIdAndDelete(req.params.id);

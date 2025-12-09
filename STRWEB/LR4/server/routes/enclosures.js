@@ -5,7 +5,7 @@ const Enclosure = require('../models/Enclosure');
 const Animal = require('../models/Animal');
 const auth = require('../middleware/auth');
 
-// GET всех вольеров (публичный доступ)
+// GET all enclosures (public access)
 router.get('/', async (req, res) => {
   try {
     const enclosures = await Enclosure.find().sort({ name: 1 });
@@ -15,13 +15,13 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST создание нового вольера (требуется авторизация)
+// POST create new enclosure (requires authentication)
 router.post('/', auth, async (req, res) => {
   try {
-    // Проверка уникальности имени
+    // Check name uniqueness
     const existingEnclosure = await Enclosure.findOne({ name: req.body.name });
     if (existingEnclosure) {
-      return res.status(400).json({ error: 'Вольер с таким названием уже существует' });
+      return res.status(400).json({ error: 'Enclosure with this name already exists' });
     }
 
     const enclosure = new Enclosure(req.body);
@@ -36,14 +36,14 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// DELETE удаление вольера (требуется авторизация)
+// DELETE delete enclosure (requires authentication)
 router.delete('/:id', auth, async (req, res) => {
   try {
-    // Проверяем, есть ли животные в вольере
+    // Check if there are animals in the enclosure
     const animalsInEnclosure = await Animal.find({ enclosure: req.params.id });
     if (animalsInEnclosure.length > 0) {
       return res.status(400).json({ 
-        error: 'Невозможно удалить вольер: в нем содержатся животные',
+        error: 'Cannot delete enclosure: there are animals inside',
         animalsCount: animalsInEnclosure.length
       });
     }
@@ -51,11 +51,11 @@ router.delete('/:id', auth, async (req, res) => {
     const enclosure = await Enclosure.findByIdAndDelete(req.params.id);
     
     if (!enclosure) {
-      return res.status(404).json({ error: 'Вольер не найден' });
+      return res.status(404).json({ error: 'Enclosure not found' });
     }
     
     res.json({ 
-      message: 'Вольер успешно удален',
+      message: 'Enclosure successfully deleted',
       deletedEnclosure: enclosure.name
     });
   } catch (error) {

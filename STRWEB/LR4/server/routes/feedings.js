@@ -6,7 +6,7 @@ const Animal = require('../models/Animal');
 const Employee = require('../models/Employee');
 const auth = require('../middleware/auth');
 
-// GET всех записей о кормлении (публичный доступ)
+// GET all feeding records (public access)
 router.get('/', async (req, res) => {
   try {
     const feedings = await Feeding.find()
@@ -20,22 +20,22 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST создание новой записи о кормлении (требуется авторизация)
+// POST create new feeding record (requires authentication)
 router.post('/', auth, async (req, res) => {
   try {
-    // Проверяем существование животного
+    // Check if animal exists
     const animal = await Animal.findById(req.body.animal);
     if (!animal) {
-      return res.status(404).json({ error: 'Животное не найдено' });
+      return res.status(404).json({ error: 'Animal not found' });
     }
 
-    // Проверяем существование сотрудника
+    // Check if employee exists
     const employee = await Employee.findById(req.body.fedBy);
     if (!employee) {
-      return res.status(404).json({ error: 'Сотрудник не найден' });
+      return res.status(404).json({ error: 'Employee not found' });
     }
 
-    // Если feedingTime не указан, устанавливаем текущее время
+    // If feedingTime not specified, set current time
     if (!req.body.feedingTime) {
       req.body.feedingTime = new Date();
     }
@@ -43,7 +43,7 @@ router.post('/', auth, async (req, res) => {
     const feeding = new Feeding(req.body);
     await feeding.save();
 
-    // Получаем запись с populate
+    // Get record with populate
     const populatedFeeding = await Feeding.findById(feeding._id)
       .populate('animal', 'name species')
       .populate('fedBy', 'firstName lastName position');
@@ -58,17 +58,17 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// DELETE удаление записи о кормлении (требуется авторизация)
+// DELETE delete feeding record (requires authentication)
 router.delete('/:id', auth, async (req, res) => {
   try {
     const feeding = await Feeding.findByIdAndDelete(req.params.id);
     
     if (!feeding) {
-      return res.status(404).json({ error: 'Запись о кормлении не найдена' });
+      return res.status(404).json({ error: 'Feeding record not found' });
     }
     
     res.json({ 
-      message: 'Запись о кормлении успешно удалена',
+      message: 'Feeding record successfully deleted',
       deletedFeeding: {
         id: feeding._id,
         animal: feeding.animal,
