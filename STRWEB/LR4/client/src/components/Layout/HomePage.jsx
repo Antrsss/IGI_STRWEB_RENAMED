@@ -113,23 +113,6 @@ const HomePage = () => {
           </Link>
         </div>
       </section>
-
-      {!user && (
-        <section className="cta-section">
-          <div className="cta-content">
-            <h2>Get full access to the system!</h2>
-            <p>Register to add new records and manage all data</p>
-            <div className="cta-buttons">
-              <Link to="/register" className="btn btn-primary btn-large">
-                Register
-              </Link>
-              <Link to="/login" className="btn btn-outline btn-large">
-                Login
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
     </div>
   );
 };
