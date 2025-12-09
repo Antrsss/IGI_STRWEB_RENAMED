@@ -1,5 +1,5 @@
 // src/components/animals/AnimalList.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -12,7 +12,7 @@ const AnimalList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // Для поиска и сортировки
+  // For search and sorting
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('name');
   const [sortDirection, setSortDirection] = useState('asc');
@@ -21,11 +21,11 @@ const AnimalList = () => {
     fetchAnimals();
   }, []);
 
-  // Используем useCallback, чтобы функция не пересоздавалась при каждом рендере
+  // Use useCallback so the function doesn't get recreated on every render
   const filterAndSortAnimals = useCallback(() => {
     let result = [...animals];
 
-    // Поиск
+    // Search
     if (searchTerm) {
       result = result.filter(animal =>
         animal.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -33,7 +33,7 @@ const AnimalList = () => {
       );
     }
 
-    // Сортировка
+    // Sorting
     result.sort((a, b) => {
       let aValue = a[sortField];
       let bValue = b[sortField];
@@ -53,7 +53,7 @@ const AnimalList = () => {
 
   useEffect(() => {
     filterAndSortAnimals();
-  }, [filterAndSortAnimals]); // Теперь зависимость стабильна благодаря useCallback
+  }, [filterAndSortAnimals]); // Now dependency is stable thanks to useCallback
 
   const fetchAnimals = async () => {
     try {
@@ -62,15 +62,15 @@ const AnimalList = () => {
       setAnimals(response.data);
       setError(null);
     } catch (error) {
-      console.error('Ошибка загрузки животных:', error);
-      setError('Не удалось загрузить список животных');
+      console.error('Error loading animals:', error);
+      setError('Failed to load animal list');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Вы уверены, что хотите удалить это животное?')) {
+    if (!window.confirm('Are you sure you want to delete this animal?')) {
       return;
     }
 
@@ -80,34 +80,34 @@ const AnimalList = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
-      fetchAnimals(); // Обновляем список
+      fetchAnimals(); // Refresh list
     } catch (error) {
-      console.error('Ошибка удаления:', error);
-      alert('Не удалось удалить животное');
+      console.error('Delete error:', error);
+      alert('Failed to delete animal');
     }
   };
 
-  if (loading) return <div className="loading">Загрузка...</div>;
+  if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="animal-list-container">
       <div className="animal-list-header">
-        <h1>🐾 Список животных</h1>
+        <h1>Animal List</h1>
         
         {user && (
           <Link to="/animals/new" className="btn btn-primary">
-            ➕ Добавить новое животное
+            ➕ Add New Animal
           </Link>
         )}
       </div>
 
-      {/* Панель поиска и сортировки */}
+      {/* Search and sort panel */}
       <div className="search-sort-panel">
         <div className="search-box">
           <input
             type="text"
-            placeholder="Поиск по имени или виду..."
+            placeholder="Search by name or species..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -120,10 +120,10 @@ const AnimalList = () => {
             onChange={(e) => setSortField(e.target.value)}
             className="sort-select"
           >
-            <option value="name">По имени</option>
-            <option value="species">По виду</option>
-            <option value="age">По возрасту</option>
-            <option value="arrivalDate">По дате прибытия</option>
+            <option value="name">By name</option>
+            <option value="species">By species</option>
+            <option value="age">By age</option>
+            <option value="arrivalDate">By arrival date</option>
           </select>
 
           <button 
@@ -135,18 +135,18 @@ const AnimalList = () => {
         </div>
       </div>
 
-      {/* Таблица животных */}
+      {/* Animals table */}
       <div className="animals-table-container">
         <table className="animals-table">
           <thead>
             <tr>
-              <th>Имя</th>
-              <th>Вид</th>
-              <th>Возраст</th>
-              <th>Вес</th>
-              <th>Состояние здоровья</th>
-              <th>Дата прибытия</th>
-              {user && <th>Действия</th>}
+              <th>Name</th>
+              <th>Species</th>
+              <th>Age</th>
+              <th>Weight</th>
+              <th>Health Status</th>
+              <th>Arrival Date</th>
+              {user && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -154,28 +154,28 @@ const AnimalList = () => {
               <tr key={animal._id}>
                 <td>{animal.name}</td>
                 <td>{animal.species}</td>
-                <td>{animal.age} лет</td>
-                <td>{animal.weight} кг</td>
+                <td>{animal.age} years</td>
+                <td>{animal.weight} kg</td>
                 <td>
                   <span className={`health-status health-${animal.healthStatus.toLowerCase().replace(' ', '-')}`}>
                     {animal.healthStatus}
                   </span>
                 </td>
-                <td>{new Date(animal.arrivalDate).toLocaleDateString('ru-RU')}</td>
+                <td>{new Date(animal.arrivalDate).toLocaleDateString('en-US')}</td>
                 
                 {user && (
                   <td className="actions-cell">
                     <Link to={`/animals/${animal._id}`} className="btn-view">
-                      👁️ Просмотр
+                      View
                     </Link>
                     <Link to={`/animals/edit/${animal._id}`} className="btn-edit">
-                      ✏️ Редактировать
+                      Edit
                     </Link>
                     <button 
                       onClick={() => handleDelete(animal._id)}
                       className="btn-delete"
                     >
-                      🗑️ Удалить
+                      Delete
                     </button>
                   </td>
                 )}
@@ -186,19 +186,19 @@ const AnimalList = () => {
 
         {filteredAnimals.length === 0 && (
           <div className="no-results">
-            <p>Животные не найдены</p>
+            <p>No animals found</p>
           </div>
         )}
       </div>
 
-      {/* Статистика */}
+      {/* Statistics */}
       <div className="animal-stats">
         <div className="stat-card">
-          <h3>Всего животных</h3>
+          <h3>Total Animals</h3>
           <p className="stat-number">{animals.length}</p>
         </div>
         <div className="stat-card">
-          <h3>Отображено</h3>
+          <h3>Displayed</h3>
           <p className="stat-number">{filteredAnimals.length}</p>
         </div>
       </div>

@@ -27,7 +27,7 @@ const LoginPage = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <h2>🦒 Zoo Management System</h2>
+          <h2>Zoo Management System</h2>
           <h3>Login</h3>
           <p className="auth-subtitle">
             Welcome back to the zoo management platform
@@ -36,7 +36,6 @@ const LoginPage = () => {
         
         {error && (
           <div className="alert alert-error">
-            <span className="alert-icon">⚠️</span>
             {error}
           </div>
         )}

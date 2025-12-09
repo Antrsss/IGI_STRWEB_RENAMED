@@ -1,5 +1,5 @@
 // src/components/animals/AnimalForm.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -7,7 +7,7 @@ import './AnimalForm.css';
 
 const AnimalForm = () => {
   const { user } = useAuth();
-  const { id } = useParams(); // Для редактирования
+  const { id } = useParams(); // For editing
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -28,7 +28,7 @@ const AnimalForm = () => {
 
   const fetchDropdownData = useCallback(async () => {
     try {
-      // Загружаем вольеры и сотрудников для выпадающих списков
+      // Load enclosures and employees for dropdowns
       const [enclosuresRes, employeesRes] = await Promise.all([
         axios.get('http://localhost:5000/api/enclosures'),
         axios.get('http://localhost:5000/api/employees')
@@ -37,7 +37,7 @@ const AnimalForm = () => {
       setEnclosures(enclosuresRes.data);
       setEmployees(employeesRes.data);
       
-      // Устанавливаем значения по умолчанию, если они есть
+      // Set default values if available
       if (enclosuresRes.data.length > 0 && !formData.enclosure) {
         setFormData(prev => ({ ...prev, enclosure: enclosuresRes.data[0]._id }));
       }
@@ -46,7 +46,7 @@ const AnimalForm = () => {
         setFormData(prev => ({ ...prev, caretaker: employeesRes.data[0]._id }));
       }
     } catch (error) {
-      console.error('Ошибка загрузки данных:', error);
+      console.error('Error loading data:', error);
     }
   }, [formData.enclosure, formData.caretaker]);
 
@@ -56,8 +56,8 @@ const AnimalForm = () => {
       const response = await axios.get(`http://localhost:5000/api/animals/${id}`);
       setFormData(response.data);
     } catch (error) {
-      console.error('Ошибка загрузки животного:', error);
-      setError('Не удалось загрузить данные животного');
+      console.error('Error loading animal:', error);
+      setError('Failed to load animal data');
     } finally {
       setLoading(false);
     }
@@ -71,7 +71,7 @@ const AnimalForm = () => {
 
     fetchDropdownData();
     
-    // Если это редактирование, загружаем данные животного
+    // If editing, load animal data
     if (id) {
       fetchAnimalData();
     }
@@ -99,19 +99,19 @@ const AnimalForm = () => {
       };
 
       if (id) {
-        // Обновление существующего животного
+        // Update existing animal
         await axios.put(`http://localhost:5000/api/animals/${id}`, formData, config);
-        alert('Животное успешно обновлено!');
+        alert('Animal updated successfully!');
       } else {
-        // Создание нового животного
+        // Create new animal
         await axios.post('http://localhost:5000/api/animals', formData, config);
-        alert('Животное успешно добавлено!');
+        alert('Animal added successfully!');
       }
       
       navigate('/animals');
     } catch (error) {
-      console.error('Ошибка сохранения:', error);
-      setError(error.response?.data?.message || 'Ошибка при сохранении');
+      console.error('Save error:', error);
+      setError(error.response?.data?.message || 'Error saving data');
     } finally {
       setLoading(false);
     }
@@ -124,22 +124,22 @@ const AnimalForm = () => {
   return (
     <div className="animal-form-container">
       <div className="animal-form-header">
-        <h1>{id ? '✏️ Редактировать животное' : '➕ Добавить новое животное'}</h1>
+        <h1>{id ? 'Edit Animal' : '➕ Add New Animal'}</h1>
         <button onClick={() => navigate('/animals')} className="btn-back">
-          ← Назад к списку
+          ← Back to list
         </button>
       </div>
 
       {error && (
         <div className="error-message">
-          ⚠️ {error}
+          {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="animal-form">
         <div className="form-grid">
           <div className="form-group">
-            <label htmlFor="name">Имя животного *</label>
+            <label htmlFor="name">Animal Name *</label>
             <input
               type="text"
               id="name"
@@ -152,7 +152,7 @@ const AnimalForm = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="species">Вид *</label>
+            <label htmlFor="species">Species *</label>
             <select
               id="species"
               name="species"
@@ -161,21 +161,21 @@ const AnimalForm = () => {
               required
               disabled={loading}
             >
-              <option value="Lion">Лев</option>
-              <option value="Tiger">Тигр</option>
-              <option value="Elephant">Слон</option>
-              <option value="Giraffe">Жираф</option>
-              <option value="Monkey">Обезьяна</option>
-              <option value="Panda">Панда</option>
-              <option value="Crocodile">Крокодил</option>
-              <option value="Bird">Птица</option>
-              <option value="Reptile">Рептилия</option>
-              <option value="Other">Другое</option>
+              <option value="Lion">Lion</option>
+              <option value="Tiger">Tiger</option>
+              <option value="Elephant">Elephant</option>
+              <option value="Giraffe">Giraffe</option>
+              <option value="Monkey">Monkey</option>
+              <option value="Panda">Panda</option>
+              <option value="Crocodile">Crocodile</option>
+              <option value="Bird">Bird</option>
+              <option value="Reptile">Reptile</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
           <div className="form-group">
-            <label htmlFor="age">Возраст (лет)</label>
+            <label htmlFor="age">Age (years)</label>
             <input
               type="number"
               id="age"
@@ -189,7 +189,7 @@ const AnimalForm = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="weight">Вес (кг)</label>
+            <label htmlFor="weight">Weight (kg)</label>
             <input
               type="number"
               id="weight"
@@ -203,7 +203,7 @@ const AnimalForm = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="healthStatus">Состояние здоровья</label>
+            <label htmlFor="healthStatus">Health Status</label>
             <select
               id="healthStatus"
               name="healthStatus"
@@ -211,15 +211,15 @@ const AnimalForm = () => {
               onChange={handleChange}
               disabled={loading}
             >
-              <option value="Excellent">Отличное</option>
-              <option value="Good">Хорошее</option>
-              <option value="Satisfactory">Удовлетворительное</option>
-              <option value="Requires treatment">Требует лечения</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Satisfactory">Satisfactory</option>
+              <option value="Requires treatment">Requires treatment</option>
             </select>
           </div>
 
           <div className="form-group">
-            <label htmlFor="enclosure">Вольер *</label>
+            <label htmlFor="enclosure">Enclosure *</label>
             <select
               id="enclosure"
               name="enclosure"
@@ -237,7 +237,7 @@ const AnimalForm = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="caretaker">Ответственный сотрудник *</label>
+            <label htmlFor="caretaker">Responsible Employee *</label>
             <select
               id="caretaker"
               name="caretaker"
@@ -255,7 +255,7 @@ const AnimalForm = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="dietType">Тип питания *</label>
+            <label htmlFor="dietType">Diet Type *</label>
             <select
               id="dietType"
               name="dietType"
@@ -264,16 +264,16 @@ const AnimalForm = () => {
               required
               disabled={loading}
             >
-              <option value="Carnivore">Хищник</option>
-              <option value="Herbivore">Травоядное</option>
-              <option value="Omnivore">Всеядное</option>
-              <option value="Special">Специальное</option>
+              <option value="Carnivore">Carnivore</option>
+              <option value="Herbivore">Herbivore</option>
+              <option value="Omnivore">Omnivore</option>
+              <option value="Special">Special</option>
             </select>
           </div>
         </div>
 
         <div className="form-group full-width">
-          <label htmlFor="specialNeeds">Особые потребности</label>
+          <label htmlFor="specialNeeds">Special Needs</label>
           <textarea
             id="specialNeeds"
             name="specialNeeds"
@@ -282,7 +282,7 @@ const AnimalForm = () => {
             rows="3"
             maxLength="500"
             disabled={loading}
-            placeholder="Опишите особые потребности животного..."
+            placeholder="Describe any special needs of the animal..."
           />
         </div>
 
@@ -293,14 +293,14 @@ const AnimalForm = () => {
             className="btn btn-secondary"
             disabled={loading}
           >
-            Отмена
+            Cancel
           </button>
           <button
             type="submit"
             className="btn btn-primary"
             disabled={loading}
           >
-            {loading ? 'Сохранение...' : (id ? 'Обновить' : 'Сохранить')}
+            {loading ? 'Saving...' : (id ? 'Update' : 'Save')}
           </button>
         </div>
       </form>

@@ -1,5 +1,5 @@
 // src/components/enclosures/EnclosureList.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -23,7 +23,7 @@ const EnclosureList = () => {
   const filterAndSortEnclosures = useCallback(() => {
     let result = [...enclosures];
 
-    // Поиск
+    // Search
     if (searchTerm) {
       result = result.filter(enclosure =>
         enclosure.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -32,7 +32,7 @@ const EnclosureList = () => {
       );
     }
 
-    // Сортировка
+    // Sorting
     result.sort((a, b) => {
       let aValue = a[sortField];
       let bValue = b[sortField];
@@ -61,15 +61,15 @@ const EnclosureList = () => {
       setEnclosures(response.data);
       setError(null);
     } catch (error) {
-      console.error('Ошибка загрузки вольеров:', error);
-      setError('Не удалось загрузить список вольеров');
+      console.error('Error loading enclosures:', error);
+      setError('Failed to load enclosure list');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Вы уверены, что хотите удалить этот вольер?')) {
+    if (!window.confirm('Are you sure you want to delete this enclosure?')) {
       return;
     }
 
@@ -81,22 +81,22 @@ const EnclosureList = () => {
       });
       fetchEnclosures();
     } catch (error) {
-      console.error('Ошибка удаления:', error);
-      alert('Не удалось удалить вольер');
+      console.error('Delete error:', error);
+      alert('Failed to delete enclosure');
     }
   };
 
-  if (loading) return <div className="loading">Загрузка...</div>;
+  if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="enclosure-list-container">
       <div className="enclosure-list-header">
-        <h1>🏠 Вольеры зоопарка</h1>
+        <h1>Zoo Enclosures</h1>
         
         {user && (
           <Link to="/enclosures/new" className="btn btn-primary">
-            ➕ Добавить вольер
+            ➕ Add Enclosure
           </Link>
         )}
       </div>
@@ -105,7 +105,7 @@ const EnclosureList = () => {
         <div className="search-box">
           <input
             type="text"
-            placeholder="Поиск по названию, типу или расположению..."
+            placeholder="Search by name, type, or location..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -118,10 +118,10 @@ const EnclosureList = () => {
             onChange={(e) => setSortField(e.target.value)}
             className="sort-select"
           >
-            <option value="name">По названию</option>
-            <option value="type">По типу</option>
-            <option value="size.area">По площади</option>
-            <option value="location">По расположению</option>
+            <option value="name">By name</option>
+            <option value="type">By type</option>
+            <option value="size.area">By area</option>
+            <option value="location">By location</option>
           </select>
 
           <button 
@@ -145,10 +145,10 @@ const EnclosureList = () => {
             
             <div className="enclosure-card-body">
               <div className="enclosure-info">
-                <p><strong>📍 Расположение:</strong> {enclosure.location}</p>
-                <p><strong>📏 Площадь:</strong> {enclosure.size.area} м²</p>
-                <p><strong>🐾 Вместимость:</strong> {enclosure.size.capacity || 'Не указано'} животных</p>
-                <p><strong>⚙️ Состояние:</strong> 
+                <p><strong>Location:</strong> {enclosure.location}</p>
+                <p><strong>Area:</strong> {enclosure.size.area} m²</p>
+                <p><strong>Capacity:</strong> {enclosure.size.capacity || 'Not specified'} animals</p>
+                <p><strong>Condition:</strong> 
                   <span className={`maintenance-status ${enclosure.maintenanceStatus.toLowerCase().replace(' ', '-')}`}>
                     {enclosure.maintenanceStatus}
                   </span>
@@ -158,7 +158,7 @@ const EnclosureList = () => {
               {user && (
                 <div className="enclosure-actions">
                   <Link to={`/enclosures/${enclosure._id}`} className="btn-view">
-                    👁️ Подробнее
+                    👁️ Details
                   </Link>
                   <Link to={`/enclosures/edit/${enclosure._id}`} className="btn-edit">
                     ✏️
@@ -177,7 +177,7 @@ const EnclosureList = () => {
 
         {filteredEnclosures.length === 0 && (
           <div className="no-results">
-            <p>Вольеры не найдены</p>
+            <p>No enclosures found</p>
           </div>
         )}
       </div>

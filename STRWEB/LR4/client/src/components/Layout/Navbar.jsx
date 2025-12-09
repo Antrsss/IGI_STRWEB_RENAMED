@@ -1,6 +1,5 @@
-// src/components/layout/Navbar.jsx - обновленная версия
-// Добавляем ссылки на все 4 страницы
-import React from 'react';
+// src/components/layout/Navbar.jsx - updated version
+// Add links to all 4 pages
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './Navbar.css';
@@ -15,7 +14,7 @@ const Navbar = () => {
     navigate('/');
   };
 
-  // Проверяем активный маршрут
+  // Check active route
   const isActive = (path) => {
     return location.pathname.startsWith(path) ? 'active' : '';
   };
@@ -23,38 +22,38 @@ const Navbar = () => {
   return (
     <header className="navbar">
       <div className="navbar-container">
-        {/* Левый блок - логотип и название */}
+        {/* Left block - logo and name */}
         <div className="navbar-brand">
           <Link to="/" className="navbar-logo">
-            🦒 Зоопарк
+            Zoo
           </Link>
         </div>
 
-        {/* Центральный блок - навигация */}
+        {/* Center block - navigation */}
         <div className="navbar-links">
           <Link to="/" className={`nav-link ${isActive('/') && !isActive('/animals') && !isActive('/employees') && !isActive('/enclosures') && !isActive('/feedings') ? 'active' : ''}`}>
-            🏠 Главная
+            Home
           </Link>
           <Link to="/animals" className={`nav-link ${isActive('/animals') ? 'active' : ''}`}>
-            🐾 Животные
+            Animals
           </Link>
           <Link to="/employees" className={`nav-link ${isActive('/employees') ? 'active' : ''}`}>
-            👨‍⚕️ Сотрудники
+            Employees
           </Link>
           <Link to="/enclosures" className={`nav-link ${isActive('/enclosures') ? 'active' : ''}`}>
-            🏠 Вольеры
+            Enclosures
           </Link>
           <Link to="/feedings" className={`nav-link ${isActive('/feedings') ? 'active' : ''}`}>
-            🥕 Кормление
+            Feeding
           </Link>
           {user && (
             <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}>
-              📊 Панель управления
+              Dashboard
             </Link>
           )}
         </div>
 
-        {/* Правый блок - пользователь */}
+        {/* Right block - user */}
         <div className="navbar-user-section">
           {user ? (
             <div className="user-info-panel">
@@ -62,17 +61,16 @@ const Navbar = () => {
                 <span className="user-name">{user?.username || user?.email}</span>
               </div>
               <button onClick={handleLogout} className="logout-btn">
-                <span className="logout-icon">🚪</span>
-                Выйти
+                Logout
               </button>
             </div>
           ) : (
             <div className="auth-buttons">
               <Link to="/login" className="btn btn-primary">
-                🔑 Войти
+                Login
               </Link>
               <Link to="/register" className="btn btn-secondary">
-                📝 Регистрация
+                Register
               </Link>
             </div>
           )}

@@ -21,7 +21,7 @@ const Dashboard = () => {
       setLoading(true);
       setError(null);
 
-      // Если у пользователя есть токен, но его нет в axios заголовках
+      // If user has a token but it's not in axios headers
       const token = localStorage.getItem('token');
       if (token) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -36,16 +36,16 @@ const Dashboard = () => {
       setLoading(false);
 
     } catch (error) {
-      console.error('Ошибка загрузки данных:', error);
+      console.error('Error loading data:', error);
       
       if (error.response?.status === 401) {
-        setError('Сессия истекла. Пожалуйста, войдите снова.');
+        setError('Session expired. Please log in again.');
         logout();
         navigate('/login');
       } else if (error.response?.status === 403) {
-        setError('Недостаточно прав для просмотра данных.');
+        setError('Insufficient permissions to view data.');
       } else {
-        setError('Не удалось загрузить данные. Пожалуйста, попробуйте позже.');
+        setError('Failed to load data. Please try again later.');
       }
       setLoading(false);
     }
@@ -56,7 +56,7 @@ const Dashboard = () => {
       <div className="dashboard-loading">
         <div className="loading-spinner">
           <div className="spinner"></div>
-          <p>Загрузка данных...</p>
+          <p>Loading data...</p>
         </div>
       </div>
     );
@@ -65,41 +65,38 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
 
-      {/* Основной контент */}
+      {/* Main content */}
       <main className="dashboard-main">
         {error && (
           <div className="error-banner">
-            <span className="error-icon">⚠️</span>
             {error}
             <button onClick={fetchDashboardData} className="retry-btn">
-              Повторить
+              Retry
             </button>
           </div>
         )}
 
-        {/* Быстрые действия */}
+        {/* Quick actions */}
         <div className="quick-actions">
-          <h2>Быстрые действия</h2>
+          <h2>Quick Actions</h2>
           <div className="actions-grid">
             <Link to="/animals" className="action-card">
-              <span className="action-icon">🐾</span>
-              <h3>Животные</h3>
-              <p>Управление животными</p>
+              <h3>Animals</h3>
+              <p>Manage animals</p>
             </Link>
           </div>
         </div>
 
-        {/* Статистика */}
+        {/* Statistics */}
         <div className="statistics-section">
-          <h2>📊 Статистика</h2>
+          <h2>Statistics</h2>
           <div className="stats-grid">
             <div className="stat-card stat-animals">
               <div className="stat-content">
-                <h3>Животных</h3>
+                <h3>Animals</h3>
                 <p className="stat-number">{stats.totalAnimals}</p>
-                <Link to="/animals" className="stat-link">Просмотреть всех →</Link>
+                <Link to="/animals" className="stat-link">View all →</Link>
               </div>
-              <div className="stat-icon">🐾</div>
             </div>
           </div>
         </div>

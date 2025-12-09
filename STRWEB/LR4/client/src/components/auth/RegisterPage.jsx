@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
@@ -140,7 +140,7 @@ const RegisterPage = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <h2>🦒 Zoo Management System</h2>
+          <h2>Zoo Management System</h2>
           <h3>Create Account</h3>
           <p className="auth-subtitle">
             Join our zoo management platform
@@ -150,7 +150,6 @@ const RegisterPage = () => {
         {/* Display server error */}
         {serverError && (
           <div className="alert alert-error">
-            <span className="alert-icon">⚠️</span>
             {serverError}
           </div>
         )}

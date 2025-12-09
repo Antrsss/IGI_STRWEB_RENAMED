@@ -1,5 +1,4 @@
 // src/components/layout/Footer.jsx
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './Footer.css';
@@ -11,56 +10,56 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h3 className="footer-title">🦒 Система управления зоопарком</h3>
+          <h3 className="footer-title">Zoo Management System</h3>
           <p className="footer-description">
-            Современная система для управления животными, сотрудниками и вольерами зоопарка
+            Modern system for managing zoo animals, employees, and enclosures
           </p>
         </div>
         
         <div className="footer-section">
-          <h4>Навигация</h4>
+          <h4>Navigation</h4>
           <div className="footer-links">
-            <Link to="/">Главная</Link>
-            <Link to="/animals">Животные</Link>
-            {user && <Link to="/dashboard">Панель управления</Link>}
-            <Link to="/about">О проекте</Link>
+            <Link to="/">Home</Link>
+            <Link to="/animals">Animals</Link>
+            {user && <Link to="/dashboard">Dashboard</Link>}
+            <Link to="/about">About</Link>
           </div>
         </div>
         
         <div className="footer-section">
-          <h4>Аккаунт</h4>
+          <h4>Account</h4>
           <div className="footer-links">
             {user ? (
               <>
-                <span className="user-info">Вы вошли как: {user?.username || user?.email}</span>
-                <Link to="/profile">Профиль</Link>
+                <span className="user-info">Logged in as: {user?.username || user?.email}</span>
+                <Link to="/profile">Profile</Link>
               </>
             ) : (
               <>
-                <Link to="/login">Войти</Link>
-                <Link to="/register">Регистрация</Link>
+                <Link to="/login">Login</Link>
+                <Link to="/register">Register</Link>
               </>
             )}
           </div>
         </div>
         
         <div className="footer-section">
-          <h4>Поддержка</h4>
+          <h4>Support</h4>
           <div className="footer-links">
-            <Link to="/help">Помощь</Link>
-            <Link to="/contact">Контакты</Link>
-            <Link to="/privacy">Конфиденциальность</Link>
-            <Link to="/terms">Условия использования</Link>
+            <Link to="/help">Help</Link>
+            <Link to="/contact">Contact</Link>
+            <Link to="/privacy">Privacy</Link>
+            <Link to="/terms">Terms of Use</Link>
           </div>
         </div>
       </div>
       
       <div className="footer-bottom">
         <p className="footer-copyright">
-          © {new Date().getFullYear()} Система управления зоопарком. Все права защищены.
+          © {new Date().getFullYear()} Zoo Management System. All rights reserved.
         </p>
         <div className="system-info">
-          <small>Версия 2.0.0 {user && `| Пользователь: ${user?.username || user?.email}`}</small>
+          <small>Version 2.0.0 {user && `| User: ${user?.username || user?.email}`}</small>
         </div>
       </div>
     </footer>

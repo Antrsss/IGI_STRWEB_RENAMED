@@ -4,46 +4,51 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const fs = require('fs');
 const path = require('path');
+
+const authRoutes = require('./routes/auth');
+const googleAuthRoutes = require('./routes/googleAuth');
+const animalsRoutes = require('./routes/animals');
+const employeesRoutes = require('./routes/employees');
 const enclosureRoutes = require('./routes/enclosures');
 const feedingRoutes = require('./routes/feedings');
 
-// === ЖЕСТКАЯ ЗАГРУЗКА .env ===
+// === STRICT .env LOADING ===
 const envPath = path.join(__dirname, '.env');
-console.log('=== ДИАГНОСТИКА ===');
-console.log('Директория:', __dirname);
-console.log('Путь к .env:', envPath);
+console.log('=== DIAGNOSTICS ===');
+console.log('Directory:', __dirname);
+console.log('.env path:', envPath);
 
-// Проверяем файл
+// Check file
 if (fs.existsSync(envPath)) {
-  console.log('✅ .env файл найден');
+  console.log('✅ .env file found');
   const envContent = fs.readFileSync(envPath, 'utf8');
-  console.log('Содержимое .env:');
+  console.log('.env content:');
   console.log(envContent);
   
-  // Принудительно парсим .env
+  // Force parse .env
   envContent.split('\n').forEach(line => {
     if (line.trim() && !line.startsWith('#')) {
       const [key, ...valueParts] = line.split('=');
       const value = valueParts.join('=').trim();
       if (key && value) {
         process.env[key.trim()] = value;
-        console.log(`📦 Установлено: ${key.trim()} = ${value.substring(0, 10)}...`);
+        console.log(`📦 Set: ${key.trim()} = ${value.substring(0, 10)}...`);
       }
     }
   });
 } else {
-  console.log('❌ .env файл не найден!');
+  console.log('❌ .env file not found!');
 }
 
-// Альтернативно используем dotenv с абсолютным путем
+// Alternatively use dotenv with absolute path
 require('dotenv').config({ path: envPath });
 
-console.log('\n=== ПРОВЕРКА ПЕРЕМЕННЫХ ===');
+console.log('\n=== VARIABLES CHECK ===');
 console.log('PORT:', process.env.PORT || 'undefined');
-console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID ? '✅ Загружен' : '❌ Отсутствует');
-console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET ? '✅ Загружен' : '❌ Отсутствует');
+console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID ? '✅ Loaded' : '❌ Missing');
+console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET ? '✅ Loaded' : '❌ Missing');
 console.log('GOOGLE_CALLBACK_URL:', process.env.GOOGLE_CALLBACK_URL || 'undefined');
-console.log('MONGODB_URI:', process.env.MONGODB_URI ? '✅ Загружен' : '❌ Отсутствует');
+console.log('MONGODB_URI:', process.env.MONGODB_URI ? '✅ Loaded' : '❌ Missing');
 
 const app = express();
 
@@ -54,32 +59,33 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Инициализация Passport
+// Initialize Passport
 app.use(passport.initialize());
 require('./config/passport');
 
-// Подключение к MongoDB
+// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/zoo_management')
-  .then(() => console.log('✅ MongoDB подключен успешно'))
-  .catch(err => console.error('❌ Ошибка подключения MongoDB:', err));
+  .then(() => console.log('✅ MongoDB connected successfully'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
 
-// Маршруты
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/auth/google', require('./routes/googleAuth'));
-app.use('/api/animals', require('./routes/animals'));
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/auth/google', googleAuthRoutes);
+app.use('/api/animals', animalsRoutes);
+app.use('/api/employees', employeesRoutes);
 app.use('/api/enclosures', enclosureRoutes);
 app.use('/api/feedings', feedingRoutes);
 
-// Базовая маршрутизация
+// Base routing
 app.get('/', (req, res) => {
   res.json({ 
-    message: '🦁 Система управления зоопарком с аутентификацией 🦒',
+    message: '🦁 Zoo Management System with Authentication 🦒',
     version: '2.0.0',
     features: [
-      'JWT аутентификация',
+      'JWT authentication',
       'Google OAuth 2.0',
-      'Ролевая модель (user, employee, admin)',
-      'Защищенные API эндпоинты'
+      'Role model (user, employee, admin)',
+      'Protected API endpoints'
     ],
     endpoints: {
       auth: {
@@ -96,7 +102,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// Проверка здоровья
+// Health check
 app.get('/api/health', async (req, res) => {
   const dbStatus = mongoose.connection.readyState;
   const statusMessages = {
@@ -114,24 +120,24 @@ app.get('/api/health', async (req, res) => {
   });
 });
 
-// Обработка 404
+// 404 handler
 app.use((req, res) => {
-  res.status(404).json({ error: 'Маршрут не найден' });
+  res.status(404).json({ error: 'Route not found' });
 });
 
-// Обработка ошибок
+// Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ 
-    error: 'Внутренняя ошибка сервера',
+    error: 'Internal server error',
     message: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Сервер запущен на порту ${PORT}`);
-  console.log(`🔐 Аутентификация: JWT + Google OAuth`);
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🔐 Authentication: JWT + Google OAuth`);
   console.log(`🌐 API: http://localhost:${PORT}`);
   console.log(`🔗 Google OAuth Callback: ${process.env.GOOGLE_CALLBACK_URL}`);
 });

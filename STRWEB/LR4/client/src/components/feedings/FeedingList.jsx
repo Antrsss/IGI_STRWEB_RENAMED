@@ -1,5 +1,5 @@
 // src/components/feedings/FeedingList.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -23,7 +23,7 @@ const FeedingList = () => {
   const filterAndSortFeedings = useCallback(() => {
     let result = [...feedings];
 
-    // Поиск
+    // Search
     if (searchTerm) {
       result = result.filter(feeding =>
         (feeding.animal?.name && feeding.animal.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -31,7 +31,7 @@ const FeedingList = () => {
       );
     }
 
-    // Сортировка
+    // Sorting
     result.sort((a, b) => {
       let aValue = a[sortField];
       let bValue = b[sortField];
@@ -65,15 +65,15 @@ const FeedingList = () => {
       setFeedings(response.data);
       setError(null);
     } catch (error) {
-      console.error('Ошибка загрузки кормлений:', error);
-      setError('Не удалось загрузить список кормлений');
+      console.error('Error loading feedings:', error);
+      setError('Failed to load feeding list');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Вы уверены, что хотите удалить эту запись о кормлении?')) {
+    if (!window.confirm('Are you sure you want to delete this feeding record?')) {
       return;
     }
 
@@ -85,22 +85,22 @@ const FeedingList = () => {
       });
       fetchFeedings();
     } catch (error) {
-      console.error('Ошибка удаления:', error);
-      alert('Не удалось удалить запись о кормлении');
+      console.error('Delete error:', error);
+      alert('Failed to delete feeding record');
     }
   };
 
-  if (loading) return <div className="loading">Загрузка...</div>;
+  if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="feeding-list-container">
       <div className="feeding-list-header">
-        <h1>🥕 Кормление животных</h1>
+        <h1>Animal Feeding</h1>
         
         {user && (
           <Link to="/feedings/new" className="btn btn-primary">
-            ➕ Добавить запись о кормлении
+            ➕ Add Feeding Record
           </Link>
         )}
       </div>
@@ -109,7 +109,7 @@ const FeedingList = () => {
         <div className="search-box">
           <input
             type="text"
-            placeholder="Поиск по животному или типу корма..."
+            placeholder="Search by animal or food type..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -122,9 +122,9 @@ const FeedingList = () => {
             onChange={(e) => setSortField(e.target.value)}
             className="sort-select"
           >
-            <option value="feedingTime">По дате кормления</option>
-            <option value="foodType">По типу корма</option>
-            <option value="quantity">По количеству</option>
+            <option value="feedingTime">By feeding date</option>
+            <option value="foodType">By food type</option>
+            <option value="quantity">By quantity</option>
           </select>
 
           <button 
@@ -140,12 +140,12 @@ const FeedingList = () => {
         <table className="feedings-table">
           <thead>
             <tr>
-              <th>Животное</th>
-              <th>Тип корма</th>
-              <th>Количество</th>
-              <th>Дата кормления</th>
-              <th>Кормил</th>
-              {user && <th>Действия</th>}
+              <th>Animal</th>
+              <th>Food Type</th>
+              <th>Quantity</th>
+              <th>Feeding Date</th>
+              <th>Fed By</th>
+              {user && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -156,17 +156,17 @@ const FeedingList = () => {
                     <Link to={`/animals/${feeding.animal._id}`} className="animal-link">
                       {feeding.animal.name}
                     </Link>
-                  ) : 'Неизвестно'}
+                  ) : 'Unknown'}
                 </td>
                 <td>{feeding.foodType}</td>
                 <td>{feeding.quantity} {feeding.unit}</td>
-                <td>{new Date(feeding.feedingTime).toLocaleString('ru-RU')}</td>
+                <td>{new Date(feeding.feedingTime).toLocaleString('en-US')}</td>
                 <td>
                   {feeding.fedBy ? (
                     <span className="fed-by">
                       {feeding.fedBy.firstName} {feeding.fedBy.lastName}
                     </span>
-                  ) : 'Неизвестно'}
+                  ) : 'Unknown'}
                 </td>
                 
                 {user && (
@@ -192,7 +192,7 @@ const FeedingList = () => {
 
         {filteredFeedings.length === 0 && (
           <div className="no-results">
-            <p>Записи о кормлении не найдены</p>
+            <p>No feeding records found</p>
           </div>
         )}
       </div>

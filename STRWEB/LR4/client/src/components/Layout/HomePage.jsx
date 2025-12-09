@@ -1,4 +1,4 @@
-// src/components/layout/HomePage.jsx - обновленная версия
+// src/components/layout/HomePage.jsx - updated version
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -35,7 +35,7 @@ const HomePage = () => {
         totalFeedings: feedingsRes.data.length
       });
     } catch (error) {
-      console.error('Ошибка загрузки статистики:', error);
+      console.error('Error loading statistics:', error);
     } finally {
       setLoading(false);
     }
@@ -46,73 +46,69 @@ const HomePage = () => {
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">
-            🦒 Добро пожаловать в систему управления зоопарком
+            Welcome to the Zoo Management System
           </h1>
           <p className="hero-subtitle">
-            Управляйте животными, сотрудниками, вольерами и кормлениями в одном месте
+            Manage animals, employees, enclosures, and feedings all in one place
           </p>
           
           <div className="hero-stats">
             <div className="stat-item">
               <span className="stat-number">{stats.totalAnimals}</span>
-              <span className="stat-label">Животных</span>
+              <span className="stat-label">Animals</span>
             </div>
             <div className="stat-item">
               <span className="stat-number">{stats.totalEmployees}</span>
-              <span className="stat-label">Сотрудников</span>
+              <span className="stat-label">Employees</span>
             </div>
             <div className="stat-item">
               <span className="stat-number">{stats.totalEnclosures}</span>
-              <span className="stat-label">Вольеров</span>
+              <span className="stat-label">Enclosures</span>
             </div>
             <div className="stat-item">
               <span className="stat-number">{stats.totalFeedings}</span>
-              <span className="stat-label">Кормлений</span>
+              <span className="stat-label">Feedings</span>
             </div>
           </div>
         </div>
       </section>
 
       <section className="features-section">
-        <h2>Система управления зоопарком</h2>
+        <h2>Zoo Management System</h2>
         <p className="section-description">
-          Информационная система для эффективного управления всеми аспектами работы зоопарка
+          Information system for efficient management of all aspects of zoo operations
         </p>
         
         <div className="features-grid">
           <Link to="/animals" className="feature-card">
-            <div className="feature-icon">🐾</div>
-            <h3>Животные</h3>
-            <p>Учет всех животных, их состояние, питание и медицинские данные</p>
+            <h3>Animals</h3>
+            <p>Track all animals, their condition, nutrition, and medical data</p>
             <div className="feature-stats">
-              <span className="feature-stat">{stats.totalAnimals} записей</span>
+              <span className="feature-stat">{stats.totalAnimals} records</span>
             </div>
           </Link>
           
           <Link to="/employees" className="feature-card">
-            <div className="feature-icon">👨‍⚕️</div>
-            <h3>Сотрудники</h3>
-            <p>Управление персоналом, должностями, расписанием и обязанностями</p>
+            <h3>Employees</h3>
+            <p>Manage personnel, positions, schedules, and responsibilities</p>
             <div className="feature-stats">
-              <span className="feature-stat">{stats.totalEmployees} записей</span>
+              <span className="feature-stat">{stats.totalEmployees} records</span>
             </div>
           </Link>
           
           <Link to="/enclosures" className="feature-card">
-            <div className="feature-icon">🏠</div>
-            <h3>Вольеры</h3>
-            <p>Информация о вольерах, их состоянии, размерах и условиях содержания</p>
+            <h3>Enclosures</h3>
+            <p>Information about enclosures, their condition, size, and maintenance</p>
             <div className="feature-stats">
-              <span className="feature-stat">{stats.totalEnclosures} записей</span>
+              <span className="feature-stat">{stats.totalEnclosures} records</span>
             </div>
           </Link>
           
           <Link to="/feedings" className="feature-card">
-            <div className="feature-icon">🥕</div>
-            <h3>Кормление</h3>
-            <p>Учет кормлений животных, рационов и расходов на питание</p>
+            <h3>Feeding</h3>
+            <p>Track animal feedings, diets, and food expenses</p>
             <div className="feature-stats">
-              <span className="feature-stat">{stats.totalFeedings} записей</span>
+              <span className="feature-stat">{stats.totalFeedings} records</span>
             </div>
           </Link>
         </div>
@@ -121,14 +117,14 @@ const HomePage = () => {
       {!user && (
         <section className="cta-section">
           <div className="cta-content">
-            <h2>Получите полный доступ к системе!</h2>
-            <p>Зарегистрируйтесь, чтобы добавлять новые записи и управлять всеми данными</p>
+            <h2>Get full access to the system!</h2>
+            <p>Register to add new records and manage all data</p>
             <div className="cta-buttons">
               <Link to="/register" className="btn btn-primary btn-large">
-                📝 Зарегистрироваться
+                Register
               </Link>
               <Link to="/login" className="btn btn-outline btn-large">
-                🔑 Войти в систему
+                Login
               </Link>
             </div>
           </div>

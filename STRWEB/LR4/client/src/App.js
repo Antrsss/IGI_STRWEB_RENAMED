@@ -1,4 +1,4 @@
-// src/App.js - полная версия со всеми маршрутами
+// src/App.js - full version with all routes
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './components/contexts/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -10,7 +10,7 @@ import GoogleCallback from './components/auth/GoogleCallback';
 import Dashboard from './components/layout/Dashboard';
 import HomePage from './components/layout/HomePage';
 
-// Импортируем все компоненты для 4 сущностей
+// Import all components for 4 entities
 import AnimalList from './components/animals/AnimalList.jsx';
 import AnimalForm from './components/animals/AnimalForm.jsx';
 import AnimalDetail from './components/animals/AnimalDetail.jsx';
@@ -44,24 +44,24 @@ function App() {
           
           <main className="main-content">
             <Routes>
-              {/* Публичные маршруты */}
+              {/* Public routes */}
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/auth/callback" element={<GoogleCallback />} />
               
-              {/* Защищенные маршруты */}
+              {/* Protected routes */}
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
                 </ProtectedRoute>
               } />
               
-              {/* Животные - публичный просмотр */}
+              {/* Animals - public view */}
               <Route path="/animals" element={<AnimalList />} />
               <Route path="/animals/:id" element={<AnimalDetail />} />
               
-              {/* Животные - защищенные действия */}
+              {/* Animals - protected actions */}
               <Route path="/animals/new" element={
                 <ProtectedRoute>
                   <AnimalForm />
@@ -73,21 +73,21 @@ function App() {
                 </ProtectedRoute>
               } />
               
-              {/* Сотрудники - публичный просмотр */}
+              {/* Employees - public view */}
               <Route path="/employees" element={<EmployeeList />} />
               
-              {/* Вольеры - публичный просмотр */}
+              {/* Enclosures - public view */}
               <Route path="/enclosures" element={<EnclosureList />} />
               
-              {/* Кормление - публичный просмотр */}
+              {/* Feedings - public view */}
               <Route path="/feedings" element={<FeedingList />} />
               
-              {/* 404 страница */}
+              {/* 404 page */}
               <Route path="*" element={
                 <div className="error-page">
-                  <h1>404 - Страница не найдена</h1>
-                  <p>Запрашиваемая страница не существует.</p>
-                  <a href="/" className="btn-primary">На главную</a>
+                  <h1>404 - Page Not Found</h1>
+                  <p>The requested page does not exist.</p>
+                  <a href="/" className="btn-primary">Go to Home</a>
                 </div>
               } />
             </Routes>
