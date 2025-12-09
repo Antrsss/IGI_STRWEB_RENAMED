@@ -116,7 +116,7 @@ userSchema.methods.generateAuthToken = function() {
   if (this.googleId) payload.googleId = this.googleId;
   if (this.avatar) payload.avatar = this.avatar;
   
-  const secret = process.env.JWT_SECRET;s
+  const secret = process.env.JWT_SECRET;
   
   return jwt.sign(
     payload,

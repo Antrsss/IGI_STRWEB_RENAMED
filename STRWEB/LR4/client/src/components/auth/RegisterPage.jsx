@@ -277,26 +277,6 @@ const RegisterPage = () => {
             </Link>
           </p>
         </div>
-        
-        <div className="auth-info">
-          <p className="info-text">
-            <small>
-              🛡️ Your data is protected and never shared with third parties.
-            </small>
-          </p>
-        </div>
-      </div>
-      
-      {/* Demo credentials hint */}
-      <div className="demo-credentials">
-        <h4>💡 Demo Credentials</h4>
-        <p>
-          <strong>Email:</strong> demo@zoo.com<br />
-          <strong>Password:</strong> demo123
-        </p>
-        <p className="demo-note">
-          Or use any email with password (min 6 characters)
-        </p>
       </div>
     </div>
   );

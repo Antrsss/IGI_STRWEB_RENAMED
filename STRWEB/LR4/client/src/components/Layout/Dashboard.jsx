@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import './Dashboard.css';
 
 const Dashboard = () => {
-  const { user, logout, isEmployee, isAdmin } = useAuth();
+  const { user, logout } = useAuth();
   const [stats, setStats] = useState({
     totalAnimals: 0,
     totalEmployees: 0,
@@ -37,37 +37,15 @@ const Dashboard = () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       }
 
-      // Запрашиваем данные в зависимости от роли
-      if (isEmployee || isAdmin) {
-        const [animalsRes, employeesRes, enclosuresRes, feedingsRes] = await Promise.all([
-          axios.get('/api/animals'),
-          axios.get('/api/employees'),
-          axios.get('/api/enclosures'),
-          axios.get('/api/feedings?limit=5')
-        ]);
-
-        setStats({
-          totalAnimals: animalsRes.data.length,
-          totalEmployees: employeesRes.data.length,
-          totalEnclosures: enclosuresRes.data.length,
-          upcomingFeedings: feedingsRes.data.filter(f => 
-            new Date(f.scheduledTime) > new Date()
-          ).length
-        });
-
-        setRecentAnimals(animalsRes.data.slice(0, 5));
-        setRecentFeedings(feedingsRes.data.slice(0, 5));
-      } else {
-        // Для обычных пользователей - только базовые данные
-        const animalsRes = await axios.get('/api/animals');
+      const animalsRes = await axios.get('/api/animals');
         setStats(prev => ({
           ...prev,
           totalAnimals: animalsRes.data.length
         }));
         setRecentAnimals(animalsRes.data.slice(0, 3));
-      }
 
       setLoading(false);
+
     } catch (error) {
       console.error('Ошибка загрузки данных:', error);
       
@@ -165,36 +143,6 @@ const Dashboard = () => {
               <h3>Животные</h3>
               <p>Управление животными</p>
             </Link>
-            
-            {(isEmployee || isAdmin) && (
-              <>
-                <Link to="/employees" className="action-card">
-                  <span className="action-icon">👨‍⚕️</span>
-                  <h3>Сотрудники</h3>
-                  <p>Управление персоналом</p>
-                </Link>
-                
-                <Link to="/enclosures" className="action-card">
-                  <span className="action-icon">🏠</span>
-                  <h3>Вольеры</h3>
-                  <p>Управление вольерами</p>
-                </Link>
-                
-                <Link to="/feedings" className="action-card">
-                  <span className="action-icon">🥕</span>
-                  <h3>Кормления</h3>
-                  <p>Расписание кормлений</p>
-                </Link>
-              </>
-            )}
-            
-            {!isEmployee && !isAdmin && (
-              <div className="action-card action-info">
-                <span className="action-icon">ℹ️</span>
-                <h3>Расширенные функции</h3>
-                <p>Доступны сотрудникам</p>
-              </div>
-            )}
           </div>
         </div>
 
@@ -210,161 +158,6 @@ const Dashboard = () => {
               </div>
               <div className="stat-icon">🐾</div>
             </div>
-            
-            {(isEmployee || isAdmin) && (
-              <>
-                <div className="stat-card stat-employees">
-                  <div className="stat-content">
-                    <h3>Сотрудников</h3>
-                    <p className="stat-number">{stats.totalEmployees}</p>
-                    <Link to="/employees" className="stat-link">Список сотрудников →</Link>
-                  </div>
-                  <div className="stat-icon">👨‍⚕️</div>
-                </div>
-                
-                <div className="stat-card stat-enclosures">
-                  <div className="stat-content">
-                    <h3>Вольеров</h3>
-                    <p className="stat-number">{stats.totalEnclosures}</p>
-                    <Link to="/enclosures" className="stat-link">Все вольеры →</Link>
-                  </div>
-                  <div className="stat-icon">🏠</div>
-                </div>
-                
-                <div className="stat-card stat-feedings">
-                  <div className="stat-content">
-                    <h3>Предстоящих кормлений</h3>
-                    <p className="stat-number">{stats.upcomingFeedings}</p>
-                    <Link to="/feedings" className="stat-link">Расписание →</Link>
-                  </div>
-                  <div className="stat-icon">🥕</div>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Недавние животные */}
-        <div className="recent-section">
-          <div className="recent-animals">
-            <div className="section-header">
-              <h2>🦁 Недавно добавленные животные</h2>
-              <Link to="/animals" className="view-all">Все животные →</Link>
-            </div>
-            
-            {recentAnimals.length === 0 ? (
-              <div className="empty-state">
-                <span className="empty-icon">🐘</span>
-                <p>Животных пока нет в системе</p>
-                {isEmployee && (
-                  <Link to="/animals/new" className="btn-primary">
-                    Добавить животное
-                  </Link>
-                )}
-              </div>
-            ) : (
-              <div className="animals-grid">
-                {recentAnimals.map(animal => (
-                  <div key={animal._id} className="animal-card">
-                    <div className="animal-header">
-                      <h3>{animal.name}</h3>
-                      <span className={`health-status status-${animal.healthStatus?.toLowerCase()}`}>
-                        {animal.healthStatus}
-                      </span>
-                    </div>
-                    <div className="animal-details">
-                      <p><strong>Вид:</strong> {animal.species}</p>
-                      <p><strong>Возраст:</strong> {animal.age || 'Не указан'}</p>
-                      <p><strong>Вольер:</strong> {animal.enclosure?.name || 'Не назначен'}</p>
-                    </div>
-                    <div className="animal-footer">
-                      <Link to={`/animals/${animal._id}`} className="view-details">
-                        Подробнее →
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Недавние кормления (только для сотрудников) */}
-          {(isEmployee || isAdmin) && recentFeedings.length > 0 && (
-            <div className="recent-feedings">
-              <div className="section-header">
-                <h2>🥕 Недавние кормления</h2>
-                <Link to="/feedings" className="view-all">Все кормления →</Link>
-              </div>
-              
-              <div className="feedings-list">
-                {recentFeedings.map(feeding => (
-                  <div key={feeding._id} className="feeding-item">
-                    <div className="feeding-time">
-                      {formatDate(feeding.scheduledTime)}
-                    </div>
-                    <div className="feeding-details">
-                      <strong>{feeding.animal?.name}</strong>
-                      <span>{feeding.foodType}</span>
-                    </div>
-                    <div className="feeding-employee">
-                      {feeding.employee?.firstName} {feeding.employee?.lastName}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Информация о пользователе */}
-        <div className="user-profile-section">
-          <h2>👤 Ваш профиль</h2>
-          <div className="profile-card">
-            <div className="profile-header">
-              <div className="profile-avatar-large">
-                {user?.avatar ? (
-                  <img src={user.avatar} alt={user.username} />
-                ) : (
-                  <span className="avatar-placeholder">
-                    {user?.username?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase()}
-                  </span>
-                )}
-              </div>
-              <div className="profile-info">
-                <h3>{user?.username || user?.email}</h3>
-                <div className="profile-meta">
-                  <span className="profile-email">{user?.email}</span>
-                  <span className={`profile-role role-${user?.role}`}>
-                    {user?.role}
-                  </span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="profile-stats">
-              <div className="profile-stat">
-                <span className="stat-label">Дата регистрации</span>
-                <span className="stat-value">
-                  {user?.createdAt ? formatDate(user.createdAt) : 'Не указана'}
-                </span>
-              </div>
-              <div className="profile-stat">
-                <span className="stat-label">Последний вход</span>
-                <span className="stat-value">
-                  {user?.lastLogin ? formatDate(user.lastLogin) : 'Сейчас'}
-                </span>
-              </div>
-            </div>
-            
-            {!isEmployee && !isAdmin && (
-              <div className="upgrade-prompt">
-                <h4>Хотите больше возможностей?</h4>
-                <p>Станьте сотрудником зоопарка для доступа к расширенным функциям</p>
-                <button className="btn-secondary" onClick={() => navigate('/contact')}>
-                  Связаться с администрацией
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </main>

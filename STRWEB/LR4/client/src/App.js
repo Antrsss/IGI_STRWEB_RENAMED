@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './components/contexts/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import LoginPage from './components/auth/LoginPage.js';
+import LoginPage from './components/auth/LoginPage';
 import RegisterPage from './components/auth/RegisterPage';
 import GoogleCallback from './components/auth/GoogleCallback';
 import Dashboard from './components/layout/Dashboard';
