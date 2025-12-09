@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-  // Local authentication
   username: {
     type: String,
     required: function() {
@@ -31,7 +30,6 @@ const userSchema = new mongoose.Schema({
     default: null
   },
   
-  // Google OAuth
   googleId: {
     type: String,
     sparse: true,
@@ -59,29 +57,23 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// === ИСПРАВЛЕННЫЙ pre-save middleware БЕЗ next ===
 userSchema.pre('save', async function() {
-  // Только для локальной регистрации (когда есть пароль)
   if (this.password && this.isModified('password')) {
     try {
-      console.log('🔐 Hashing password for user:', this.email);
       const salt = await bcrypt.genSalt(10);
       this.password = await bcrypt.hash(this.password, salt);
     } catch (error) {
-      console.error('Password hashing error:', error);
-      throw error; // Просто выбрасываем ошибку вместо next(error)
+      throw error;
     }
   }
   
-  // Установим username для Google-пользователей если его нет
   if (this.googleId && !this.username) {
     try {
       const baseUsername = this.email.split('@')[0];
       let username = baseUsername;
       let counter = 1;
       
-      // Проверяем уникальность username
-      while (counter < 100) { // Добавляем лимит на случай бесконечного цикла
+      while (counter < 100) {
         const existingUser = await mongoose.models.User.findOne({ username });
         if (!existingUser) break;
         username = `${baseUsername}_${counter}`;
@@ -92,25 +84,34 @@ userSchema.pre('save', async function() {
       console.log('👤 Generated username for Google user:', this.username);
     } catch (error) {
       console.error('Username generation error:', error);
-      // Не выбрасываем ошибку - просто пропускаем
     }
   }
 });
 
-// === Compare password method ===
 userSchema.methods.comparePassword = async function(candidatePassword) {
-  // Для Google-пользователей нет пароля
-  if (!this.password) return false;
-  
   try {
-    return await bcrypt.compare(candidatePassword, this.password);
+    console.log('🔐 ===== comparePassword called =====');
+    console.log('User email:', this.email);
+    console.log('User has password field?', !!this.password);
+    console.log('User password type:', typeof this.password);
+    console.log('User password length:', this.password?.length || 0);
+    
+    if (!this.password || !candidatePassword) {
+      return false;
+    }
+    
+    console.log('Candidate password type:', typeof candidatePassword);
+    console.log('Candidate password length:', candidatePassword.length);
+    
+    const result = await bcrypt.compare(candidatePassword, this.password);
+    
+    return result;
   } catch (error) {
-    console.error('Password comparison error:', error);
+    console.error('Error stack:', error.stack);
     return false;
   }
 };
 
-// === Generate JWT token ===
 userSchema.methods.generateAuthToken = function() {
   const jwt = require('jsonwebtoken');
   
@@ -119,7 +120,6 @@ userSchema.methods.generateAuthToken = function() {
     email: this.email
   };
   
-  // Добавляем опциональные поля
   if (this.username) payload.username = this.username;
   if (this.displayName) payload.displayName = this.displayName;
   if (this.googleId) payload.googleId = this.googleId;
@@ -138,15 +138,13 @@ userSchema.methods.generateAuthToken = function() {
   );
 };
 
-// === Статический метод для поиска по email ===
 userSchema.statics.findByEmail = async function(email) {
   return await this.findOne({ email: email.toLowerCase().trim() });
 };
 
-// === Метод для обновления lastLogin ===
 userSchema.methods.updateLastLogin = async function() {
   this.lastLogin = new Date();
-  return await this.save({ validateBeforeSave: false }); // Отключаем валидацию для быстрого сохранения
+  return await this.save({ validateBeforeSave: false });
 };
 
 module.exports = mongoose.model('User', userSchema);

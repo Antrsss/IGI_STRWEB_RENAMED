@@ -11,7 +11,11 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('🚀 Начало логина:', { email, password });
+    
     const result = await login(email, password);
+    console.log('📊 Результат логина:', result);
+    
     if (result.success) {
       navigate('/dashboard');
     }

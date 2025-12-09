@@ -1,9 +1,8 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './components/contexts/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import LoginPage from './components/auth/LoginPage';
+import LoginPage from './components/auth/LoginPage.js';
 import RegisterPage from './components/auth/RegisterPage';
 import GoogleCallback from './components/auth/GoogleCallback';
 import Dashboard from './components/layout/Dashboard';
@@ -17,12 +16,10 @@ function App() {
       <AuthProvider>
         <div className="App">
           <Routes>
-            {/* Публичные маршруты */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/auth/callback" element={<GoogleCallback />} />
             
-            {/* Защищенные маршруты */}
             <Route path="/" element={<Navigate to="/dashboard" />} />
             
             <Route path="/dashboard" element={

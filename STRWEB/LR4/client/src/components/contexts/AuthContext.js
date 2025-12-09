@@ -15,17 +15,25 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
+  // В начале AuthContext.js после импортов
+  const api = axios.create({
+    baseURL: 'http://localhost:5000/api',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  // Затем замените все axios на api
   const checkAuth = async () => {
     try {
       const token = localStorage.getItem('token');
       if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        
-        const response = await axios.get('http://localhost:5000/api/auth/profile');
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const response = await api.get('/auth/profile');
         setUser(response.data.user);
       }
     } catch (error) {
-      console.log('No valid session found');
+      console.log('No valid session found:', error.response?.data);
       localStorage.removeItem('token');
     } finally {
       setLoading(false);
@@ -35,15 +43,24 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setError(null);
-      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      console.log('📤 Отправка данных:', { email, password });
       
+      const response = await api.post('/auth/login', { 
+        email, 
+        password 
+      });
+      
+      console.log('✅ Ответ сервера:', response.data);
       const { user, token } = response.data;
       localStorage.setItem('token', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       
       setUser(user);
       return { success: true, user };
     } catch (error) {
+      console.error('❌ Ошибка логина:', error);
+      console.error('Детали ошибки:', error.response?.data);
+      
       const errorMsg = error.response?.data?.error || 'Login failed';
       setError(errorMsg);
       return { success: false, error: errorMsg };

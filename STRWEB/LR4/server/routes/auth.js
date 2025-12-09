@@ -49,28 +49,66 @@ router.post('/register', async (req, res) => {
 });
 
 // Login user
+// routes/auth.js - ОБНОВЛЕННЫЙ роут /login
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    // Find user
-    const user = await User.findOne({ email });
+    console.log('🔐 ========== LOGIN ATTEMPT ==========');
+    console.log('📧 Email:', email);
+    console.log('🔑 Password provided:', password ? 'YES (length: ' + password.length + ')' : 'NO');
+    
+    // 1. Ищем пользователя
+    console.log('🔍 Searching for user with email:', email);
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    
     if (!user) {
+      console.log('❌ User not found in database');
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
-    // Check password
+    console.log('✅ User found:', {
+      id: user._id,
+      email: user.email,
+      username: user.username,
+      hasPassword: !!user.password,
+      passwordLength: user.password?.length || 0,
+      googleId: user.googleId || 'none'
+    });
+    
+    // 2. Проверяем, это Google-пользователь?
+    if (user.googleId && !user.password) {
+      console.log('⚠️ This is a Google-only user (no password set)');
+      return res.status(400).json({ 
+        error: 'This account uses Google Sign In. Please use Google authentication.' 
+      });
+    }
+    
+    // 3. Проверяем пароль
+    if (!user.password) {
+      console.log('❌ User has no password field at all');
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    
+    console.log('🔑 Comparing password...');
     const isPasswordValid = await user.comparePassword(password);
+    console.log('🔐 Password comparison result:', isPasswordValid);
+    
     if (!isPasswordValid) {
+      console.log('❌ Password comparison failed');
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
-    // Update last login
+    // 4. Обновляем lastLogin
     user.lastLogin = new Date();
     await user.save();
+    console.log('🕒 Last login updated');
     
-    // Generate token
+    // 5. Генерируем токен
     const token = user.generateAuthToken();
+    console.log('🎫 Token generated (first 30 chars):', token.substring(0, 30) + '...');
+    
+    console.log('✅ ========== LOGIN SUCCESSFUL ==========');
     
     res.json({
       message: 'Login successful',
@@ -78,13 +116,16 @@ router.post('/login', async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
-        avatar: user.avatar
+        avatar: user.avatar,
+        displayName: user.displayName
       },
       token
     });
     
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('❌ ========== LOGIN ERROR ==========');
+    console.error('Error details:', error);
+    console.error('Error stack:', error.stack);
     res.status(500).json({ error: 'Login failed' });
   }
 });
