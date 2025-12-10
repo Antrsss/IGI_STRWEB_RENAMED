@@ -5,6 +5,14 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './EnclosureList.css';
 
+// Импортируем утилиты
+import {
+  getUserTimeZone,
+  getUTCOffset,
+  formatLocalDateTime,
+  formatUTCDateTime
+} from '../../utils/dateUtils';
+
 const EnclosureList = () => {
   const { user } = useAuth();
   const [enclosures, setEnclosures] = useState([]);
@@ -15,10 +23,35 @@ const EnclosureList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('name');
   const [sortDirection, setSortDirection] = useState('asc');
+  
+  // Текущая дата и временная зона пользователя
+  const [currentDateTime, setCurrentDateTime] = useState({ // Исправлено: удалена лишняя деструктуризация
+    local: '',
+    utc: '',
+    timezone: '',
+    offset: ''
+  });
 
   useEffect(() => {
     fetchEnclosures();
+    updateCurrentDateTime();
+    
+    // Обновляем время каждую минуту
+    const interval = setInterval(updateCurrentDateTime, 60000);
+    return () => clearInterval(interval);
   }, []);
+
+  // Функция для обновления текущей даты и времени
+  const updateCurrentDateTime = () => {
+    const now = new Date();
+    
+    setCurrentDateTime({
+      local: formatLocalDateTime(now),
+      utc: formatUTCDateTime(now),
+      timezone: getUserTimeZone(),
+      offset: `UTC${getUTCOffset() >= 0 ? '+' : ''}${getUTCOffset()}`
+    });
+  };
 
   const filterAndSortEnclosures = useCallback(() => {
     let result = [...enclosures];
@@ -40,6 +73,12 @@ const EnclosureList = () => {
       if (sortField === 'size.area') {
         aValue = a.size.area;
         bValue = b.size.area;
+      }
+      
+      // Добавляем сортировку по дате создания/обновления
+      if (sortField === 'createdAt' || sortField === 'updatedAt') {
+        aValue = new Date(a[sortField]);
+        bValue = new Date(b[sortField]);
       }
 
       if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
@@ -122,6 +161,8 @@ const EnclosureList = () => {
             <option value="type">By type</option>
             <option value="size.area">By area</option>
             <option value="location">By location</option>
+            <option value="createdAt">By creation date</option>
+            <option value="updatedAt">By update date</option>
           </select>
 
           <button 
@@ -153,16 +194,43 @@ const EnclosureList = () => {
                     {enclosure.maintenanceStatus}
                   </span>
                 </p>
+                
+                {/* Временные метки - только даты добавления/изменения */}
+                <div className="timestamp-info">
+                  <div className="timestamp-group">
+                    <div className="timestamp-item">
+                      <strong className="timestamp-label">Created:</strong>
+                      <div className="timestamp-values">
+                        <div className="timestamp-row">
+                          <span className="time-type">Local:</span>
+                          <span className="time-value">{formatLocalDateTime(enclosure.createdAt)}</span>
+                        </div>
+                        <div className="timestamp-row">
+                          <span className="time-type">UTC:</span>
+                          <span className="time-value">{formatUTCDateTime(enclosure.createdAt)}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="timestamp-item">
+                      <strong className="timestamp-label">Last Updated:</strong>
+                      <div className="timestamp-values">
+                        <div className="timestamp-row">
+                          <span className="time-type">Local:</span>
+                          <span className="time-value">{formatLocalDateTime(enclosure.updatedAt)}</span>
+                        </div>
+                        <div className="timestamp-row">
+                          <span className="time-type">UTC:</span>
+                          <span className="time-value">{formatUTCDateTime(enclosure.updatedAt)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               
               {user && (
                 <div className="enclosure-actions">
-                  <Link to={`/enclosures/${enclosure._id}`} className="btn-view">
-                    👁️ Details
-                  </Link>
-                  <Link to={`/enclosures/edit/${enclosure._id}`} className="btn-edit">
-                    ✏️
-                  </Link>
                   <button 
                     onClick={() => handleDelete(enclosure._id)}
                     className="btn-delete"

@@ -68,7 +68,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/animals - Требуется авторизация + загрузка файла
-router.post('/', auth, upload.single('image'), async (req, res) => {
+router.post('/', auth(), upload.single('image'), async (req, res) => {
   try {
     console.log('Creating animal with data:', req.body);
     console.log('File:', req.file ? req.file.filename : 'No file');
@@ -107,7 +107,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
 });
 
 // PUT /api/animals/:id - Требуется авторизация + загрузка файла
-router.put('/:id', auth, upload.single('image'), async (req, res) => {
+router.put('/:id', auth(), upload.single('image'), async (req, res) => {
   try {
     console.log('Updating animal:', req.params.id);
     console.log('Update data:', req.body);
@@ -162,7 +162,7 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
 });
 
 // DELETE /api/animals/:id - Требуется авторизация
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', auth(), async (req, res) => {
   try {
     console.log('Deleting animal:', req.params.id);
     

@@ -108,19 +108,19 @@ const HomePage = () => {
         <div className="container">
           <div className="time-info-row">
             <div className="time-zone-info">
-              <span className="time-label">📅 Date:</span>
+              <span className="time-label">Date:</span>
               <span className="time-value">{currentDateTime.date}</span>
             </div>
             <div className="time-zone-info">
-              <span className="time-label">⏰ Local Time:</span>
+              <span className="time-label">Local Time:</span>
               <span className="time-value">{currentDateTime.local}</span>
             </div>
             <div className="time-zone-info">
-              <span className="time-label">🌐 UTC Time:</span>
+              <span className="time-label">UTC Time:</span>
               <span className="time-value">{currentDateTime.utc}</span>
             </div>
             <div className="time-zone-info">
-              <span className="time-label">📍 Your Time Zone:</span>
+              <span className="time-label">Your Time Zone:</span>
               <span className="time-value">{userTimeZone}</span>
             </div>
           </div>

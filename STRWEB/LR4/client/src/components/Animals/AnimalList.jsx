@@ -106,12 +106,6 @@ const AnimalList = () => {
       <div className="animal-list-header">
         <h1>Animal List</h1>
         
-        <div className="time-info">
-          <small>
-            <strong>Time Zone:</strong> {userTimeZone}
-          </small>
-        </div>
-        
         {user && (
           <Link to="/animals/new" className="btn btn-primary">
             ➕ Add New Animal
@@ -234,21 +228,6 @@ const AnimalList = () => {
             <p>No animals found</p>
           </div>
         )}
-      </div>
-
-      <div className="animal-stats">
-        <div className="stat-card">
-          <h3>Total Animals</h3>
-          <p className="stat-number">{animals.length}</p>
-        </div>
-        <div className="stat-card">
-          <h3>Displayed</h3>
-          <p className="stat-number">{filteredAnimals.length}</p>
-        </div>
-        <div className="stat-card">
-          <h3>Your Time Zone</h3>
-          <p className="stat-number">{userTimeZone}</p>
-        </div>
       </div>
     </div>
   );

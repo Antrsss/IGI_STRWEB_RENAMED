@@ -5,6 +5,14 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './FeedingList.css';
 
+// Импортируем утилиты для работы с временем
+import {
+  getUserTimeZone,
+  getUTCOffset,
+  formatLocalDateTime,
+  formatUTCDateTime
+} from '../../utils/dateUtils';
+
 const FeedingList = () => {
   const { user } = useAuth();
   const [feedings, setFeedings] = useState([]);
@@ -15,10 +23,35 @@ const FeedingList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('feedingTime');
   const [sortDirection, setSortDirection] = useState('desc');
+  
+  // Текущая дата и временная зона пользователя
+  const [currentDateTime, setCurrentDateTime] = useState({
+    local: '',
+    utc: '',
+    timezone: '',
+    offset: ''
+  });
 
   useEffect(() => {
     fetchFeedings();
+    updateCurrentDateTime();
+    
+    // Обновляем время каждую минуту
+    const interval = setInterval(updateCurrentDateTime, 60000);
+    return () => clearInterval(interval);
   }, []);
+
+  // Функция для обновления текущей даты и времени
+  const updateCurrentDateTime = () => {
+    const now = new Date();
+    
+    setCurrentDateTime({
+      local: formatLocalDateTime(now),
+      utc: formatUTCDateTime(now),
+      timezone: getUserTimeZone(),
+      offset: `UTC${getUTCOffset() >= 0 ? '+' : ''}${getUTCOffset()}`
+    });
+  };
 
   const filterAndSortFeedings = useCallback(() => {
     let result = [...feedings];
@@ -27,7 +60,8 @@ const FeedingList = () => {
     if (searchTerm) {
       result = result.filter(feeding =>
         (feeding.animal?.name && feeding.animal.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        feeding.foodType.toLowerCase().includes(searchTerm.toLowerCase())
+        feeding.foodType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (feeding.fedBy?.firstName && `${feeding.fedBy.firstName} ${feeding.fedBy.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
@@ -36,7 +70,7 @@ const FeedingList = () => {
       let aValue = a[sortField];
       let bValue = b[sortField];
 
-      if (sortField === 'feedingTime') {
+      if (sortField === 'feedingTime' || sortField === 'createdAt' || sortField === 'updatedAt') {
         aValue = new Date(aValue);
         bValue = new Date(bValue);
       }
@@ -109,7 +143,7 @@ const FeedingList = () => {
         <div className="search-box">
           <input
             type="text"
-            placeholder="Search by animal or food type..."
+            placeholder="Search by animal, food type, or employee..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -125,6 +159,8 @@ const FeedingList = () => {
             <option value="feedingTime">By feeding date</option>
             <option value="foodType">By food type</option>
             <option value="quantity">By quantity</option>
+            <option value="createdAt">By creation date</option>
+            <option value="updatedAt">By update date</option>
           </select>
 
           <button 
@@ -145,6 +181,7 @@ const FeedingList = () => {
               <th>Quantity</th>
               <th>Feeding Date</th>
               <th>Fed By</th>
+              <th>Timestamps</th>
               {user && <th>Actions</th>}
             </tr>
           </thead>
@@ -160,7 +197,18 @@ const FeedingList = () => {
                 </td>
                 <td>{feeding.foodType}</td>
                 <td>{feeding.quantity} {feeding.unit}</td>
-                <td>{new Date(feeding.feedingTime).toLocaleString('en-US')}</td>
+                <td>
+                  <div className="time-display">
+                    <div className="time-row">
+                      <span className="time-type">Local:</span>
+                      <span className="time-value">{formatLocalDateTime(feeding.feedingTime)}</span>
+                    </div>
+                    <div className="time-row">
+                      <span className="time-type">UTC:</span>
+                      <span className="time-value">{formatUTCDateTime(feeding.feedingTime)}</span>
+                    </div>
+                  </div>
+                </td>
                 <td>
                   {feeding.fedBy ? (
                     <span className="fed-by">
@@ -169,14 +217,42 @@ const FeedingList = () => {
                   ) : 'Unknown'}
                 </td>
                 
+                {/* Временные метки создания/обновления */}
+                <td>
+                  <div className="timestamp-details">
+                    <details className="timestamp-dropdown">
+                      <summary className="timestamp-summary">View Timestamps</summary>
+                      <div className="timestamp-content">
+                        <div className="timestamp-group">
+                          <h5>Record Created</h5>
+                          <div className="timestamp-row">
+                            <span className="timestamp-label">Local:</span>
+                            <span className="timestamp-value">{formatLocalDateTime(feeding.createdAt)}</span>
+                          </div>
+                          <div className="timestamp-row">
+                            <span className="timestamp-label">UTC:</span>
+                            <span className="timestamp-value">{formatUTCDateTime(feeding.createdAt)}</span>
+                          </div>
+                        </div>
+                        
+                        <div className="timestamp-group">
+                          <h5>Last Updated</h5>
+                          <div className="timestamp-row">
+                            <span className="timestamp-label">Local:</span>
+                            <span className="timestamp-value">{formatLocalDateTime(feeding.updatedAt)}</span>
+                          </div>
+                          <div className="timestamp-row">
+                            <span className="timestamp-label">UTC:</span>
+                            <span className="timestamp-value">{formatUTCDateTime(feeding.updatedAt)}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </details>
+                  </div>
+                </td>
+                
                 {user && (
                   <td className="actions-cell">
-                    <Link to={`/feedings/${feeding._id}`} className="btn-view">
-                      👁️
-                    </Link>
-                    <Link to={`/feedings/edit/${feeding._id}`} className="btn-edit">
-                      ✏️
-                    </Link>
                     <button 
                       onClick={() => handleDelete(feeding._id)}
                       className="btn-delete"

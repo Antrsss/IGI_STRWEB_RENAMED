@@ -17,7 +17,6 @@
   padding: 20px;
   background: var(--light-beige);
   min-height: 100vh;
-  animation: fadeIn 0.5s ease-out;
 }
 
 .enclosure-list-header {
@@ -46,6 +45,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  font-size: 1rem;
 }
 
 .btn-primary {
@@ -109,6 +109,7 @@
   color: var(--dark-brown);
   cursor: pointer;
   transition: var(--transition);
+  min-width: 160px;
 }
 
 .sort-select:focus {
@@ -138,7 +139,7 @@
 
 .enclosures-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
 }
 
@@ -148,10 +149,7 @@
   overflow: hidden;
   box-shadow: var(--shadow);
   transition: var(--transition);
-  display: flex;
-  flex-direction: column;
-  animation: cardAppear 0.4s ease-out;
-  animation-fill-mode: backwards;
+  animation: fadeIn 0.5s ease-out;
 }
 
 .enclosure-card:hover {
@@ -178,25 +176,20 @@
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 500;
-  text-transform: uppercase;
   background: var(--white);
   color: var(--dark-brown);
 }
 
 .enclosure-card-body {
   padding: 20px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
 }
 
 .enclosure-info {
-  flex-grow: 1;
   margin-bottom: 15px;
 }
 
 .enclosure-info p {
-  margin: 8px 0;
+  margin: 10px 0;
   color: var(--dark-brown);
   display: flex;
   justify-content: space-between;
@@ -230,60 +223,85 @@
   color: #721c24;
 }
 
-.enclosure-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  border-top: 1px solid var(--light-beige);
+.timestamp-info {
+  margin-top: 15px;
   padding-top: 15px;
+  border-top: 1px solid var(--light-beige);
 }
 
-.btn-view, .btn-edit, .btn-delete {
-  padding: 8px 15px;
-  border-radius: var(--radius);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: var(--transition);
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
+.timestamp-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.timestamp-item {
+  display: flex;
+  flex-direction: column;
   gap: 5px;
 }
 
-.btn-view {
-  background: var(--secondary-green);
-  color: var(--white);
-  margin-right: auto;
+.timestamp-label {
+  color: var(--dark-brown);
+  font-size: 0.9rem;
+  margin-bottom: 5px;
 }
 
-.btn-view:hover {
-  background: var(--primary-green);
-  transform: translateX(2px);
+.timestamp-values {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
-.btn-edit {
-  background: var(--medium-brown);
-  color: var(--white);
-  padding: 8px 12px;
+.timestamp-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
 }
 
-.btn-edit:hover {
-  background: var(--dark-brown);
-  transform: scale(1.05);
+.time-type {
+  color: var(--medium-brown);
+  min-width: 50px;
+  font-size: 0.8rem;
+}
+
+.time-value {
+  color: var(--dark-brown);
+  font-family: monospace;
+  font-size: 0.85rem;
+  word-break: break-all;
+}
+
+.enclosure-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 15px;
+  border-top: 1px solid var(--light-beige);
 }
 
 .btn-delete {
+  padding: 8px 16px;
+  border: 1px solid #dc3545;
+  border-radius: var(--radius);
   background: transparent;
   color: #dc3545;
-  border: 1px solid #dc3545;
-  padding: 8px 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .btn-delete:hover {
   background: #dc3545;
   color: var(--white);
   transform: scale(1.05);
+}
+
+.btn-delete:active {
+  transform: scale(1);
 }
 
 .no-results {
@@ -306,25 +324,9 @@
   color: #dc3545;
 }
 
-/* Animations */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes cardAppear {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Responsive design */
@@ -348,15 +350,27 @@
     align-items: flex-start;
     gap: 5px;
   }
+  
+  .timestamp-row {
+    flex-wrap: wrap;
+  }
 }
 
 @media (max-width: 480px) {
-  .enclosure-actions {
-    flex-wrap: wrap;
+  .sort-controls {
+    flex-direction: column;
+    align-items: stretch;
   }
   
-  .btn-view, .btn-edit, .btn-delete {
-    flex: 1;
+  .sort-select {
+    min-width: auto;
+  }
+  
+  .sort-direction-btn {
+    width: 100%;
+  }
+  
+  .enclosure-actions {
     justify-content: center;
   }
 }

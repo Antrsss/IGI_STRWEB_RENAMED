@@ -1,121 +1,116 @@
 /* src/components/layout/Footer.css */
+:root {
+  --primary-green: #2d5a27;
+  --secondary-green: #4a7c59;
+  --light-beige: #f5f1e8;
+  --medium-brown: #8b7355;
+  --dark-brown: #5d4c3a;
+  --white: #ffffff;
+  --transition: all 0.3s ease;
+}
+
 .footer {
-  background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
-  color: #ecf0f1;
+  background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+  color: #ffffff;
   padding: 40px 20px 20px;
   margin-top: auto;
+  animation: fadeIn 0.5s ease-out;
+  border-top: 3px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 40px;
   max-width: 1200px;
   margin: 0 auto;
-  padding-bottom: 30px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 .footer-section {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  align-items: center;
+  text-align: center;
 }
 
 .footer-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: white;
-  margin: 0;
-}
-
-.footer-description {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #bdc3c7;
-  margin: 0;
-}
-
-.footer-section h4 {
-  font-size: 16px;
-  font-weight: 600;
-  color: white;
+  font-size: 1.8rem;
   margin: 0 0 15px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #3498db;
-}
-
-.footer-links {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.footer-links a {
-  color: #bdc3c7;
-  text-decoration: none;
-  font-size: 14px;
-  transition: all 0.3s;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.footer-links a:hover {
-  color: #3498db;
-  transform: translateX(5px);
-}
-
-.footer-links a::before {
-  content: "→";
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.footer-links a:hover::before {
-  opacity: 1;
-}
-
-.user-info {
-  font-size: 14px;
-  color: #3498db;
-  font-weight: 500;
-  padding: 5px 0;
-}
-
-.footer-bottom {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.footer-copyright {
-  font-size: 14px;
-  color: #95a5a6;
-  margin: 0;
-}
-
-.system-info {
-  font-size: 12px;
-  color: #7f8c8d;
-}
-
-.system-info small {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* Адаптивность */
+.footer-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 500px;
+  margin: 0 auto;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 30px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.footer-copyright {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-weight: 500;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.system-info {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+  transition: var(--transition);
+}
+
+.system-info:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.system-info small {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Адаптивный дизайн */
 @media (max-width: 768px) {
-  .footer-content {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
+  .footer {
+    padding: 30px 15px 15px;
+  }
+  
+  .footer-title {
+    font-size: 1.5rem;
+  }
+  
+  .footer-description {
+    font-size: 0.95rem;
   }
   
   .footer-bottom {
@@ -124,17 +119,21 @@
     gap: 10px;
   }
   
-  .footer-description {
-    font-size: 13px;
+  .footer-copyright {
+    font-size: 0.85rem;
   }
 }
 
 @media (max-width: 480px) {
-  .footer-content {
-    grid-template-columns: 1fr;
+  .footer-title {
+    font-size: 1.3rem;
   }
   
-  .footer {
-    padding: 30px 15px 15px;
+  .footer-description {
+    font-size: 0.9rem;
+  }
+  
+  .system-info {
+    font-size: 0.75rem;
   }
 }
