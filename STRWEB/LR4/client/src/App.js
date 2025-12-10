@@ -7,7 +7,6 @@ import Footer from './components/layout/Footer';
 import LoginPage from './components/auth/LoginPage';
 import RegisterPage from './components/auth/RegisterPage';
 import GoogleCallback from './components/auth/GoogleCallback';
-import Dashboard from './components/layout/Dashboard';
 import HomePage from './components/layout/HomePage';
 
 // Import all components for 4 entities
@@ -16,25 +15,16 @@ import AnimalForm from './components/animals/AnimalForm.jsx';
 import AnimalDetail from './components/animals/AnimalDetail.jsx';
 
 import EmployeeList from './components/employees/EmployeeList.jsx';
+
 import EnclosureList from './components/enclosures/EnclosureList.jsx';
+import EnclosureForm from './components/enclosures/EnclosureForm.jsx'; // Добавьте этот импорт
+
 import FeedingList from './components/feedings/FeedingList.jsx';
+import FeedingForm from './components/feedings/FeedingForm.jsx';
 
 import './App.css';
 
 function App() {
-  console.log("Navbar:", Navbar);
-  console.log("Footer:", Footer);
-  console.log("Dashboard:", Dashboard);
-  console.log("HomePage:", HomePage);
-  console.log("LoginPage:", LoginPage);
-  console.log("RegisterPage:", RegisterPage);
-  console.log("GoogleCallback:", GoogleCallback);
-  console.log("AnimalList:", AnimalList);
-  console.log("AnimalForm:", AnimalForm);
-  console.log("AnimalDetail:", AnimalDetail);
-  console.log("EmployeeList:", EmployeeList);
-  console.log("EnclosureList:", EnclosureList);
-  console.log("FeedingList:", FeedingList);
 
   return (
     <Router>
@@ -49,13 +39,6 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/auth/callback" element={<GoogleCallback />} />
-              
-              {/* Protected routes */}
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } />
               
               {/* Animals - public view */}
               <Route path="/animals" element={<AnimalList />} />
@@ -75,12 +58,22 @@ function App() {
               
               {/* Employees - public view */}
               <Route path="/employees" element={<EmployeeList />} />
-              
+
               {/* Enclosures - public view */}
               <Route path="/enclosures" element={<EnclosureList />} />
+              <Route path="/enclosures/new" element={
+                <ProtectedRoute>
+                  <EnclosureForm />
+                </ProtectedRoute>
+              } />
               
               {/* Feedings - public view */}
               <Route path="/feedings" element={<FeedingList />} />
+              <Route path="/feedings/new" element={
+                <ProtectedRoute>
+                  <FeedingForm />
+                </ProtectedRoute>
+              } />
               
               {/* 404 page */}
               <Route path="*" element={

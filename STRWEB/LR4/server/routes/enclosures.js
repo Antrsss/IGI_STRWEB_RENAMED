@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 // POST create new enclosure (requires authentication)
-router.post('/', auth, async (req, res) => {
+router.post('/', auth(), async (req, res) => {
   try {
     // Check name uniqueness
     const existingEnclosure = await Enclosure.findOne({ name: req.body.name });
@@ -37,7 +37,7 @@ router.post('/', auth, async (req, res) => {
 });
 
 // DELETE delete enclosure (requires authentication)
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', auth(), async (req, res) => {
   try {
     // Check if there are animals in the enclosure
     const animalsInEnclosure = await Animal.find({ enclosure: req.params.id });

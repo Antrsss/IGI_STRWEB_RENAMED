@@ -1,8 +1,8 @@
-// src/components/employees/EmployeeList.jsx
 import { useState, useEffect, useCallback } from 'react'; 
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { formatLocalDateTime, formatUTCDateTime, DateTimeDisplay, getUserTimeZone } from '../../utils/dateUtils';
 import './EmployeeList.css';
 
 const EmployeeList = () => {
@@ -16,6 +16,27 @@ const EmployeeList = () => {
   const [sortField, setSortField] = useState('firstName');
   const [sortDirection, setSortDirection] = useState('asc');
 
+  // Получаем часовой пояс пользователя
+  const userTimeZone = getUserTimeZone();
+  
+  // Текущая дата и время
+  const [currentDateTime, setCurrentDateTime] = useState({
+    local: new Date().toLocaleString('en-US', { timeZone: userTimeZone }),
+    utc: new Date().toUTCString()
+  });
+
+  // Обновляем текущее время каждую минуту
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime({
+        local: new Date().toLocaleString('en-US', { timeZone: userTimeZone }),
+        utc: new Date().toUTCString()
+      });
+    }, 60000);
+    
+    return () => clearInterval(timer);
+  }, [userTimeZone]);
+
   useEffect(() => {
     fetchEmployees();
   }, []);
@@ -28,7 +49,8 @@ const EmployeeList = () => {
       result = result.filter(employee =>
         employee.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         employee.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        employee.position.toLowerCase().includes(searchTerm.toLowerCase())
+        employee.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        employee.specialization?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -37,7 +59,7 @@ const EmployeeList = () => {
       let aValue = a[sortField];
       let bValue = b[sortField];
 
-      if (sortField === 'hireDate') {
+      if (sortField === 'hireDate' || sortField === 'createdAt' || sortField === 'updatedAt') {
         aValue = new Date(aValue);
         bValue = new Date(bValue);
       }
@@ -68,21 +90,51 @@ const EmployeeList = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this employee?')) {
+  const handleDelete = async (event, id, employeeName) => {
+    console.log('🔄 handleDelete called with:', { id, employeeName });
+    console.log('Event:', event);
+    
+    // Остановим всплытие события
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
+    if (!id) {
+      console.error('❌ No ID provided for deletion');
+      alert('Error: No employee ID provided');
+      return;
+    }
+
+    if (!window.confirm(`Are you sure you want to delete ${employeeName || 'this employee'}?`)) {
       return;
     }
 
     try {
-      await axios.delete(`http://localhost:5000/api/employees/${id}`, {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        alert('No authentication token found. Please login again.');
+        window.location.href = '/login';
+        return;
+      }
+
+      const cleanToken = token.replace(/\n/g, '').trim();
+      
+      const response = await axios.delete(`http://localhost:5000/api/employees/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${cleanToken}`,
+          'Content-Type': 'application/json'
         }
       });
+      
+      console.log('✅ Delete successful:', response.data);
+      alert('Employee deleted successfully!');
       fetchEmployees();
+      
     } catch (error) {
-      console.error('Delete error:', error);
-      alert('Failed to delete employee');
+      console.error('❌ Delete failed:', error);
+      alert(`Error: ${error.response?.data?.error || error.message}`);
     }
   };
 
@@ -93,12 +145,6 @@ const EmployeeList = () => {
     <div className="employee-list-container">
       <div className="employee-list-header">
         <h1>Zoo Employees</h1>
-        
-        {user && (
-          <Link to="/employees/new" className="btn btn-primary">
-            ➕ Add Employee
-          </Link>
-        )}
       </div>
 
       <div className="search-sort-panel">
@@ -122,6 +168,9 @@ const EmployeeList = () => {
             <option value="lastName">By last name</option>
             <option value="position">By position</option>
             <option value="hireDate">By hire date</option>
+            <option value="createdAt">By creation date</option>
+            <option value="updatedAt">By update date</option>
+            <option value="isActive">By status</option>
           </select>
 
           <button 
@@ -141,6 +190,8 @@ const EmployeeList = () => {
               <th>Position</th>
               <th>Specialization</th>
               <th>Hire Date</th>
+              <th>Created At</th>
+              <th>Updated At</th>
               <th>Status</th>
               {user && <th>Actions</th>}
             </tr>
@@ -155,16 +206,42 @@ const EmployeeList = () => {
                 </td>
                 <td>{employee.position}</td>
                 <td>{employee.specialization || '-'}</td>
-                <td>{new Date(employee.hireDate).toLocaleDateString('en-US')}</td>
+                <td>
+                  <DateTimeDisplay 
+                    date={employee.hireDate} 
+                    showRelative={false}
+                    showLocal={true}
+                    showUTC={false}
+                  />
+                </td>
+                <td>
+                  <DateTimeDisplay 
+                    date={employee.createdAt} 
+                    showRelative={true}
+                    showLocal={false}
+                    showUTC={false}
+                  />
+                </td>
+                <td>
+                  <DateTimeDisplay 
+                    date={employee.updatedAt} 
+                    showRelative={true}
+                    showLocal={false}
+                    showUTC={false}
+                  />
+                </td>
+                <td>
+                  <span className={`status-badge ${employee.isActive ? 'status-active' : 'status-inactive'}`}>
+                    {employee.isActive ? '✅ Active' : '❌ Inactive'}
+                  </span>
+                </td>
                 
                 {user && (
                   <td className="actions-cell">
-                    <Link to={`/employees/edit/${employee._id}`} className="btn-edit">
-                      ✏️
-                    </Link>
                     <button 
-                      onClick={() => handleDelete(employee._id)}
+                      onClick={(e) => handleDelete(e, employee._id, `${employee.firstName} ${employee.lastName}`)}
                       className="btn-delete"
+                      title="Delete employee"
                     >
                       🗑️
                     </button>

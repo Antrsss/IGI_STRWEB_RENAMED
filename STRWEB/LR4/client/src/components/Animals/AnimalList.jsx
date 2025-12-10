@@ -1,8 +1,8 @@
-// src/components/animals/AnimalList.jsx
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { DateTimeDisplay, getUserTimeZone } from '../../utils/dateUtils';
 import './AnimalList.css';
 
 const AnimalList = () => {
@@ -12,16 +12,16 @@ const AnimalList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // For search and sorting
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('name');
   const [sortDirection, setSortDirection] = useState('asc');
 
+  const userTimeZone = getUserTimeZone();
+  
   useEffect(() => {
     fetchAnimals();
   }, []);
 
-  // Use useCallback so the function doesn't get recreated on every render
   const filterAndSortAnimals = useCallback(() => {
     let result = [...animals];
 
@@ -29,7 +29,8 @@ const AnimalList = () => {
     if (searchTerm) {
       result = result.filter(animal =>
         animal.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        animal.species.toLowerCase().includes(searchTerm.toLowerCase())
+        animal.species.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (animal.specialNeeds && animal.specialNeeds.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
@@ -38,9 +39,19 @@ const AnimalList = () => {
       let aValue = a[sortField];
       let bValue = b[sortField];
 
-      if (sortField === 'arrivalDate') {
+      if (sortField === 'arrivalDate' || sortField === 'createdAt' || sortField === 'updatedAt') {
         aValue = new Date(aValue);
         bValue = new Date(bValue);
+      }
+
+      if (sortField === 'weight') {
+        aValue = a.weight;
+        bValue = b.weight;
+      }
+
+      if (sortField === 'age') {
+        aValue = a.age;
+        bValue = b.age;
       }
 
       if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
@@ -53,7 +64,7 @@ const AnimalList = () => {
 
   useEffect(() => {
     filterAndSortAnimals();
-  }, [filterAndSortAnimals]); // Now dependency is stable thanks to useCallback
+  }, [filterAndSortAnimals]);
 
   const fetchAnimals = async () => {
     try {
@@ -80,7 +91,7 @@ const AnimalList = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
-      fetchAnimals(); // Refresh list
+      fetchAnimals();
     } catch (error) {
       console.error('Delete error:', error);
       alert('Failed to delete animal');
@@ -95,6 +106,12 @@ const AnimalList = () => {
       <div className="animal-list-header">
         <h1>Animal List</h1>
         
+        <div className="time-info">
+          <small>
+            <strong>Time Zone:</strong> {userTimeZone}
+          </small>
+        </div>
+        
         {user && (
           <Link to="/animals/new" className="btn btn-primary">
             ➕ Add New Animal
@@ -102,12 +119,11 @@ const AnimalList = () => {
         )}
       </div>
 
-      {/* Search and sort panel */}
       <div className="search-sort-panel">
         <div className="search-box">
           <input
             type="text"
-            placeholder="Search by name or species..."
+            placeholder="Search by name, species, or special needs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -123,7 +139,10 @@ const AnimalList = () => {
             <option value="name">By name</option>
             <option value="species">By species</option>
             <option value="age">By age</option>
+            <option value="weight">By weight</option>
             <option value="arrivalDate">By arrival date</option>
+            <option value="createdAt">By creation date</option>
+            <option value="updatedAt">By update date</option>
           </select>
 
           <button 
@@ -135,54 +154,80 @@ const AnimalList = () => {
         </div>
       </div>
 
-      {/* Animals table */}
-      <div className="animals-table-container">
-        <table className="animals-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Species</th>
-              <th>Age</th>
-              <th>Weight</th>
-              <th>Health Status</th>
-              <th>Arrival Date</th>
-              {user && <th>Actions</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAnimals.map(animal => (
-              <tr key={animal._id}>
-                <td>{animal.name}</td>
-                <td>{animal.species}</td>
-                <td>{animal.age} years</td>
-                <td>{animal.weight} kg</td>
-                <td>
+      <div className="animals-grid">
+        {filteredAnimals.map(animal => (
+          <div key={animal._id} className="animal-card">
+            <div className="animal-image">
+              <img 
+                src={animal.imageUrl || `https://placehold.co/400x300/4a5568/ffffff?text=${encodeURIComponent(animal.name)}`} 
+                alt={animal.name}
+                onError={(e) => {
+                  e.target.src = `https://placehold.co/400x300/4a5568/ffffff?text=${encodeURIComponent(animal.name)}`;
+                }}
+              />
+            </div>
+            
+            <div className="animal-card-body">
+              <h3 className="animal-name">{animal.name}</h3>
+              <p className="animal-species">{animal.species}</p>
+              
+              <div className="animal-info">
+                <p><strong>Age:</strong> {animal.age} years</p>
+                <p><strong>Weight:</strong> {animal.weight} kg</p>
+                <p><strong>Diet:</strong> {animal.dietType}</p>
+                <p>
+                  <strong>Health:</strong>
                   <span className={`health-status health-${animal.healthStatus.toLowerCase().replace(' ', '-')}`}>
                     {animal.healthStatus}
                   </span>
-                </td>
-                <td>{new Date(animal.arrivalDate).toLocaleDateString('en-US')}</td>
+                </p>
+              </div>
+              
+              <div className="animal-dates">
+                <div className="date-info">
+                  <small><strong>Arrived:</strong></small>
+                  <DateTimeDisplay 
+                    date={animal.arrivalDate} 
+                    showRelative={true}
+                    showLocal={false}
+                    showUTC={false}
+                  />
+                </div>
                 
-                {user && (
-                  <td className="actions-cell">
-                    <Link to={`/animals/${animal._id}`} className="btn-view">
-                      View
-                    </Link>
-                    <Link to={`/animals/edit/${animal._id}`} className="btn-edit">
-                      Edit
-                    </Link>
-                    <button 
-                      onClick={() => handleDelete(animal._id)}
-                      className="btn-delete"
-                    >
-                      Delete
-                    </button>
-                  </td>
+                {animal.specialNeeds && (
+                  <div className="special-needs">
+                    <small><strong>Special Needs:</strong> {animal.specialNeeds}</small>
+                  </div>
                 )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+              </div>
+              
+              {user && (
+                <div className="animal-actions">
+                  <Link to={`/animals/${animal._id}`} className="btn-view">
+                    👁️ Details
+                  </Link>
+                  <Link to={`/animals/edit/${animal._id}`} className="btn-edit">
+                    ✏️ Edit
+                  </Link>
+                  <button 
+                    onClick={() => handleDelete(animal._id)}
+                    className="btn-delete"
+                  >
+                    🗑️ Delete
+                  </button>
+                </div>
+              )}
+            </div>
+            
+            <div className="animal-card-footer">
+              <small className="text-muted">
+                <strong>Created:</strong> <DateTimeDisplay date={animal.createdAt} showRelative={true} showLocal={false} showUTC={false} />
+                <br />
+                <strong>Updated:</strong> <DateTimeDisplay date={animal.updatedAt} showRelative={true} showLocal={false} showUTC={false} />
+              </small>
+            </div>
+          </div>
+        ))}
 
         {filteredAnimals.length === 0 && (
           <div className="no-results">
@@ -191,7 +236,6 @@ const AnimalList = () => {
         )}
       </div>
 
-      {/* Statistics */}
       <div className="animal-stats">
         <div className="stat-card">
           <h3>Total Animals</h3>
@@ -200,6 +244,10 @@ const AnimalList = () => {
         <div className="stat-card">
           <h3>Displayed</h3>
           <p className="stat-number">{filteredAnimals.length}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Your Time Zone</h3>
+          <p className="stat-number">{userTimeZone}</p>
         </div>
       </div>
     </div>

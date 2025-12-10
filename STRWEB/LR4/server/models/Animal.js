@@ -48,9 +48,31 @@ const animalSchema = new mongoose.Schema({
   specialNeeds: {
     type: String,
     maxlength: [500, 'Special needs cannot exceed 500 characters']
+  },
+  // Добавляем поле для изображения
+  image: {
+    type: String,
+    default: null
   }
 }, {
   timestamps: true
 });
+
+// Виртуальное поле для URL изображения
+animalSchema.virtual('imageUrl').get(function() {
+  if (this.image) {
+    // Если это полный URL
+    if (this.image.startsWith('http')) {
+      return this.image;
+    }
+    // Иначе предполагаем, что это путь на сервере
+    return `/uploads/animals/${this.image}`;
+  }
+  // Дефолтное изображение
+  return `https://placehold.co/400x300/4a5568/ffffff?text=${encodeURIComponent(this.name)}`;
+});
+
+animalSchema.set('toJSON', { virtuals: true });
+animalSchema.set('toObject', { virtuals: true });
 
 module.exports = mongoose.model('Animal', animalSchema);

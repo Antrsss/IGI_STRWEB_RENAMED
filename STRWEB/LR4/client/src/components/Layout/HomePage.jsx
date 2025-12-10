@@ -1,8 +1,8 @@
-// src/components/layout/HomePage.jsx - updated version
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
+import { getUserTimeZone } from '../../utils/dateUtils';
 import './HomePage.css';
 
 const HomePage = () => {
@@ -14,6 +14,66 @@ const HomePage = () => {
     totalFeedings: 0
   });
   const [loading, setLoading] = useState(true);
+  
+  // Получаем часовой пояс пользователя
+  const userTimeZone = getUserTimeZone();
+  
+  // Текущая дата и время
+  const [currentDateTime, setCurrentDateTime] = useState({
+    local: new Date().toLocaleString('en-US', { 
+      timeZone: userTimeZone,
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    }),
+    utc: new Date().toUTCString(),
+    date: new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: userTimeZone
+    })
+  });
+
+  // Обновляем текущее время каждую секунду
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentDateTime({
+        local: now.toLocaleString('en-US', { 
+          timeZone: userTimeZone,
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: true
+        }),
+        utc: now.toUTCString(),
+        date: now.toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          timeZone: userTimeZone
+        })
+      });
+    };
+    
+    // Обновляем сразу
+    updateTime();
+    
+    // Обновляем каждую секунду
+    const timer = setInterval(updateTime, 1000);
+    
+    return () => clearInterval(timer);
+  }, [userTimeZone]);
 
   useEffect(() => {
     fetchStats();
@@ -43,6 +103,30 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
+      {/* Информация о времени в самом верху */}
+      <div className="time-header">
+        <div className="container">
+          <div className="time-info-row">
+            <div className="time-zone-info">
+              <span className="time-label">📅 Date:</span>
+              <span className="time-value">{currentDateTime.date}</span>
+            </div>
+            <div className="time-zone-info">
+              <span className="time-label">⏰ Local Time:</span>
+              <span className="time-value">{currentDateTime.local}</span>
+            </div>
+            <div className="time-zone-info">
+              <span className="time-label">🌐 UTC Time:</span>
+              <span className="time-value">{currentDateTime.utc}</span>
+            </div>
+            <div className="time-zone-info">
+              <span className="time-label">📍 Your Time Zone:</span>
+              <span className="time-value">{userTimeZone}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">

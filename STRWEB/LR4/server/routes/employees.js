@@ -1,12 +1,14 @@
-// server/routes/employees.js
 const express = require('express');
 const router = express.Router();
 const Employee = require('../models/Employee');
 const auth = require('../middleware/auth');
 
+console.log('✅ Employees route module loaded');
+
 // GET all employees (public)
 router.get('/', async (req, res) => {
   try {
+    console.log('GET /api/employees called');
     const employees = await Employee.find().sort({ lastName: 1 });
     res.json(employees);
   } catch (error) {
@@ -14,19 +16,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST new employee (requires authentication)
-router.post('/', auth, async (req, res) => {
-  try {
-    const employee = new Employee(req.body);
-    await employee.save();
-    res.status(201).json(employee);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
 // DELETE employee (requires authentication)
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', auth(), async (req, res) => {
   try {
     const employee = await Employee.findByIdAndDelete(req.params.id);
     

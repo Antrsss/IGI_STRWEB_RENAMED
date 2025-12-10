@@ -46,11 +46,6 @@ const Navbar = () => {
           <Link to="/feedings" className={`nav-link ${isActive('/feedings') ? 'active' : ''}`}>
             Feeding
           </Link>
-          {user && (
-            <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}>
-              Dashboard
-            </Link>
-          )}
         </div>
 
         {/* Right block - user */}

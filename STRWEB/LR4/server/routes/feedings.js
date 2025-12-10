@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 });
 
 // POST create new feeding record (requires authentication)
-router.post('/', auth, async (req, res) => {
+router.post('/', auth(), async (req, res) => {
   try {
     // Check if animal exists
     const animal = await Animal.findById(req.body.animal);
@@ -59,7 +59,7 @@ router.post('/', auth, async (req, res) => {
 });
 
 // DELETE delete feeding record (requires authentication)
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', auth(), async (req, res) => {
   try {
     const feeding = await Feeding.findByIdAndDelete(req.params.id);
     
