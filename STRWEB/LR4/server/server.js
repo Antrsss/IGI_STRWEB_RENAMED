@@ -12,6 +12,8 @@ const employeesRoutes = require('./routes/employees');
 const enclosureRoutes = require('./routes/enclosures');
 const feedingRoutes = require('./routes/feedings');
 
+const animalRecognitionRoutes = require('./routes/animalRecognition');
+
 // === STRICT .env LOADING ===
 const envPath = path.join(__dirname, '.env');
 console.log('=== DIAGNOSTICS ===');
@@ -163,6 +165,8 @@ app.use('/api/animals', animalsRoutes);
 app.use('/api/employees', employeesRoutes);
 app.use('/api/enclosures', enclosureRoutes);
 app.use('/api/feedings', feedingRoutes);
+
+app.use('/api/animal-recognition', animalRecognitionRoutes);
 
 // ✅ Базовый маршрут
 app.get('/', (req, res) => {
