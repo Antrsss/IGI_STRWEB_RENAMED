@@ -70,10 +70,13 @@
 .time-value {
   font-weight: 500;
   font-size: 0.9rem;
-  color: #f5f1e8 !important;
   font-family: 'Courier New', monospace;
   text-align: right;
   flex-grow: 1;
+}
+
+#current-date, #current-date-local, #current-date-utc, #user-time-zone {
+    color: #f5f1e8 !important;
 }
 
 /* Hero Section */
