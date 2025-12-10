@@ -11,30 +11,59 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  // В начале AuthContext.js после импортов
+  // Создаем экземпляр axios с базовым URL
   const api = axios.create({
     baseURL: 'http://localhost:5000/api',
+    timeout: 10000,
     headers: {
       'Content-Type': 'application/json'
     }
   });
 
-  // Затем замените все axios на api
+  // Перехватчик для добавления токена к запросам
+  api.interceptors.request.use(
+    (config) => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+
+  // Перехватчик для обработки ошибок авторизации
+  api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response?.status === 401) {
+        localStorage.removeItem('token');
+        setUser(null);
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
   const checkAuth = async () => {
     try {
       const token = localStorage.getItem('token');
-      if (token) {
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        const response = await api.get('/auth/profile');
-        setUser(response.data.user);
+      if (!token) {
+        setLoading(false);
+        return;
       }
+
+      const response = await api.get('/auth/profile');
+      setUser(response.data.user);
     } catch (error) {
-      console.log('No valid session found:', error.response?.data);
+      console.log('No valid session found:', error.response?.data || error.message);
       localStorage.removeItem('token');
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -43,25 +72,37 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setError(null);
-      console.log('Отправка данных:', { email, password });
+      console.log('🔐 Attempting login for:', email);
       
       const response = await api.post('/auth/login', { 
         email, 
         password 
       });
       
-      console.log('✅ Ответ сервера:', response.data);
+      console.log('✅ Login successful:', response.data);
       const { user, token } = response.data;
-      localStorage.setItem('token', token);
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       
+      localStorage.setItem('token', token);
       setUser(user);
+      
       return { success: true, user };
     } catch (error) {
-      console.error('❌ Ошибка логина:', error);
-      console.error('Детали ошибки:', error.response?.data);
+      console.error('❌ Login error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        code: error.code
+      });
       
-      const errorMsg = error.response?.data?.error || 'Login failed';
+      let errorMsg = 'Login failed';
+      if (error.code === 'ERR_NETWORK') {
+        errorMsg = 'Server is not available. Please check if the server is running.';
+      } else if (error.response?.data?.error) {
+        errorMsg = error.response.data.error;
+      } else if (error.message) {
+        errorMsg = error.message;
+      }
+      
       setError(errorMsg);
       return { success: false, error: errorMsg };
     }
@@ -71,13 +112,11 @@ export const AuthProvider = ({ children }) => {
     window.location.href = 'http://localhost:5000/api/auth/google';
   };
 
-  // Новая функция для обработки Google callback
   const handleGoogleCallback = async (token) => {
     try {
       localStorage.setItem('token', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       
-      const response = await axios.get('http://localhost:5000/api/auth/profile');
+      const response = await api.get('/auth/profile');
       const user = response.data.user;
       setUser(user);
       
@@ -90,8 +129,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
     setUser(null);
+    setError(null);
   };
 
   const value = {
