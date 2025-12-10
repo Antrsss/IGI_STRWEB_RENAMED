@@ -1,4 +1,5 @@
 const googleVisionService = require('../services/googleVisionService');
+const path = require('path');
 const fs = require('fs').promises;
 
 class AnimalRecognitionController {
@@ -82,6 +83,48 @@ class AnimalRecognitionController {
         message: error.message,
         code: 'API_ERROR'
       });
+    }
+  };
+
+  testAPI = async (req, res) => {
+    try {
+      console.log('🧪 Testing Google Vision API connection...');
+      const testResult = await googleVisionService.testConnection();
+
+      if (testResult.success) {
+        res.status(200).json({
+          success: true,
+          message: 'Google Vision API is working correctly',
+          projectId: testResult.projectId,
+          timestamp: new Date().toISOString()
+        });
+      } else {
+        res.status(503).json({
+          success: false,
+          message: testResult.message,
+          error: testResult.error,
+          timestamp: new Date().toISOString()
+        });
+      }
+    } catch (error) {
+      console.error('❌ API test failed:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to test Google Vision API',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  };
+
+  cleanupFile = async (filePath) => {
+    try {
+      if (filePath) {
+        await fs.unlink(filePath);
+        console.log(`🗑️ Temporary file deleted: ${filePath}`);
+      }
+    } catch (error) {
+      console.error('Failed to delete temp file:', error.message);
     }
   };
 }
