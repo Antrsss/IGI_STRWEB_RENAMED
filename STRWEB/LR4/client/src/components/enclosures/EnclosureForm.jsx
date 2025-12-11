@@ -1,5 +1,5 @@
 // src/components/enclosures/EnclosureForm.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -69,7 +69,6 @@ const EnclosureForm = () => {
         }
       };
 
-      // Prepare data for sending
       const dataToSend = {
         ...formData,
         size: {
@@ -82,7 +81,6 @@ const EnclosureForm = () => {
         }
       };
 
-      // Create new enclosure
       await axios.post('http://localhost:5000/api/enclosures', dataToSend, config);
       alert('Enclosure created successfully!');
       navigate('/enclosures');
@@ -109,7 +107,7 @@ const EnclosureForm = () => {
 
       {error && (
         <div className="error-message">
-          ⚠️ {error}
+          {error}
         </div>
       )}
 

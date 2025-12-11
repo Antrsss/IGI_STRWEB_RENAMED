@@ -5,7 +5,6 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './EnclosureList.css';
 
-// Импортируем утилиты
 import {
   getUserTimeZone,
   getUTCOffset,
@@ -24,8 +23,7 @@ const EnclosureList = () => {
   const [sortField, setSortField] = useState('name');
   const [sortDirection, setSortDirection] = useState('asc');
   
-  // Текущая дата и временная зона пользователя
-  const [currentDateTime, setCurrentDateTime] = useState({ // Исправлено: удалена лишняя деструктуризация
+  const [currentDateTime, setCurrentDateTime] = useState({
     local: '',
     utc: '',
     timezone: '',
@@ -36,12 +34,10 @@ const EnclosureList = () => {
     fetchEnclosures();
     updateCurrentDateTime();
     
-    // Обновляем время каждую минуту
     const interval = setInterval(updateCurrentDateTime, 60000);
     return () => clearInterval(interval);
   }, []);
 
-  // Функция для обновления текущей даты и времени
   const updateCurrentDateTime = () => {
     const now = new Date();
     
@@ -56,7 +52,6 @@ const EnclosureList = () => {
   const filterAndSortEnclosures = useCallback(() => {
     let result = [...enclosures];
 
-    // Search
     if (searchTerm) {
       result = result.filter(enclosure =>
         enclosure.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -65,7 +60,6 @@ const EnclosureList = () => {
       );
     }
 
-    // Sorting
     result.sort((a, b) => {
       let aValue = a[sortField];
       let bValue = b[sortField];
@@ -75,7 +69,6 @@ const EnclosureList = () => {
         bValue = b.size.area;
       }
       
-      // Добавляем сортировку по дате создания/обновления
       if (sortField === 'createdAt' || sortField === 'updatedAt') {
         aValue = new Date(a[sortField]);
         bValue = new Date(b[sortField]);
@@ -195,7 +188,6 @@ const EnclosureList = () => {
                   </span>
                 </p>
                 
-                {/* Временные метки - только даты добавления/изменения */}
                 <div className="timestamp-info">
                   <div className="timestamp-group">
                     <div className="timestamp-item">

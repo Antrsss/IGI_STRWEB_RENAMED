@@ -1,10 +1,9 @@
 const googleVisionService = require('../services/googleVisionService');
-const path = require('path');
 const fs = require('fs').promises;
 
 class AnimalRecognitionController {
   recognizeAnimal = async (req, res) => {
-    console.log('🔄 Processing animal recognition request...');
+    console.log('Processing animal recognition request...');
 
     try {
       if (!req.file) {
@@ -88,7 +87,7 @@ class AnimalRecognitionController {
 
   testAPI = async (req, res) => {
     try {
-      console.log('🧪 Testing Google Vision API connection...');
+      console.log('Testing Google Vision API connection...');
       const testResult = await googleVisionService.testConnection();
 
       if (testResult.success) {
@@ -121,7 +120,7 @@ class AnimalRecognitionController {
     try {
       if (filePath) {
         await fs.unlink(filePath);
-        console.log(`🗑️ Temporary file deleted: ${filePath}`);
+        console.log(`Temporary file deleted: ${filePath}`);
       }
     } catch (error) {
       console.error('Failed to delete temp file:', error.message);

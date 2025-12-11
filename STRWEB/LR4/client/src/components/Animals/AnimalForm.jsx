@@ -6,7 +6,7 @@ import './AnimalForm.css';
 
 const AnimalForm = () => {
   const { user } = useAuth();
-  const { id } = useParams(); // For editing
+  const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -30,7 +30,6 @@ const AnimalForm = () => {
 
   const fetchDropdownData = useCallback(async () => {
     try {
-      // Load enclosures and employees for dropdowns
       const [enclosuresRes, employeesRes] = await Promise.all([
         axios.get('http://localhost:5000/api/enclosures'),
         axios.get('http://localhost:5000/api/employees')
@@ -39,7 +38,6 @@ const AnimalForm = () => {
       setEnclosures(enclosuresRes.data);
       setEmployees(employeesRes.data);
       
-      // Set default values if available
       if (enclosuresRes.data.length > 0 && !formData.enclosure) {
         setFormData(prev => ({ ...prev, enclosure: enclosuresRes.data[0]._id }));
       }
@@ -57,7 +55,6 @@ const AnimalForm = () => {
       setLoading(true);
       const response = await axios.get(`http://localhost:5000/api/animals/${id}`);
       
-      // Set form data
       setFormData({
         name: response.data.name || '',
         species: response.data.species || 'Lion',
@@ -71,7 +68,6 @@ const AnimalForm = () => {
         image: response.data.image || ''
       });
       
-      // Set image preview if exists
       if (response.data.image) {
         if (response.data.image.startsWith('http')) {
           setImagePreview(response.data.image);
@@ -96,7 +92,6 @@ const AnimalForm = () => {
 
     fetchDropdownData();
     
-    // If editing, load animal data
     if (id) {
       fetchAnimalData();
     }
@@ -115,7 +110,6 @@ const AnimalForm = () => {
     if (file) {
       setImageFile(file);
       
-      // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
@@ -131,18 +125,14 @@ const AnimalForm = () => {
 
     try {
       const token = localStorage.getItem('token');
-      
-      // Prepare form data for file upload
       const submitData = new FormData();
       
-      // Add all form fields
       Object.keys(formData).forEach(key => {
         if (formData[key] !== null && formData[key] !== undefined) {
           submitData.append(key, formData[key]);
         }
       });
       
-      // Add image file if selected
       if (imageFile) {
         submitData.append('image', imageFile);
       }
@@ -156,11 +146,9 @@ const AnimalForm = () => {
 
       let response;
       if (id) {
-        // Update existing animal
         response = await axios.put(`http://localhost:5000/api/animals/${id}`, submitData, config);
         alert('Animal updated successfully!');
       } else {
-        // Create new animal
         response = await axios.post('http://localhost:5000/api/animals', submitData, config);
         alert('Animal added successfully!');
       }
@@ -193,7 +181,7 @@ const AnimalForm = () => {
   return (
     <div className="animal-form-container">
       <div className="animal-form-header">
-        <h1>{id ? '✏️ Edit Animal' : '➕ Add New Animal'}</h1>
+        <h1>{id ? 'Edit Animal' : '➕ Add New Animal'}</h1>
         <button onClick={() => navigate('/animals')} className="btn-back">
           ← Back to list
         </button>
@@ -201,7 +189,7 @@ const AnimalForm = () => {
 
       {error && (
         <div className="error-message">
-          ⚠️ {error}
+          {error}
         </div>
       )}
 
@@ -231,15 +219,15 @@ const AnimalForm = () => {
               required
               disabled={loading}
             >
-              <option value="Lion">Lion 🦁</option>
-              <option value="Tiger">Tiger 🐅</option>
-              <option value="Elephant">Elephant 🐘</option>
-              <option value="Giraffe">Giraffe 🦒</option>
-              <option value="Monkey">Monkey 🐒</option>
-              <option value="Panda">Panda 🐼</option>
-              <option value="Crocodile">Crocodile 🐊</option>
-              <option value="Bird">Bird 🐦</option>
-              <option value="Reptile">Reptile 🦎</option>
+              <option value="Lion">Lion</option>
+              <option value="Tiger">Tiger</option>
+              <option value="Elephant">Elephant</option>
+              <option value="Giraffe">Giraffe</option>
+              <option value="Monkey">Monkey</option>
+              <option value="Panda">Panda</option>
+              <option value="Crocodile">Crocodile</option>
+              <option value="Bird">Bird</option>
+              <option value="Reptile">Reptile</option>
               <option value="Other">Other</option>
             </select>
           </div>
@@ -284,10 +272,10 @@ const AnimalForm = () => {
               onChange={handleChange}
               disabled={loading}
             >
-              <option value="Excellent">✅ Excellent</option>
-              <option value="Good">👍 Good</option>
-              <option value="Satisfactory">⚠️ Satisfactory</option>
-              <option value="Requires treatment">🏥 Requires treatment</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Satisfactory">Satisfactory</option>
+              <option value="Requires treatment">Requires treatment</option>
             </select>
           </div>
 
@@ -345,15 +333,14 @@ const AnimalForm = () => {
               required
               disabled={loading}
             >
-              <option value="Carnivore">🥩 Carnivore</option>
-              <option value="Herbivore">🥬 Herbivore</option>
-              <option value="Omnivore">🍖🌿 Omnivore</option>
-              <option value="Special">🎯 Special</option>
+              <option value="Carnivore">Carnivore</option>
+              <option value="Herbivore">Herbivore</option>
+              <option value="Omnivore">Omnivore</option>
+              <option value="Special">Special</option>
             </select>
           </div>
         </div>
 
-        {/* Image Upload Section */}
         <div className="form-group image-upload-group">
           <label htmlFor="image">Animal Image</label>
           <div className="image-upload-container">

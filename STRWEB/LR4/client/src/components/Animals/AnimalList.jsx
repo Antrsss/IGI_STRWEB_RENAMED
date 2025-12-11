@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { DateTimeDisplay, getUserTimeZone } from '../../utils/dateUtils';
+import { DateTimeDisplay } from '../../utils/dateUtils';
 import './AnimalList.css';
 
 const AnimalList = () => {
@@ -15,8 +15,6 @@ const AnimalList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('name');
   const [sortDirection, setSortDirection] = useState('asc');
-
-  const userTimeZone = getUserTimeZone();
   
   useEffect(() => {
     fetchAnimals();
@@ -25,7 +23,6 @@ const AnimalList = () => {
   const filterAndSortAnimals = useCallback(() => {
     let result = [...animals];
 
-    // Search
     if (searchTerm) {
       result = result.filter(animal =>
         animal.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -34,7 +31,6 @@ const AnimalList = () => {
       );
     }
 
-    // Sorting
     result.sort((a, b) => {
       let aValue = a[sortField];
       let bValue = b[sortField];
@@ -198,16 +194,16 @@ const AnimalList = () => {
               {user && (
                 <div className="animal-actions">
                   <Link to={`/animals/${animal._id}`} className="btn-view">
-                    👁️ Details
+                    Details
                   </Link>
                   <Link to={`/animals/edit/${animal._id}`} className="btn-edit">
-                    ✏️ Edit
+                    Edit
                   </Link>
                   <button 
                     onClick={() => handleDelete(animal._id)}
                     className="btn-delete"
                   >
-                    🗑️ Delete
+                    Delete
                   </button>
                 </div>
               )}

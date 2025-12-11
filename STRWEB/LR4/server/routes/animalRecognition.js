@@ -6,14 +6,12 @@ const fs = require('fs');
 const animalRecognitionController = require('../controllers/animalRecognitionController');
 const auth = require('../middleware/auth');
 
-// Создаем папку для временных файлов, если ее нет
 const tempDir = path.join(__dirname, '..', 'uploads', 'temp');
 if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir, { recursive: true });
   console.log(`Created temp directory: ${tempDir}`);
 }
 
-// Настройка multer для загрузки файлов
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, tempDir),
   filename: (req, file, cb) => {
@@ -41,11 +39,9 @@ const upload = multer({
   fileFilter
 });
 
-// Маршруты
 router.post('/recognize', auth(), upload.single('image'), animalRecognitionController.recognizeAnimal);
 router.get('/test', auth(), animalRecognitionController.testAPI);
 
-// Обработчик ошибок multer
 router.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {

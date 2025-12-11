@@ -43,7 +43,6 @@ const feedingSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index for quick search of feedings by animal
 feedingSchema.index({ animal: 1, feedingTime: -1 });
 
 module.exports = mongoose.model('Feeding', feedingSchema);

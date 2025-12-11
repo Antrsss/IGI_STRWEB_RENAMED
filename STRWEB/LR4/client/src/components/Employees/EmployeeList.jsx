@@ -16,16 +16,13 @@ const EmployeeList = () => {
   const [sortField, setSortField] = useState('firstName');
   const [sortDirection, setSortDirection] = useState('asc');
 
-  // Получаем часовой пояс пользователя
   const userTimeZone = getUserTimeZone();
   
-  // Текущая дата и время
   const [currentDateTime, setCurrentDateTime] = useState({
     local: new Date().toLocaleString('en-US', { timeZone: userTimeZone }),
     utc: new Date().toUTCString()
   });
 
-  // Обновляем текущее время каждую минуту
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentDateTime({
@@ -44,7 +41,6 @@ const EmployeeList = () => {
   const filterAndSortEmployees = useCallback(() => {
     let result = [...employees];
 
-    // Search
     if (searchTerm) {
       result = result.filter(employee =>
         employee.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -54,7 +50,6 @@ const EmployeeList = () => {
       );
     }
 
-    // Sorting
     result.sort((a, b) => {
       let aValue = a[sortField];
       let bValue = b[sortField];
@@ -91,7 +86,7 @@ const EmployeeList = () => {
   };
 
   const handleDelete = async (event, id, employeeName) => {
-    console.log('🔄 handleDelete called with:', { id, employeeName });
+    console.log('handleDelete called with:', { id, employeeName });
     console.log('Event:', event);
     
     // Остановим всплытие события
@@ -101,7 +96,7 @@ const EmployeeList = () => {
     }
     
     if (!id) {
-      console.error('❌ No ID provided for deletion');
+      console.error('No ID provided for deletion');
       alert('Error: No employee ID provided');
       return;
     }
@@ -128,12 +123,12 @@ const EmployeeList = () => {
         }
       });
       
-      console.log('✅ Delete successful:', response.data);
+      console.log('Delete successful:', response.data);
       alert('Employee deleted successfully!');
       fetchEmployees();
       
     } catch (error) {
-      console.error('❌ Delete failed:', error);
+      console.error('Delete failed:', error);
       alert(`Error: ${error.response?.data?.error || error.message}`);
     }
   };
@@ -232,7 +227,7 @@ const EmployeeList = () => {
                 </td>
                 <td>
                   <span className={`status-badge ${employee.isActive ? 'status-active' : 'status-inactive'}`}>
-                    {employee.isActive ? '✅ Active' : '❌ Inactive'}
+                    {employee.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </td>
                 

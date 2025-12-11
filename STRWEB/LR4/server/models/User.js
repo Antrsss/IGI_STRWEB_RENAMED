@@ -81,7 +81,7 @@ userSchema.pre('save', async function() {
       }
       
       this.username = username;
-      console.log('👤 Generated username for Google user:', this.username);
+      console.log('Generated username for Google user:', this.username);
     } catch (error) {
       console.error('Username generation error:', error);
     }

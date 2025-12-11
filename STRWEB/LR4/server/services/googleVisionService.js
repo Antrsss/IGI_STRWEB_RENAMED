@@ -5,43 +5,35 @@ const fs = require('fs').promises;
 class GoogleVisionService {
   constructor() {
     try {
-      // Инициализация клиента Vision API
       this.client = new vision.ImageAnnotatorClient();
-      console.log('✅ Google Vision API client initialized');
+      console.log('Google Vision API client initialized');
     } catch (error) {
-      console.error('❌ Failed to initialize Vision API client:', error.message);
+      console.error('Failed to initialize Vision API client:', error.message);
       throw error;
     }
   }
 
-  /**
-   * Распознает животное на изображении
-   */
   async recognizeAnimal(imagePath) {
     try {
-      console.log(`📸 Analyzing image: ${imagePath}`);
+      console.log(`Analyzing image: ${imagePath}`);
 
-      // Проверяем существование файла
       try {
         await fs.access(imagePath);
       } catch {
         throw new Error(`Image file not found: ${imagePath}`);
       }
 
-      // 1. Детекция объектов (labels)
-      console.log('🔍 Performing label detection...');
+      console.log('Performing label detection...');
       const [labelResult] = await this.client.labelDetection({
         image: { source: { filename: imagePath } }
       });
 
-      // 2. Определение веб-сущностей
-      console.log('🌐 Performing web detection...');
+      console.log('Performing web detection...');
       const [webDetectionResult] = await this.client.webDetection({
         image: { source: { filename: imagePath } }
       });
 
-      // 3. Детекция логотипов (для зоопарков/заповедников)
-      console.log('🏷️ Performing logo detection...');
+      console.log('Performing logo detection...');
       const [logoResult] = await this.client.logoDetection({
         image: { source: { filename: imagePath } }
       });
@@ -50,15 +42,12 @@ class GoogleVisionService {
       const webEntities = webDetectionResult.webDetection?.webEntities || [];
       const logos = logoResult.logoAnnotations || [];
 
-      // Фильтруем только животных из результатов
       const animalLabels = this.filterAnimalLabels(labels);
       const webAnimals = this.filterWebEntities(webEntities);
       
-      // Объединяем и сортируем результаты
       const allResults = [...animalLabels, ...webAnimals];
       allResults.sort((a, b) => b.confidence - a.confidence);
 
-      // Получаем лучший результат
       const bestMatch = allResults[0] || {
         name: 'Unknown Animal',
         confidence: 0,
@@ -67,9 +56,9 @@ class GoogleVisionService {
 
       return {
         success: true,
-        detectedAnimals: allResults.slice(0, 10), // Топ-10 результатов
+        detectedAnimals: allResults.slice(0, 10),
         bestMatch: bestMatch,
-        databaseMatches: [], // Позже можно добавить поиск в вашей БД
+        databaseMatches: [],
         additionalInfo: {
           totalLabels: labels.length,
           animalLabels: animalLabels.length,
@@ -93,7 +82,6 @@ class GoogleVisionService {
     } catch (error) {
       console.error('Google Vision API Error:', error);
       
-      // Пробуем определить, какая именно ошибка
       let errorMessage = 'Failed to recognize animal';
       
       if (error.message.includes('credentials')) {
@@ -112,35 +100,26 @@ class GoogleVisionService {
     }
   }
 
-  /**
-   * Фильтрует метки, относящиеся к животным
-   */
   filterAnimalLabels(labels) {
     const animalKeywords = [
-      // Млекопитающие
       'lion', 'tiger', 'elephant', 'giraffe', 'zebra', 'bear', 'wolf', 'fox',
       'deer', 'monkey', 'ape', 'gorilla', 'chimpanzee', 'orangutan', 'panda',
       'koala', 'kangaroo', 'wallaby', 'wombat', 'platypus', 'rhinoceros',
       'hippopotamus', 'buffalo', 'bison', 'antelope', 'gazelle', 'camel',
       'llama', 'alpaca', 'horse', 'donkey', 'zebra', 'tapir',
       
-      // Птицы
       'bird', 'eagle', 'hawk', 'falcon', 'owl', 'parrot', 'macaw', 'cockatoo',
       'penguin', 'flamingo', 'ostrich', 'emu', 'kiwi', 'peacock', 'swan',
       'goose', 'duck', 'chicken', 'turkey', 'pigeon', 'dove',
       
-      // Рептилии
       'reptile', 'snake', 'python', 'cobra', 'viper', 'lizard', 'gecko',
       'iguana', 'chameleon', 'crocodile', 'alligator', 'turtle', 'tortoise',
       
-      // Амфибии
       'amphibian', 'frog', 'toad', 'salamander', 'newt',
       
-      // Рыбы
       'fish', 'shark', 'whale', 'dolphin', 'porpoise', 'seal', 'sea lion',
       'walrus', 'octopus', 'squid', 'jellyfish', 'crab', 'lobster', 'shrimp',
       
-      // Домашние животные
       'dog', 'puppy', 'cat', 'kitten', 'rabbit', 'hamster', 'guinea pig',
       'ferret', 'mouse', 'rat'
     ];
@@ -158,9 +137,6 @@ class GoogleVisionService {
       }));
   }
 
-  /**
-   * Фильтрует веб-сущности
-   */
   filterWebEntities(entities) {
     return entities
       .filter(entity => entity.description && entity.description.length > 0)
@@ -170,12 +146,9 @@ class GoogleVisionService {
         type: 'web_entity',
         source: 'web_detection'
       }))
-      .slice(0, 5); // Берем только топ-5
+      .slice(0, 5);
   }
 
-  /**
-   * Определяет тип животного по названию
-   */
   getAnimalType(animalName) {
     const name = animalName.toLowerCase();
     
@@ -192,14 +165,10 @@ class GoogleVisionService {
     }
   }
 
-  /**
-   * Простой тест API
-   */
   async testConnection() {
     try {
       console.log('Testing Google Vision API connection...');
       
-      // Создаем временный тестовый файл
       const testImagePath = path.join(__dirname, '..', 'uploads', 'temp', 'test.txt');
       await fs.writeFile(testImagePath, 'test');
       
@@ -209,14 +178,14 @@ class GoogleVisionService {
       
       await fs.unlink(testImagePath);
       
-      console.log('✅ Vision API connection successful');
+      console.log('Vision API connection successful');
       return {
         success: true,
         message: 'API connection successful',
         projectId: this.client.projectId
       };
     } catch (error) {
-      console.error('❌ Vision API connection failed:', error.message);
+      console.error('Vision API connection failed:', error.message);
       return {
         success: false,
         message: `API connection failed: ${error.message}`,
@@ -226,6 +195,5 @@ class GoogleVisionService {
   }
 }
 
-// Экспортируем синглтон
 const visionService = new GoogleVisionService();
 module.exports = visionService;

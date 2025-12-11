@@ -4,7 +4,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './AnimalDetail.css';
 
-// Импортируем утилиты для работы с временем
 import {
   formatLocalDateTime,
   formatUTCDateTime
@@ -49,16 +48,12 @@ const AnimalDetail = () => {
 
       <div className="animal-detail-content">
         <div className="animal-info-card">
-          {/* Основная информация с изображением */}
           <div className="animal-main-info">
             <div className="animal-image-container">
               <img 
                 src={animal.imageUrl} 
                 alt={animal.name}
                 className="animal-image"
-                onError={(e) => {
-                  e.target.src = `https://placehold.co/400x300/4a5568/ffffff?text=${encodeURIComponent(animal.name)}`;
-                }}
               />
             </div>
             
@@ -138,7 +133,6 @@ const AnimalDetail = () => {
             </div>
           </div>
 
-          {/* Временные метки */}
           <div className="timestamp-section">
             <h3>Timestamps</h3>
             <div className="timestamp-grid">

@@ -3,14 +3,13 @@ const jwt = require('jsonwebtoken');
 const authMiddleware = (requiredRole = null) => {
   return async (req, res, next) => {
     try {
-      console.log('🔐 AUTH MIDDLEWARE - Checking token...');
+      console.log('AUTH MIDDLEWARE - Checking token...');
       
-      // Get token from header
       const authHeader = req.header('Authorization');
       console.log('  Auth header:', authHeader ? 'Present' : 'Missing');
       
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        console.log('❌ No Bearer token in header');
+        console.log('No Bearer token in header');
         return res.status(401).json({ error: 'No authentication token provided' });
       }
       
@@ -18,16 +17,14 @@ const authMiddleware = (requiredRole = null) => {
       console.log('  Token length:', token.length);
       console.log('  JWT_SECRET exists:', !!process.env.JWT_SECRET);
       
-      // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret-for-dev');
-      console.log('✅ Token valid for user:', decoded.userId || decoded.id);
+      console.log('Token valid for user:', decoded.userId || decoded.id);
       
-      // Add user to request
       req.user = decoded;
       
       next();
     } catch (error) {
-      console.error('❌ Auth error:', error.message);
+      console.error('Auth error:', error.message);
       
       if (error.name === 'JsonWebTokenError') {
         return res.status(401).json({ error: 'Invalid token' });

@@ -3,9 +3,8 @@ const router = express.Router();
 const Employee = require('../models/Employee');
 const auth = require('../middleware/auth');
 
-console.log('✅ Employees route module loaded');
+console.log('Employees route module loaded');
 
-// GET all employees (public)
 router.get('/', async (req, res) => {
   try {
     console.log('GET /api/employees called');
@@ -16,7 +15,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// DELETE employee (requires authentication)
 router.delete('/:id', auth(), async (req, res) => {
   try {
     const employee = await Employee.findByIdAndDelete(req.params.id);

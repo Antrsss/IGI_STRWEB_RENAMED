@@ -1,15 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const jwt = require('jsonwebtoken');
 const authMiddleware = require('../middleware/auth');
 
-// Register new user
 router.post('/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
     
-    // Check if user exists
     const existingUser = await User.findOne({ 
       $or: [{ email }, { username }] 
     });
@@ -20,7 +17,6 @@ router.post('/register', async (req, res) => {
       });
     }
     
-    // Create new user
     const user = new User({
       username,
       email,
@@ -29,7 +25,6 @@ router.post('/register', async (req, res) => {
     
     await user.save();
     
-    // Generate token
     const token = user.generateAuthToken();
     
     res.status(201).json({
@@ -48,26 +43,23 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login user
-// routes/auth.js - ОБНОВЛЕННЫЙ роут /login
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    console.log('🔐 ========== LOGIN ATTEMPT ==========');
-    console.log('📧 Email:', email);
-    console.log('🔑 Password provided:', password ? 'YES (length: ' + password.length + ')' : 'NO');
+    console.log('========== LOGIN ATTEMPT ==========');
+    console.log('Email:', email);
+    console.log('Password provided:', password ? 'YES (length: ' + password.length + ')' : 'NO');
     
-    // 1. Ищем пользователя
-    console.log('🔍 Searching for user with email:', email);
+    console.log('Searching for user with email:', email);
     const user = await User.findOne({ email: email.toLowerCase().trim() });
     
     if (!user) {
-      console.log('❌ User not found in database');
+      console.log('User not found in database');
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
-    console.log('✅ User found:', {
+    console.log('User found:', {
       id: user._id,
       email: user.email,
       username: user.username,
@@ -76,39 +68,35 @@ router.post('/login', async (req, res) => {
       googleId: user.googleId || 'none'
     });
     
-    // 2. Проверяем, это Google-пользователь?
     if (user.googleId && !user.password) {
-      console.log('⚠️ This is a Google-only user (no password set)');
+      console.log('This is a Google-only user (no password set)');
       return res.status(400).json({ 
         error: 'This account uses Google Sign In. Please use Google authentication.' 
       });
     }
     
-    // 3. Проверяем пароль
     if (!user.password) {
-      console.log('❌ User has no password field at all');
+      console.log('User has no password field at all');
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
-    console.log('🔑 Comparing password...');
+    console.log('Comparing password...');
     const isPasswordValid = await user.comparePassword(password);
-    console.log('🔐 Password comparison result:', isPasswordValid);
+    console.log('Password comparison result:', isPasswordValid);
     
     if (!isPasswordValid) {
-      console.log('❌ Password comparison failed');
+      console.log('Password comparison failed');
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
-    // 4. Обновляем lastLogin
     user.lastLogin = new Date();
     await user.save();
-    console.log('🕒 Last login updated');
+    console.log('Last login updated');
     
-    // 5. Генерируем токен
     const token = user.generateAuthToken();
-    console.log('🎫 Token generated (first 30 chars):', token.substring(0, 30) + '...');
+    console.log('Token generated (first 30 chars):', token.substring(0, 30) + '...');
     
-    console.log('✅ ========== LOGIN SUCCESSFUL ==========');
+    console.log('========== LOGIN SUCCESSFUL ==========');
     
     res.json({
       message: 'Login successful',
@@ -123,14 +111,13 @@ router.post('/login', async (req, res) => {
     });
     
   } catch (error) {
-    console.error('❌ ========== LOGIN ERROR ==========');
+    console.error('========== LOGIN ERROR ==========');
     console.error('Error details:', error);
     console.error('Error stack:', error.stack);
     res.status(500).json({ error: 'Login failed' });
   }
 });
 
-// Get current user profile (protected)
 router.get('/profile', authMiddleware(), async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -144,7 +131,6 @@ router.get('/profile', authMiddleware(), async (req, res) => {
   }
 });
 
-// Logout (client-side - just remove token)
 router.post('/logout', (req, res) => {
   res.json({ message: 'Logged out successfully' });
 });

@@ -15,10 +15,8 @@ const HomePage = () => {
   });
   const [loading, setLoading] = useState(true);
   
-  // Получаем часовой пояс пользователя
   const userTimeZone = getUserTimeZone();
   
-  // Текущая дата и время
   const [currentDateTime, setCurrentDateTime] = useState({
     local: new Date().toLocaleString('en-US', { 
       timeZone: userTimeZone,
@@ -40,7 +38,6 @@ const HomePage = () => {
     })
   });
 
-  // Обновляем текущее время каждую секунду
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -66,10 +63,8 @@ const HomePage = () => {
       });
     };
     
-    // Обновляем сразу
     updateTime();
     
-    // Обновляем каждую секунду
     const timer = setInterval(updateTime, 1000);
     
     return () => clearInterval(timer);
@@ -103,7 +98,6 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      {/* Информация о времени в самом верху */}
       <div className="time-header">
         <div className="container">
           <div className="time-info-row">

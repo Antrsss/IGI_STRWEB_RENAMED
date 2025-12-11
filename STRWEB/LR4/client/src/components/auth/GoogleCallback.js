@@ -9,19 +9,14 @@ const GoogleCallback = () => {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        // Получаем токен из URL
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         
         if (token) {
-          // Сохраняем токен
           localStorage.setItem('token', token);
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          
-          // Получаем данные пользователя
-          const response = await axios.get('/api/auth/profile');
 
-          navigate('/dashboard');
+          navigate('/animals');
         } else {
           console.error('No token in URL');
           navigate('/login', { state: { error: 'Authentication failed' } });

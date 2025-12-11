@@ -1,5 +1,5 @@
 // src/components/feedings/FeedingForm.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -45,7 +45,6 @@ const FeedingForm = () => {
       setAnimals(animalsRes.data);
       setEmployees(employeesRes.data);
       
-      // Set default values if available
       if (animalsRes.data.length > 0 && !formData.animal) {
         setFormData(prev => ({ ...prev, animal: animalsRes.data[0]._id }));
       }
@@ -82,7 +81,6 @@ const FeedingForm = () => {
         }
       };
 
-      // Prepare data for sending
       const dataToSend = {
         ...formData,
         quantity: Number(formData.quantity),
@@ -90,7 +88,6 @@ const FeedingForm = () => {
         cost: formData.cost ? Number(formData.cost) : undefined
       };
 
-      // Create new feeding
       await axios.post('http://localhost:5000/api/feedings', dataToSend, config);
       alert('Feeding record created successfully!');
       navigate('/feedings');
@@ -121,7 +118,7 @@ const FeedingForm = () => {
 
       {error && (
         <div className="error-message">
-          ⚠️ {error}
+          {error}
         </div>
       )}
 

@@ -5,7 +5,6 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './FeedingList.css';
 
-// Импортируем утилиты для работы с временем
 import {
   getUserTimeZone,
   getUTCOffset,
@@ -24,7 +23,6 @@ const FeedingList = () => {
   const [sortField, setSortField] = useState('feedingTime');
   const [sortDirection, setSortDirection] = useState('desc');
   
-  // Текущая дата и временная зона пользователя
   const [currentDateTime, setCurrentDateTime] = useState({
     local: '',
     utc: '',
@@ -36,12 +34,10 @@ const FeedingList = () => {
     fetchFeedings();
     updateCurrentDateTime();
     
-    // Обновляем время каждую минуту
     const interval = setInterval(updateCurrentDateTime, 60000);
     return () => clearInterval(interval);
   }, []);
 
-  // Функция для обновления текущей даты и времени
   const updateCurrentDateTime = () => {
     const now = new Date();
     
@@ -56,7 +52,6 @@ const FeedingList = () => {
   const filterAndSortFeedings = useCallback(() => {
     let result = [...feedings];
 
-    // Search
     if (searchTerm) {
       result = result.filter(feeding =>
         (feeding.animal?.name && feeding.animal.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -65,7 +60,6 @@ const FeedingList = () => {
       );
     }
 
-    // Sorting
     result.sort((a, b) => {
       let aValue = a[sortField];
       let bValue = b[sortField];
@@ -217,7 +211,6 @@ const FeedingList = () => {
                   ) : 'Unknown'}
                 </td>
                 
-                {/* Временные метки создания/обновления */}
                 <td>
                   <div className="timestamp-details">
                     <details className="timestamp-dropdown">

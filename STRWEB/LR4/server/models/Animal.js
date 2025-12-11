@@ -49,7 +49,6 @@ const animalSchema = new mongoose.Schema({
     type: String,
     maxlength: [500, 'Special needs cannot exceed 500 characters']
   },
-  // Добавляем поле для изображения
   image: {
     type: String,
     default: null
@@ -58,17 +57,13 @@ const animalSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Виртуальное поле для URL изображения
 animalSchema.virtual('imageUrl').get(function() {
   if (this.image) {
-    // Если это полный URL
     if (this.image.startsWith('http')) {
       return this.image;
     }
-    // Иначе предполагаем, что это путь на сервере
     return `/uploads/animals/${this.image}`;
   }
-  // Дефолтное изображение
   return `https://placehold.co/400x300/4a5568/ffffff?text=${encodeURIComponent(this.name)}`;
 });
 

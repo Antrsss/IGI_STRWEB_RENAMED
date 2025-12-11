@@ -26,7 +26,6 @@ const RegisterPage = () => {
       [name]: value
     }));
     
-    // Очищаем ошибку при изменении поля
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -38,28 +37,24 @@ const RegisterPage = () => {
   const validateForm = () => {
     const newErrors = {};
     
-    // Username validation
     if (!formData.username.trim()) {
       newErrors.username = 'Username is required';
     } else if (formData.username.length < 3) {
       newErrors.username = 'Username must be at least 3 characters';
     }
     
-    // Email validation
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
     }
     
-    // Password validation
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
     
-    // Confirm password validation
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
@@ -80,20 +75,17 @@ const RegisterPage = () => {
     setIsLoading(true);
     
     try {
-      // Отправляем данные на сервер
       const response = await axios.post('http://localhost:5000/api/auth/register', {
         username: formData.username,
         email: formData.email,
         password: formData.password
       });
       
-      // Сохраняем токен
       const { token, user } = response.data;
       localStorage.setItem('token', token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       
-      // Перенаправляем на дашборд
-      navigate('/dashboard', { 
+      navigate('/', { 
         state: { 
           message: `Welcome, ${user.username}! Registration successful.` 
         } 
@@ -103,11 +95,9 @@ const RegisterPage = () => {
       console.error('Registration error:', error);
       
       if (error.response) {
-        // Сервер вернул ошибку
         const { data, status } = error.response;
         
         if (status === 400 && data.error) {
-          // Ошибка валидации с сервера
           if (data.error.includes('email')) {
             setErrors({ email: data.error });
           } else if (data.error.includes('username')) {
@@ -121,10 +111,8 @@ const RegisterPage = () => {
           setServerError(data.error || 'Registration failed');
         }
       } else if (error.request) {
-        // Запрос был сделан, но ответ не получен
         setServerError('No response from server. Please check your connection.');
       } else {
-        // Ошибка при настройке запроса
         setServerError('Registration failed. Please try again.');
       }
     } finally {
@@ -147,7 +135,6 @@ const RegisterPage = () => {
           </p>
         </div>
         
-        {/* Display server error */}
         {serverError && (
           <div className="alert alert-error">
             {serverError}

@@ -268,11 +268,6 @@
   color: var(--primary-green);
 }
 
-.timestamp-summary::before {
-  content: "🕒";
-  font-size: 0.9rem;
-}
-
 .timestamp-summary::marker {
   display: none;
 }
@@ -307,11 +302,6 @@
   display: flex;
   align-items: center;
   gap: 5px;
-}
-
-.timestamp-group h5::before {
-  content: "📅";
-  font-size: 0.8rem;
 }
 
 .timestamp-row {

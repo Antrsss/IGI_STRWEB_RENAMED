@@ -6,7 +6,6 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Настройка multer для загрузки изображений
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadDir = 'uploads/animals';
@@ -23,7 +22,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: function (req, file, cb) {
     const filetypes = /jpeg|jpg|png|gif|webp/;
     const mimetype = filetypes.test(file.mimetype);
@@ -36,7 +35,7 @@ const upload = multer({
   }
 });
 
-// GET /api/animals - Публичный доступ
+// GET /api/animals
 router.get('/', async (req, res) => {
   try {
     const animals = await Animal.find()
@@ -49,7 +48,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/animals/:id - Публичный доступ
+// GET /api/animals/:id
 router.get('/:id', async (req, res) => {
   try {
     const animal = await Animal.findById(req.params.id)
@@ -67,7 +66,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST /api/animals - Требуется авторизация + загрузка файла
+// POST /api/animals
 router.post('/', auth(), upload.single('image'), async (req, res) => {
   try {
     console.log('Creating animal with data:', req.body);
@@ -75,16 +74,13 @@ router.post('/', auth(), upload.single('image'), async (req, res) => {
     
     const animalData = { ...req.body };
     
-    // Если загружено изображение
     if (req.file) {
       animalData.image = req.file.filename;
     }
     
-    // Создаем животное
     const animal = new Animal(animalData);
     await animal.save();
     
-    // Получаем полные данные с populate
     const populatedAnimal = await Animal.findById(animal._id)
       .populate('enclosure')
       .populate('caretaker', 'firstName lastName position specialization');
@@ -95,7 +91,6 @@ router.post('/', auth(), upload.single('image'), async (req, res) => {
   } catch (error) {
     console.error('Error creating animal:', error);
     
-    // Удаляем загруженный файл в случае ошибки
     if (req.file) {
       fs.unlink(req.file.path, (err) => {
         if (err) console.error('Error deleting uploaded file:', err);
@@ -106,7 +101,7 @@ router.post('/', auth(), upload.single('image'), async (req, res) => {
   }
 });
 
-// PUT /api/animals/:id - Требуется авторизация + загрузка файла
+// PUT /api/animals/:id
 router.put('/:id', auth(), upload.single('image'), async (req, res) => {
   try {
     console.log('Updating animal:', req.params.id);
@@ -115,11 +110,9 @@ router.put('/:id', auth(), upload.single('image'), async (req, res) => {
     
     const animalData = { ...req.body };
     
-    // Если загружено новое изображение
     if (req.file) {
       animalData.image = req.file.filename;
       
-      // Удаляем старое изображение если оно было и это не URL
       const existingAnimal = await Animal.findById(req.params.id);
       if (existingAnimal && existingAnimal.image && !existingAnimal.image.startsWith('http')) {
         const oldImagePath = path.join('uploads/animals', existingAnimal.image);
@@ -131,7 +124,6 @@ router.put('/:id', auth(), upload.single('image'), async (req, res) => {
       }
     }
     
-    // Обновляем животное
     const animal = await Animal.findByIdAndUpdate(
       req.params.id,
       animalData,
@@ -150,7 +142,6 @@ router.put('/:id', auth(), upload.single('image'), async (req, res) => {
   } catch (error) {
     console.error('Error updating animal:', error);
     
-    // Удаляем загруженный файл в случае ошибки
     if (req.file) {
       fs.unlink(req.file.path, (err) => {
         if (err) console.error('Error deleting uploaded file:', err);
@@ -161,7 +152,7 @@ router.put('/:id', auth(), upload.single('image'), async (req, res) => {
   }
 });
 
-// DELETE /api/animals/:id - Требуется авторизация
+// DELETE /api/animals/:id
 router.delete('/:id', auth(), async (req, res) => {
   try {
     console.log('Deleting animal:', req.params.id);
@@ -172,7 +163,6 @@ router.delete('/:id', auth(), async (req, res) => {
       return res.status(404).json({ error: 'Animal not found' });
     }
     
-    // Удаляем изображение если оно было и это не URL
     if (animal.image && !animal.image.startsWith('http')) {
       const imagePath = path.join('uploads/animals', animal.image);
       if (fs.existsSync(imagePath)) {
@@ -182,7 +172,6 @@ router.delete('/:id', auth(), async (req, res) => {
       }
     }
     
-    // Удаляем запись из базы данных
     await Animal.findByIdAndDelete(req.params.id);
     
     console.log('Animal deleted successfully:', req.params.id);

@@ -1,5 +1,4 @@
-// src/components/layout/Navbar.jsx - updated version
-// Add links to all 4 pages
+// src/components/layout/Navbar.jsx
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './Navbar.css';
@@ -14,7 +13,6 @@ const Navbar = () => {
     navigate('/');
   };
 
-  // Check active route
   const isActive = (path) => {
     return location.pathname.startsWith(path) ? 'active' : '';
   };
@@ -22,14 +20,12 @@ const Navbar = () => {
   return (
     <header className="navbar">
       <div className="navbar-container">
-        {/* Left block - logo and name */}
         <div className="navbar-brand">
           <Link to="/" className="navbar-logo">
             Zoo
           </Link>
         </div>
 
-        {/* Center block - navigation */}
         <div className="navbar-links">
           <Link to="/" className={`nav-link ${isActive('/') && !isActive('/animals') && !isActive('/employees') && !isActive('/enclosures') && !isActive('/feedings') ? 'active' : ''}`}>
             Home
@@ -48,7 +44,6 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Right block - user */}
         <div className="navbar-user-section">
           {user ? (
             <div className="user-info-panel">

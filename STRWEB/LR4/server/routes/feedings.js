@@ -6,7 +6,6 @@ const Animal = require('../models/Animal');
 const Employee = require('../models/Employee');
 const auth = require('../middleware/auth');
 
-// GET all feeding records (public access)
 router.get('/', async (req, res) => {
   try {
     const feedings = await Feeding.find()
@@ -20,22 +19,18 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST create new feeding record (requires authentication)
 router.post('/', auth(), async (req, res) => {
   try {
-    // Check if animal exists
     const animal = await Animal.findById(req.body.animal);
     if (!animal) {
       return res.status(404).json({ error: 'Animal not found' });
     }
 
-    // Check if employee exists
     const employee = await Employee.findById(req.body.fedBy);
     if (!employee) {
       return res.status(404).json({ error: 'Employee not found' });
     }
 
-    // If feedingTime not specified, set current time
     if (!req.body.feedingTime) {
       req.body.feedingTime = new Date();
     }
@@ -43,7 +38,6 @@ router.post('/', auth(), async (req, res) => {
     const feeding = new Feeding(req.body);
     await feeding.save();
 
-    // Get record with populate
     const populatedFeeding = await Feeding.findById(feeding._id)
       .populate('animal', 'name species')
       .populate('fedBy', 'firstName lastName position');
@@ -58,7 +52,6 @@ router.post('/', auth(), async (req, res) => {
   }
 });
 
-// DELETE delete feeding record (requires authentication)
 router.delete('/:id', auth(), async (req, res) => {
   try {
     const feeding = await Feeding.findByIdAndDelete(req.params.id);

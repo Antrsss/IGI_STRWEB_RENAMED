@@ -11,7 +11,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Создаем экземпляр axios с базовым URL
   const api = axios.create({
     baseURL: 'http://localhost:5000/api',
     timeout: 10000,
@@ -20,7 +19,6 @@ export const AuthProvider = ({ children }) => {
     }
   });
 
-  // Перехватчик для добавления токена к запросам
   api.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem('token');
@@ -34,7 +32,6 @@ export const AuthProvider = ({ children }) => {
     }
   );
 
-  // Перехватчик для обработки ошибок авторизации
   api.interceptors.response.use(
     (response) => response,
     (error) => {
@@ -72,7 +69,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setError(null);
-      console.log('🔐 Attempting login for:', email);
+      console.log('Attempting login for:', email);
       
       const response = await api.post('/auth/login', { 
         email, 
