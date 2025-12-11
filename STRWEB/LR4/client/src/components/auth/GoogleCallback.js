@@ -16,10 +16,10 @@ const GoogleCallback = () => {
           localStorage.setItem('token', token);
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-          navigate('/', { state: { error: 'Authentication failed' } });
+          navigate('/');
         } else {
           console.error('No token in URL');
-          navigate('/', { state: { error: 'Authentication failed' } });
+          navigate('/');
         }
       } catch (error) {
         console.error('Google callback error:', error);
