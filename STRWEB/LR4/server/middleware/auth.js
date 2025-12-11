@@ -6,16 +6,12 @@ const authMiddleware = () => {
       console.log('AUTH MIDDLEWARE - Checking token...');
       
       const authHeader = req.header('Authorization');
-      console.log('  Auth header:', authHeader ? 'Present' : 'Missing');
       
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        console.log('No Bearer token in header');
         return res.status(401).json({ error: 'No authentication token provided' });
       }
       
       const token = authHeader.replace('Bearer ', '');
-      console.log('  Token length:', token.length);
-      console.log('  JWT_SECRET exists:', !!process.env.JWT_SECRET);
       
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret-for-dev');
       console.log('Token valid for user:', decoded.userId || decoded.id);
