@@ -1,13 +1,10 @@
-// src/components/layout/Footer.jsx
 import React from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import './Footer.css';
 
 class Footer extends React.Component {
-  // 1. Определяем contextType для доступа к контексту
   static contextType = AuthContext;
   
-  // 2. Конструктор (опционально)
   constructor(props) {
     super(props);
     this.state = {
@@ -15,17 +12,14 @@ class Footer extends React.Component {
     };
   }
   
-  // 3. Метод жизненного цикла (пример)
   componentDidMount() {
     console.log('Footer mounted');
   }
   
-  // 4. Метод жизненного цикла (пример)
   componentWillUnmount() {
     console.log('Footer will unmount');
   }
   
-  // 5. Пользовательский метод (пример)
   getCopyrightText() {
     const { user } = this.context;
     const baseText = `© ${this.state.currentYear} Zoo Management System. All rights reserved.`;
@@ -37,7 +31,6 @@ class Footer extends React.Component {
     return baseText;
   }
   
-  // 6. Обязательный метод render()
   render() {
     const { user } = this.context;
     

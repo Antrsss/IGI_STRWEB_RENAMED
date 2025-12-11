@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { formatLocalDateTime, formatUTCDateTime, DateTimeDisplay, getUserTimeZone } from '../../utils/dateUtils';
+import { DateTimeDisplay, getUserTimeZone } from '../../utils/dateUtils';
 import './EmployeeList.css';
 
 const EmployeeList = () => {
@@ -89,7 +89,6 @@ const EmployeeList = () => {
     console.log('handleDelete called with:', { id, employeeName });
     console.log('Event:', event);
     
-    // Остановим всплытие события
     if (event) {
       event.preventDefault();
       event.stopPropagation();

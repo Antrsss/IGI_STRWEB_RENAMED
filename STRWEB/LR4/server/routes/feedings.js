@@ -1,4 +1,3 @@
-// server/routes/feedings.js
 const express = require('express');
 const router = express.Router();
 const Feeding = require('../models/Feeding');

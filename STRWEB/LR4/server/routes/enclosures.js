@@ -1,4 +1,3 @@
-// server/routes/enclosures.js
 const express = require('express');
 const router = express.Router();
 const Enclosure = require('../models/Enclosure');

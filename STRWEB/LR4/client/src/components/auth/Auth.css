@@ -1,8 +1,4 @@
-/* Auth.css - Стили для страниц аутентификации зоопарка */
-
-/* CSS Variables для темизации */
 :root {
-  /* Естественная цветовая палитра зоопарка */
   --color-primary-green: #2d5a27;
   --color-secondary-green: #4a7c59;
   --color-light-green: #8fbc8f;
@@ -18,27 +14,22 @@
   --color-danger: #dc3545;
   --color-success: #28a745;
   
-  /* Градиенты */
   --gradient-auth-bg: linear-gradient(135deg, var(--color-light-green) 0%, var(--color-beige) 50%, var(--color-light) 100%);
   --gradient-auth-card: linear-gradient(135deg, var(--color-white) 0%, var(--color-cream) 100%);
   
-  /* Тени */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
   
-  /* Переходы */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
   
-  /* Радиусы */
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-xl: 30px;
   
-  /* Отступы */
   --space-xs: 0.5rem;
   --space-sm: 1rem;
   --space-md: 1.5rem;
@@ -46,7 +37,6 @@
   --space-xl: 3rem;
 }
 
-/* Базовые стили для аутентификации */
 .auth-container {
   min-height: 100vh;
   display: flex;
@@ -58,7 +48,6 @@
   overflow: hidden;
 }
 
-/* Декоративные элементы фона */
 .auth-container::before {
   content: '';
   position: absolute;
@@ -91,7 +80,6 @@
   100% { transform: translate(0, 0) rotate(360deg); }
 }
 
-/* Карточка аутентификации */
 .auth-card {
   background: var(--gradient-auth-card);
   border-radius: var(--radius-xl);
@@ -117,7 +105,6 @@
   }
 }
 
-/* Заголовок */
 .auth-header {
   text-align: center;
   margin-bottom: var(--space-lg);
@@ -150,7 +137,6 @@
   opacity: 0.8;
 }
 
-/* Форма */
 .auth-form {
   margin-bottom: var(--space-lg);
 }
@@ -202,7 +188,6 @@
   box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
 }
 
-/* Строка с двумя полями (регистрация) */
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -215,7 +200,6 @@
   }
 }
 
-/* Кнопки */
 .btn-primary {
   width: 100%;
   padding: 14px 24px;
@@ -271,7 +255,6 @@
   width: 100%;
 }
 
-/* Кнопка Google */
 .btn-google {
   width: 100%;
   padding: 14px 24px;
@@ -306,7 +289,6 @@
   height: 20px;
 }
 
-/* Разделитель */
 .auth-separator {
   display: flex;
   align-items: center;
@@ -327,7 +309,6 @@
   background: var(--color-gray-light);
 }
 
-/* Для регистрации с линиями */
 .separator-line {
   flex: 1;
   height: 1px;
@@ -341,7 +322,6 @@
   white-space: nowrap;
 }
 
-/* Оповещения и ошибки */
 .alert {
   padding: var(--space-md);
   border-radius: var(--radius-md);
@@ -382,7 +362,6 @@
   75% { transform: translateX(5px); }
 }
 
-/* Спиннер загрузки */
 .spinner {
   display: inline-block;
   width: 16px;
@@ -399,7 +378,6 @@
   to { transform: rotate(360deg); }
 }
 
-/* Ссылки */
 .auth-links {
   text-align: center;
   margin-top: var(--space-md);
@@ -433,7 +411,6 @@
   width: 100%;
 }
 
-/* Футер формы */
 .auth-footer {
   text-align: center;
   margin-top: var(--space-lg);
@@ -469,7 +446,6 @@
   }
 }
 
-/* Анимация для формы при успешной регистрации */
 @keyframes successPulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.02); }
@@ -479,7 +455,6 @@
   animation: successPulse 0.5s ease 3;
 }
 
-/* Стили для кастомных чекбоксов */
 .checkbox-group {
   display: flex;
   align-items: center;
@@ -507,7 +482,6 @@
   text-decoration: underline;
 }
 
-/* Адаптивный дизайн */
 @media (max-width: 768px) {
   .auth-container {
     padding: var(--space-sm);
@@ -548,7 +522,6 @@
   }
 }
 
-/* Эффект для капчи или дополнительных полей */
 .captcha-container {
   margin: var(--space-md) 0;
   padding: var(--space-md);
@@ -558,7 +531,6 @@
   animation: fadeIn 0.5s ease;
 }
 
-/* Стили для состояния "запомнить меня" в логине */
 .remember-me {
   display: flex;
   justify-content: space-between;
@@ -578,7 +550,6 @@
   text-decoration: underline;
 }
 
-/* Эффект вибрации для неверного пароля */
 @keyframes vibrate {
   0%, 100% { transform: translateX(0); }
   20%, 60% { transform: translateX(-5px); }
@@ -589,7 +560,6 @@
   animation: vibrate 0.5s ease;
 }
 
-/* Стили для иконок социальных сетей (если добавите другие) */
 .social-buttons {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -618,7 +588,6 @@
 .btn-social.twitter { border-color: #1da1f2; }
 .btn-social.github { border-color: #333; }
 
-/* Стили для прогресс-бара сложности пароля */
 .password-strength {
   margin-top: var(--space-xs);
 }

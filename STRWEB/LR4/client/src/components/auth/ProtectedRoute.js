@@ -1,4 +1,3 @@
-// src/components/auth/ProtectedRoute.js - УПРОЩЕННАЯ ВЕРСИЯ
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 

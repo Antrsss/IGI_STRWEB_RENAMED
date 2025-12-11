@@ -1,4 +1,3 @@
-// src/components/layout/Navbar.jsx
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './Navbar.css';
