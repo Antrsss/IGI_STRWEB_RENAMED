@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { getUserTimeZone } from '../../utils/dateUtils';
 import './HomePage.css';
 
-const HomePage = () => {
-  const { user } = useAuth();
+function HomePage() {
   const [stats, setStats] = useState({
     totalAnimals: 0,
     totalEmployees: 0,
@@ -38,7 +36,7 @@ const HomePage = () => {
     })
   });
 
-  useEffect(() => {
+  useEffect(function() {
     const updateTime = () => {
       const now = new Date();
       setCurrentDateTime({
@@ -67,14 +65,16 @@ const HomePage = () => {
     
     const timer = setInterval(updateTime, 1000);
     
-    return () => clearInterval(timer);
+    return function() {
+      clearInterval(timer);
+    };
   }, [userTimeZone]);
 
-  useEffect(() => {
+  useEffect(function() {
     fetchStats();
   }, []);
 
-  const fetchStats = async () => {
+  async function fetchStats() {
     try {
       const [animalsRes, employeesRes, enclosuresRes, feedingsRes] = await Promise.all([
         axios.get('http://localhost:5000/api/animals'),
@@ -94,7 +94,7 @@ const HomePage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
     <div className="home-page">
@@ -193,6 +193,6 @@ const HomePage = () => {
       </section>
     </div>
   );
-};
+}
 
 export default HomePage;

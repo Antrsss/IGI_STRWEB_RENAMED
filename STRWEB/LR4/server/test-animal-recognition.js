@@ -4,22 +4,19 @@ const fs = require('fs');
 
 async function testAnimalRecognition() {
   try {
-    // 1. Вход в систему для получения токена
-    console.log('🔐 Logging in...');
+    console.log('Logging in...');
     const loginResponse = await axios.post('http://localhost:5000/api/auth/login', {
-      email: 'test@gmail.com', // Используйте реальные данные
+      email: 'test@gmail.com',
       password: '625100'
     });
     
     const token = loginResponse.data.token;
-    console.log('✅ Logged in, token received');
+    console.log('Logged in, token received');
 
-    // 2. Создаем тестовое изображение (можно использовать реальное)
     const formData = new FormData();
-    formData.append('image', fs.createReadStream('snake.webp')); // Положите тестовое изображение
+    formData.append('image', fs.createReadStream('snake.webp'));
     
-    // 3. Отправляем запрос на распознавание
-    console.log('🖼️ Sending image for recognition...');
+    console.log('Sending image for recognition...');
     const response = await axios.post(
       'http://localhost:5000/api/animal-recognition/recognize',
       formData,

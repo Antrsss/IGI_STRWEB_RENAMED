@@ -11,7 +11,7 @@ passport.use(new GoogleStrategy({
   },
   async (req, accessToken, refreshToken, profile, done) => {
     try {
-      console.log('🔐 Google OAuth profile received:', {
+      console.log('Google OAuth profile received:', {
         id: profile.id,
         email: profile.emails[0].value,
         name: profile.displayName
@@ -27,7 +27,7 @@ passport.use(new GoogleStrategy({
       user = await User.findOne({ email: profile.emails[0].value });
       
       if (user) {
-        console.log('🔄 Merging local account with Google:', user.email);
+        console.log('Merging local account with Google:', user.email);
         user.googleId = profile.id;
         user.avatar = profile.photos[0]?.value || user.avatar;
         user.displayName = profile.displayName || user.displayName;
@@ -35,7 +35,7 @@ passport.use(new GoogleStrategy({
         return done(null, user);
       }
 
-      console.log('👤 Creating new Google user:', profile.emails[0].value);
+      console.log('Creating new Google user:', profile.emails[0].value);
       user = new User({
         googleId: profile.id,
         email: profile.emails[0].value,

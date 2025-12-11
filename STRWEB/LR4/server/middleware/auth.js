@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const authMiddleware = (requiredRole = null) => {
+const authMiddleware = () => {
   return async (req, res, next) => {
     try {
       console.log('AUTH MIDDLEWARE - Checking token...');
